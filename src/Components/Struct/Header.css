@@ -1,0 +1,12 @@
+.form-check-input:checked {
+    background-color: rgb(255, 204, 0) !important;
+    border-color: rgb(255, 204, 0) !important;
+}
+
+.form-check-input:focus { 
+    outline-color: yellow !important; 
+}
+
+.form-check-input:focus::after { 
+    background-image: linear-gradient(yellow, yellow) !important; 
+}
