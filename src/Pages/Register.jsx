@@ -7,8 +7,22 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const isValidEmailFormat = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const doesEmailExist = async (email) => {
+    // This is a placeholder. Replace this with a call to a real email verification API.
+    // Such APIs usually require a subscription and have usage limits.
+    // Be sure to handle possible errors and edge cases appropriately.
+    return fetch(`https://api.emailverification.com/verify?email=${email}`)
+      .then(response => response.json())
+      .then(data => data.exists);
+  };
 
   const checkDuplicateEmail = async (email) => {
     const usersCollection = collection(firestore, 'Users');
@@ -21,14 +35,40 @@ const Register = () => {
     try {
       setLoading(true);
 
+      const passwordRequirements = [
+        { test: (password) => password.length >= 12, message: 'Password must be at least 12 characters long' },
+        { test: (password) => /[A-Z]/.test(password), message: 'Password must contain at least one uppercase letter' },
+        { test: (password) => /[a-z]/.test(password), message: 'Password must contain at least one lowercase letter' },
+        { test: (password) => /[0-9]/.test(password), message: 'Password must contain at least one number' },
+        { test: (password) => /[^A-Za-z0-9]/.test(password), message: 'Password must contain at least one special character' },
+      ];
+
+      for (let requirement of passwordRequirements) {
+        if (!requirement.test(password)) {
+          setError(requirement.message);
+          return;
+        }
+      }
+
       if (password !== confirmPassword) {
         setError('Passwords do not match');
         return;
       }
 
-      const emailExists = await checkDuplicateEmail(email);
-      if (emailExists) {
+      if (!isValidEmailFormat(email)) {
+        setError('Invalid email format');
+        return;
+      }
+
+      const emailExistsInDatabase = await checkDuplicateEmail(email);
+      if (emailExistsInDatabase) {
         setError('Email already exists');
+        return;
+      }
+
+      const emailExists = await doesEmailExist(email);
+      if (!emailExists) {
+        setError('Email does not exist');
         return;
       }
 
@@ -52,7 +92,7 @@ const Register = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <div>
