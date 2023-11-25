@@ -4,7 +4,7 @@ import HomePage from './Pages/HomePage';
 import AboutPage from './Pages/AboutPage';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
-import PrivateRoute from './Components/Auth/PrivateRoute'; 
+
 import { firebaseConfig } from "./firebase";
 import { initializeApp } from "firebase/app";
 // Importando o componente Header
@@ -28,7 +28,6 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <PrivateRoute path="/account" element={<Account />} />
         </Routes>
       </Router>
     </div>
