@@ -4,7 +4,8 @@ import HomePage from './Pages/HomePage';
 import AboutPage from './Pages/AboutPage';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
-import { firebaseConfig } from "./firebase"; 
+
+import { firebaseConfig } from "./firebase";
 import { initializeApp } from "firebase/app";
 // Importando o componente Header
 import Header from './Components/Struct/Header';
@@ -30,8 +31,8 @@ function App() {
           {/* Definindo as rotas para os diferentes componentes */}
           <Route path="/" element={<HomePage className="home-page" />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
     </div>

@@ -36,6 +36,12 @@ function Header() {
                             <li className="nav-item">
                                 <a className="nav-link" href="/login">Login</a>
                             </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/register">Register</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/account">Account</a>
+                            </li>
                         </ul>
                         <div className="d-flex align-items-center">
 
