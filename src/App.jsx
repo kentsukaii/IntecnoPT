@@ -10,6 +10,7 @@ import { initializeApp } from "firebase/app";
 import Header from './Components/Struct/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+import './App.css';
 
 
 
@@ -27,7 +28,7 @@ function App() {
       <Router>
         <Routes>
           {/* Definindo as rotas para os diferentes componentes */}
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage className="home-page" />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
