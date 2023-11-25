@@ -1,5 +1,7 @@
 // Importing React and react-router-dom modules
 import React from 'react';
+import logotype from '../../assets/logotype.png';
+import maguire from '../../assets/godmaguire.jpg';
 import { Link } from 'react-router-dom';
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
 
@@ -9,128 +11,67 @@ import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, 
 function Header() {
     return (
         // JSX that represents the header element
-        <header className="header">
 
-            <nav data-mdb-navbar-init className="navbar navbar-expand-lg navbar-light bg-body-tertiary">
-
-                <div className="container-fluid">
-
-                    <button
-                        data-mdb-collapse-init
-                        className="navbar-toggler"
-                        type="button"
-                        data-mdb-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <i className="fas fa-bars"></i>
-                    </button>
-
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-
-                        <a className="navbar-brand mt-2 mt-lg-0" href="#">
-                            <img
-                                src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
-                                height="15"
-                                alt="MDB Logo"
-                                loading="lazy"
-                            />
+<header className="header">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light" style={{height: '80px'}}>
+        <div className="container-fluid">
+            <a className="navbar-brand" href="#">
+                <img src={logotype} alt="Your Brand" style={{height: '40px', width: '180px'}} />
+            </a>
+            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNav">
+                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li className="nav-item">
+                        <a className="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="/team">Team</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="/projects">Projects</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="/login">Login</a>
+                    </li>
+                </ul>
+                <div className="d-flex align-items-center">
+                    <div className="form-check form-switch">
+                        <input className="form-check-input" type="checkbox" id="darkModeSwitch" />
+                        <label className="form-check-label" htmlFor="darkModeSwitch">
+                            <i className="fas fa-sun"></i>
+                            <i className="fas fa-moon"></i>
+                        </label>
+                    </div>
+                    <a className="nav-link position-relative" href="/cart">
+                        <i className="fas fa-shopping-cart fa-lg"></i>
+                        <span className="badge bg-danger position-absolute top-0 start-100 translate-middle" style={{transform: 'translate(30%, -50%)'}}>1</span>
+                    </a>
+                    <div className="dropdown">
+                        <a className="nav-link d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src={maguire} alt="Profile" className="rounded-circle" style={{width: '60px', height: '60px'}} />
+                            <span className="badge bg-danger position-relative top-0 start-0 translate-middle">1</span>
                         </a>
-
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <a className="nav-link" href="/about">Dashboard</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Team</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Projects</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/login">Login</a>
-                            </li>
+                        <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a className="dropdown-item" href="/profile">Profile</a></li>
+                            <li><a className="dropdown-item" href="/settings">Settings</a></li>
+                            <li><a className="dropdown-item" href="/notifications">Notifications</a></li>
+                            <li><hr className="dropdown-divider" /></li>
+                            <li><a className="dropdown-item" href="/logout">Logout</a></li>
                         </ul>
-
                     </div>
-
-
-
-                    <div className="d-flex align-items-center">
-
-                        <a className="text-reset me-3" href="#">
-                            <i className="fas fa-shopping-cart"></i>
-                        </a>
-
-
-                        <div className="dropdown">
-                            <a
-                                data-mdb-dropdown-init
-                                className="text-reset me-3 dropdown-toggle hidden-arrow"
-                                href="#"
-                                id="navbarDropdownMenuLink"
-                                role="button"
-                                aria-expanded="false"
-                            >
-                                <i className="fas fa-bell"></i>
-                                <span className="badge rounded-pill badge-notification bg-danger">1</span>
-                            </a>
-                            <ul
-                                className="dropdown-menu dropdown-menu-end"
-                                aria-labelledby="navbarDropdownMenuLink"
-                            >
-                                <li>
-                                    <a className="dropdown-item" href="#">Some news</a>
-                                </li>
-                                <li>
-                                    <a className="dropdown-item" href="#">Another news</a>
-                                </li>
-                                <li>
-                                    <a className="dropdown-item" href="#">Something else here</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div className="dropdown">
-                            <a
-                                data-mdb-dropdown-init
-                                className="dropdown-toggle d-flex align-items-center hidden-arrow"
-                                href="#"
-                                id="navbarDropdownMenuAvatar"
-                                role="button"
-                                aria-expanded="false"
-                            >
-                                <img
-                                    src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
-                                    className="rounded-circle"
-                                    height="25"
-                                    alt="Black and White Portrait of a Man"
-                                    loading="lazy"
-                                />
-                            </a>
-                            <ul
-                                className="dropdown-menu dropdown-menu-end"
-                                aria-labelledby="navbarDropdownMenuAvatar"
-                            >
-                                <li>
-                                    <a className="dropdown-item" href="#">My profile</a>
-                                </li>
-                                <li>
-                                    <a className="dropdown-item" href="#">Settings</a>
-                                </li>
-                                <li>
-                                    <a className="dropdown-item" href="#">Logout</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
                 </div>
+            </div>
+        </div>
+    </nav>
+</header>
 
-            </nav>
 
-        </header>
+
+
+
+
     );
 }
 

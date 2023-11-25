@@ -8,6 +8,10 @@ import { firebaseConfig } from "./firebase";
 import { initializeApp } from "firebase/app";
 // Importando o componente Header
 import Header from './Components/Struct/Header';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+
+
 
 // Inicializando o aplicativo Firebase
 initializeApp(firebaseConfig);
