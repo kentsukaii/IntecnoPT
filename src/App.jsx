@@ -9,6 +9,11 @@ import { firebaseConfig } from "./firebase";
 import { initializeApp } from "firebase/app";
 // Importando o componente Header
 import Header from './Components/Struct/Header';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import './App.css';
+
+
 
 // Inicializando o aplicativo Firebase
 initializeApp(firebaseConfig);
@@ -24,7 +29,7 @@ function App() {
       <Router>
         <Routes>
           {/* Definindo as rotas para os diferentes componentes */}
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage className="home-page" />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
