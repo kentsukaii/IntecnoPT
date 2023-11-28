@@ -1,19 +1,19 @@
 // Importando os módulos necessários do React e react-router-dom
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './Pages/HomePage';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AboutPage from './Pages/AboutPage';
+import HomePage from './Pages/HomePage';
 import Login from './Pages/Login';
+import Profile from './Pages/Profile';
 import Register from './Pages/Register';
-import Register from './Pages/Profile';
 
 
-import { firebaseConfig } from "./firebase";
 import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "./firebase";
 // Importando o componente Header
-import Header from './Components/Struct/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './App.css';
+import Header from './Components/Struct/Header';
 
 
 
