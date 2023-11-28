@@ -4,6 +4,7 @@ import HomePage from './Pages/HomePage';
 import AboutPage from './Pages/AboutPage';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
+import Register from './Pages/Profile';
 
 import { firebaseConfig } from "./firebase";
 import { initializeApp } from "firebase/app";
@@ -33,6 +34,7 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
     </div>
