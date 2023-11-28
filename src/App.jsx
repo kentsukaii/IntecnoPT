@@ -4,11 +4,9 @@ import HomePage from './Pages/HomePage';
 import AboutPage from './Pages/AboutPage';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
-<<<<<<< HEAD
 import Register from './Pages/Profile';
 
-=======
->>>>>>> 4d9d145c2e86426af153b7904f22e6bc8185d542
+
 import { firebaseConfig } from "./firebase";
 import { initializeApp } from "firebase/app";
 // Importando o componente Header
