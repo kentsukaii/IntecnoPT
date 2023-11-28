@@ -101,28 +101,32 @@ const Login = () => {
   };
   return (
     <div>
-    <h1>Login form</h1>
-    {loggedInUser && (
-      <div>
-        <p>Congratulations! You are logged in with the email: {loggedInUser.user.email}</p>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-    )}
-      {!loggedInUser && !showPasswordReset && (
+      {!showPasswordReset && (
         <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button onClick={handleLogin}>Login</button>
-          <button onClick={() => handleLogingoogle()} disabled={authing}>
-            Login with Google
-          </button>
-          <button onClick={() => handleLoginFacebook()} disabled={authing}>
-            Login with Facebook
-          </button>
-          <button onClick={handlePasswordReset}>Forgot Password?</button>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          <h1>Login form</h1>
+          {loggedInUser && (
+            <div>
+              <p>Congratulations! You are logged in with the email: {loggedInUser.user.email}</p>
+              <button onClick={handleLogout}>Logout</button>
+            </div>
+          )}
+          {!loggedInUser && (
+            <div>
+              <label>Email:</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <label>Password:</label>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <button onClick={handleLogin}>Login</button>
+              <button onClick={() => handleLogingoogle()} disabled={authing}>
+                Login with Google
+              </button>
+              <button onClick={() => handleLoginFacebook()} disabled={authing}>
+                Login with Facebook
+              </button>
+              <button onClick={handlePasswordReset}>Forgot Password?</button>
+              {error && <p style={{ color: 'red' }}>{error}</p>}
+            </div>
+          )}
         </div>
       )}
       {showPasswordReset && (
