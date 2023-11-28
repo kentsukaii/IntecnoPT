@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut, sendEmailVerification } from 'firebase/auth';
 import { auth, firestore } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import PasswordReset from './PasswordReset'; 
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const navigate = useNavigate();
   const [authing, setAuthing] = useState(false);
-
+  const [showPasswordReset, setShowPasswordReset] = useState(false); 
+  const navigate = useNavigate();
+  
   const handleLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -30,22 +33,7 @@ const Login = () => {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       const authUser = result.user;
 
-      // Check if the user already exists in the Users collection
-      const usersCollection = collection(firestore, 'Users');
-      const userQuery = query(usersCollection, where('email', '==', authUser.email));
-      const userQuerySnapshot = await getDocs(userQuery);
-
-      if (userQuerySnapshot.empty) {
-        // If the user doesn't exist, add them to the Users collection
-        const usersCollection = collection(firestore, 'Users');
-        const userData = {
-          email: authUser.email,
-          Address: "",
-          Name: "",
-          Phone_number: "",
-        };
-        await addDoc(usersCollection, userData);
-      }
+      await handleAuthUser(authUser);
 
       // Redirect after a successful login
       navigate('/');
@@ -62,28 +50,35 @@ const Login = () => {
       const result = await signInWithPopup(auth, new FacebookAuthProvider());
       const authUser = result.user;
 
-      // Check if the user already exists in the Users collection
-      const usersCollection = collection(firestore, 'Users');
-      const userQuery = query(usersCollection, where('email', '==', authUser.email));
-      const userQuerySnapshot = await getDocs(userQuery);
-
-      if (userQuerySnapshot.empty) {
-        // If the user doesn't exist, add them to the Users collection
-        const usersCollection = collection(firestore, 'Users');
-        const userData = {
-          email: authUser.email,
-          Address: "",
-          Name: "",
-          Phone_number: "",
-        };
-        await addDoc(usersCollection, userData);
-      }
+      await handleAuthUser(authUser);
 
       // Redirect after a successful login
       navigate('/');
     } catch (error) {
       console.log(error);
       setAuthing(false);
+    }
+  };
+
+  const handleAuthUser = async (authUser) => {
+    // Check if the user already exists in the Users collection
+    const usersCollection = collection(firestore, 'Users');
+    const userQuery = query(usersCollection, where('email', '==', authUser.email));
+    const userQuerySnapshot = await getDocs(userQuery);
+
+    if (userQuerySnapshot.empty) {
+      // Send email verification
+      authUser.emailVerified = false;
+      await sendEmailVerification(authUser);
+
+      // If the user doesn't exist, add them to the Users collection
+      const userData = {
+        email: authUser.email,
+        Address: "",
+        Name: "",
+        Phone_number: "",
+      };
+      await addDoc(usersCollection, userData);
     }
   };
 
@@ -97,27 +92,45 @@ const Login = () => {
       console.error("Error during logout:", error);
     }
   };
+  const handlePasswordReset = () => {
+    setShowPasswordReset(true);
+  };
 
+  const handlePasswordResetComplete = () => {
+    setShowPasswordReset(false);
+  };
   return (
     <div>
-      <h1>Login form</h1>
-      {loggedInUser && (
+      {!showPasswordReset && (
         <div>
-          <p>Congratulations! You are logged in with the email: {loggedInUser.user.email}</p>
-          <button onClick={handleLogout}>Logout</button>
+          <h1>Login form</h1>
+          {loggedInUser && (
+            <div>
+              <p>Congratulations! You are logged in with the email: {loggedInUser.user.email}</p>
+              <button onClick={handleLogout}>Logout</button>
+            </div>
+          )}
+          {!loggedInUser && (
+            <div>
+              <label>Email:</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <label>Password:</label>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <button onClick={handleLogin}>Login</button>
+              <button onClick={() => handleLogingoogle()} disabled={authing}>
+                Login with Google
+              </button>
+              <button onClick={() => handleLoginFacebook()} disabled={authing}>
+                Login with Facebook
+              </button>
+              <button onClick={handlePasswordReset}>Forgot Password?</button>
+              {error && <p style={{ color: 'red' }}>{error}</p>}
+            </div>
+          )}
         </div>
       )}
-      {!loggedInUser && (
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <button onClick={handleLogin}>Login</button>
-          <button onClick={() => handleLogingoogle()} disabled={authing}>Login with Google</button>
-          <button onClick={() => handleLoginFacebook()} disabled={authing}> Login with Facebook </button>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-        </div>
+      {showPasswordReset && (
+        <PasswordReset onResetComplete={handlePasswordResetComplete} />
       )}
     </div>
   );

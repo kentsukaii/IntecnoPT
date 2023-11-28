@@ -27,6 +27,7 @@ const Account = () => {
       {users && users.map(user => (
         <div key={user.id}>
           <h2>{user.email}</h2>
+          <p>Password: {user.password}</p> {/* Display the user's password */}
           <button onClick={() => updateUser(user.id)}>Update</button>
           <button onClick={() => deleteUser(user.id)}>Delete</button>
         </div>
