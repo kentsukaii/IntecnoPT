@@ -11,6 +11,7 @@ import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebase";
 // Importando o componente Header
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './App.css';
 import Header from './Components/Struct/Header';
