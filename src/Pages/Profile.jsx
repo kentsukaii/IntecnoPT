@@ -53,7 +53,7 @@ const Profile = () => {
               <div className="row mb-4">
               <p>My Account Information</p>
                 <div className="col-md-6">
-                  <MDBInput label='Username' id='form1' type='text' />
+                  <MDBInput label='Name' id='form1' type='text' />
                 </div>
                 <div className="col-md-6">
                   <MDBInput label='Surname' id='form2' type='text' />
