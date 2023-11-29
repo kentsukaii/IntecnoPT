@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+
 import { auth, firestore } from '../firebase';
 
 const Register = () => {
@@ -15,15 +16,8 @@ const Register = () => {
     return emailRegex.test(email);
   };
 
-  const doesEmailExist = async (email) => {
-    // This is a placeholder. Replace this with a call to a real email verification API.
-    // Such APIs usually require a subscription and have usage limits.
-    // Be sure to handle possible errors and edge cases appropriately.
-    return fetch(`https://api.emailverification.com/verify?email=${email}`)
-      .then(response => response.json())
-      .then(data => data.exists);
-  };
 
+  
   const checkDuplicateEmail = async (email) => {
     const usersCollection = collection(firestore, 'Users');
     const q = query(usersCollection, where('email', '==', email));
@@ -66,20 +60,16 @@ const Register = () => {
         return;
       }
 
-      const emailExists = await doesEmailExist(email);
-      if (!emailExists) {
-        setError('Email does not exist');
-        return;
-      }
 
       const authUser = await createUserWithEmailAndPassword(auth, email, password);
 
+      await sendEmailVerification(authUser.user);
       const usersCollection = collection(firestore, 'Users');
       const userData = {
         email: authUser.user.email,
-        Address:"",
-        Name:"",
-        Phone_number:"",
+        Address: "",
+        Name: "",
+        Phone_number: "",
       };
       await addDoc(usersCollection, userData);
 
