@@ -11,7 +11,7 @@ function Header() {
     return (
         // JSX that represents the header element
 
-        <header className="header">
+        <header className="header shadow-none">
             <nav className="navbar navbar-expand-lg navbar-light bg-light" style={{ height: '80px' }}>
                 <div className="container-fluid">
                     <a className="navbar-brand" href="#">

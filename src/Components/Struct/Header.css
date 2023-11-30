@@ -10,3 +10,7 @@
 .form-check-input:focus::after { 
     background-image: linear-gradient(yellow, yellow) !important; 
 }
+
+.header {
+    box-shadow: none !important;
+}
