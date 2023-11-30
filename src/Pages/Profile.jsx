@@ -1,6 +1,6 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { MDBBtn, MDBInput, MDBModal, MDBModalBody, MDBModalContent, MDBModalDialog, MDBModalFooter, MDBModalHeader } from 'mdb-react-ui-kit';
 import React, { useEffect, useState } from 'react';
-import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
 
 const Profile = () => {
   const auth = getAuth();
@@ -28,7 +28,7 @@ const Profile = () => {
   return (
     <div className="container-fluid mt-5">
       <div className="row">
-        <div className="col-md-12">
+        <div className="col-md-13">
           <div className="bg-light p-5">
             <h1>Hello! - User</h1>
           </div>
@@ -53,10 +53,10 @@ const Profile = () => {
               <div className="row mb-4">
               <p>My Account Information</p>
                 <div className="col-md-6">
-                  <MDBInput label='Username' id='form1' type='text' />
+                  <MDBInput label='Name' id='form1' type='text' />
                 </div>
                 <div className="col-md-6">
-                  <MDBInput label='Password' id='form2' type={showPassword ? 'text' : 'password'} />
+                  <MDBInput label='Surname' id='form2' type='text' />
                 </div>
               </div>
               <div className="row mb-4">
