@@ -45,11 +45,12 @@ const HomePage = () => {
   ];
   const names = ["Computadores", "Name 2", "Name 3", "Name 4", "Name 5"];
   return (
-    <div className="container-fluid">
-      <div className="col-md-12">
+    <div className="container-fluid custom-class p-0">
+    <div className="row m-0">
+      <div className="col-md-12 p-0">
         <div className="bg-light p-5" style={{ height: "200px" }}></div>
       </div>
-      <div className="col-md-12 mt-4">
+      <div className="col-md-12 mt-4 p-0">
         <div
           className="bg-light p-5 d-flex justify-content-around align-items-center"
           style={{ height: "200px" }}
@@ -75,51 +76,51 @@ const HomePage = () => {
           ))}
         </div>
       </div>
-      <div className="col-md-12 mt-4">
+      <div className="col-md-12 mt-4 p-0">
         <div className="bg-light p-2">{"Sale of the day"}</div>
       </div>
-      <div className="col-md-12 mt-4">
+      <div className="col-md-12 mt-4 p-0">
+        <div className="bg-light p-5 "style={{ height: "200px", maxWidth: "98.5%" }}>
+        </div>
+      </div>
+      <div className="col-md-12 mt-4 p-0" >
         <div
-          className="bg-light p-5 mx-auto"
-          style={{ height: "200px", maxWidth: "98.5%" }}>
+          className="bg-light p-5 d-flex flex-column align-items-center p-0"
+          style={{ height: "690px" }}
+        >
+          <div
+            className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class"
+            style={{
+              height: "28px",
+              width: "100%",
+            }}
+          ></div>
+          <div
+            className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class"
+            style={{
+              height: "28px",
+              width: "100%",
+            }}
+          ></div>
+          <div
+            className="bg-success p-3  d-flex justify-content-around align-items-center  custom-class"
+            style={{
+              height: "50px",
+              width: "100%",
+            }}>
           </div>
-      </div>
-      <div className="col-md-12 mt-4" >
-  <div
-    className="bg-light p-5 d-flex flex-column align-items-center p-0"
-    style={{ height: "690px" }}
-  >
-    <div
-      className="bg-dark p-3 mx-auto d-flex justify-content-around align-items-center m-0 custom-class"
-      style={{
-        height: "28px",
-        width: "100%",
-      }}
-    ></div>
-    <div
-      className="bg-dark p-3 mx-auto d-flex justify-content-around align-items-center m-0 custom-class"
-      style={{
-        height: "28px",
-        width: "100%",
-      }}
-    ></div>
-    <div
-      className="bg-success p-3 mx-auto d-flex justify-content-around align-items-center m-0 custom-class"
-      style={{
-        height: "50px",
-        width: "100%",
-      }}>
-      </div>
-  </div>
-      <div className="col-md-12 mt-4">
-        <div
-          className="bg-light p-5 mx-auto"
-          style={{ height: "110px", maxWidth: "98.5%" }}>
-                      {'SPECIAL CAMPAIGNS AND OFFERS'}
+        </div>
+        <div className="col-md-12 mt-4 p-0">
+          <div
+            className="bg-light p-5 "
+            style={{ height: "110px", maxWidth: "98.5%" }}>
+            {'SPECIAL CAMPAIGNS AND OFFERS'}
           </div>
-      </div>
+        </div>
       </div>
     </div>
+  </div>
+  
   );
 };
 
