@@ -1,5 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import React, { useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import '../Pages/CSS/HomePage.css';
+
+import {
+  MDBBtn,
+  MDBInput,
+  MDBModal,
+  MDBModalBody,
+  MDBModalContent,
+  MDBModalDialog,
+  MDBModalFooter,
+  MDBModalHeader,
+} from "mdb-react-ui-kit";
+
 
 const HomePage = () => {
   const auth = getAuth();
@@ -22,18 +35,90 @@ const HomePage = () => {
     }
   };
 
+  // Replace these with your actual image paths and names
+  const images = [
+    "src/Components/Images/computadores1.png",
+    "image2.jpg",
+    "image3.jpg",
+    "image4.jpg",
+    "image5.jpg",
+  ];
+  const names = ["Computadores", "Name 2", "Name 3", "Name 4", "Name 5"];
   return (
-    <div>
-      <h1>Bem-vindo à página inicial!</h1>
-      <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, aut quibusdam esse modi praesentium veniam consequuntur sunt, inventore blanditiis laudantium voluptatum, odit ab molestiae deserunt omnis assumenda quasi voluptatem quod? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi illo officiis maxime, labore odit necessitatibus quod consectetur ipsa excepturi magni eius tenetur laboriosam ea impedit! Officiis, est. Nihil, rem temporibus! Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum amet ut iste impedit saepe. Ipsam at nostrum deserunt ullam commodi eum voluptatem repellendus minus dignissimos, excepturi facere. Laboriosam, ipsa. Architecto. Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore similique aperiam, laboriosam harum praesentium sequi vel dicta ullam doloremque iure molestiae possimus quasi deserunt accusantium nihil non tempora corrupti unde. Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio, esse veniam vitae minima tenetur laborum optio maiores eius veritatis asperiores sit corrupti. Pariatur similique expedita laudantium ea doloribus omnis corrupti. lore lore lore Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolor perferendis sequi quae dolores, voluptatum pariatur provident suscipit obcaecati sit facere minima, aperiam quam! Iure ratione eius impedit officiis, exercitationem tenetur. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas omnis perferendis voluptas dicta tempore dignissimos tempora. Officiis animi quo soluta sed! Cupiditate saepe ipsa, sit quam temporibus quo corporis omnis!  Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore beatae voluptatum, minus magnam unde sequi nostrum! Autem iusto possimus vitae architecto ad quaerat esse eveniet quo perferendis, blanditiis ullam repellendus.</h5>
-      
-
-      {user && (
-        <div>
-          {/* Exibir botão de logout quando o usuário está logado */}
-          <button onClick={handleLogout}>Logout</button>
+    <div className="container-fluid">
+      <div className="col-md-12">
+        <div className="bg-light p-5" style={{ height: "200px" }}></div>
+      </div>
+      <div className="col-md-12 mt-4">
+        <div
+          className="bg-light p-5 d-flex justify-content-around align-items-center"
+          style={{ height: "200px" }}
+        >
+          {images.map((image, i) => (
+            <div
+              key={i}
+              className="text-center d-flex flex-column align-items-center"
+            >
+              <div
+                className="circle bg-primary rounded-circle d-flex justify-content-center align-items-center"
+                style={{ width: "50px", height: "50px" }}
+              >
+                <img
+                  src={image}
+                  alt={`Circle ${i + 1}`}
+                  className="rounded-circle"
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </div>
+              <div className="mt-2">{names[i]}</div>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
+      <div className="col-md-12 mt-4">
+        <div className="bg-light p-2">{"Sale of the day"}</div>
+      </div>
+      <div className="col-md-12 mt-4">
+        <div
+          className="bg-light p-5 mx-auto"
+          style={{ height: "200px", maxWidth: "98.5%" }}>
+          </div>
+      </div>
+      <div className="col-md-12 mt-4" >
+  <div
+    className="bg-light p-5 d-flex flex-column align-items-center p-0"
+    style={{ height: "690px" }}
+  >
+    <div
+      className="bg-dark p-3 mx-auto d-flex justify-content-around align-items-center m-0 custom-class"
+      style={{
+        height: "28px",
+        width: "100%",
+      }}
+    ></div>
+    <div
+      className="bg-dark p-3 mx-auto d-flex justify-content-around align-items-center m-0 custom-class"
+      style={{
+        height: "28px",
+        width: "100%",
+      }}
+    ></div>
+    <div
+      className="bg-success p-3 mx-auto d-flex justify-content-around align-items-center m-0 custom-class"
+      style={{
+        height: "50px",
+        width: "100%",
+      }}>
+      </div>
+  </div>
+      <div className="col-md-12 mt-4">
+        <div
+          className="bg-light p-5 mx-auto"
+          style={{ height: "110px", maxWidth: "98.5%" }}>
+                      {'SPECIAL CAMPAIGNS AND OFFERS'}
+          </div>
+      </div>
+      </div>
     </div>
   );
 };

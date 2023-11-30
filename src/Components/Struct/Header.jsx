@@ -1,10 +1,8 @@
 // Importing React and react-router-dom modules
 import React from 'react';
-import logotype from '../../assets/logotype.png';
 import maguire from '../../assets/godmaguire.jpg';
+import logotype from '../../assets/logotype.png';
 import './Header.css';
-import { Link } from 'react-router-dom';
-import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
 
 
 
@@ -25,7 +23,7 @@ function Header() {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <a className="nav-link" href="/">Dashboard</a>
+                                <a className="nav-link" href="/">Homepage</a>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link" href="/team">Team</a>
@@ -38,9 +36,6 @@ function Header() {
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link" href="/register">Register</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/account">Account</a>
                             </li>
                         </ul>
                         <div className="d-flex align-items-center">

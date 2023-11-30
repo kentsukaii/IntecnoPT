@@ -28,7 +28,7 @@ const Profile = () => {
   return (
     <div className="container-fluid mt-5">
       <div className="row">
-        <div className="col-md-12">
+        <div className="col-md-13">
           <div className="bg-light p-5">
             <h1>Hello! - User</h1>
           </div>
