@@ -3,8 +3,7 @@ import React from 'react';
 import maguire from '../../assets/godmaguire.jpg';
 import logotype from '../../assets/logotype.png';
 import './Header.css';
-
-
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 // Defining the Header component as a function
 function Header() {
@@ -26,7 +25,7 @@ function Header() {
                                 <a className="nav-link" href="/">Homepage</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="/team">Team</a>
+                                <a className="nav-link" href="/card">Card</a>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link" href="/projects">Projects</a>

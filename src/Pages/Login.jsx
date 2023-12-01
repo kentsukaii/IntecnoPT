@@ -4,28 +4,31 @@ import { auth, firestore } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import PasswordReset from './PasswordReset'; 
+import { useFirebaseLogin } from "./Backend";
 
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [authing, setAuthing] = useState(false);
-  const [showPasswordReset, setShowPasswordReset] = useState(false); 
-  const navigate = useNavigate();
-  
-  const handleLogin = async () => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      setLoggedInUser(userCredential);
-      setError(null); // Clear any previous errors
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-      setLoggedInUser(null);
-    }
-  };
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    setError,
+    loggedInUser,
+    setLoggedInUser,
+    authing,
+    setAuthing,
+    handleLogin,
+    handleLogingoogle,
+    handleLoginFacebook,
+    handleLogout,
+  } = useFirebaseLogin();
 
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const navigate = useNavigate();
+
+<<<<<<< HEAD
   const handleLogingoogle = async () => {
     setAuthing(true);
 
@@ -94,6 +97,8 @@ const Login = () => {
       console.error("Error during logout:", error);
     }
   };
+=======
+>>>>>>> 08a0c758956de02478c38140053aed59503f1d07
   const handlePasswordReset = () => {
     setShowPasswordReset(true);
   };
@@ -101,6 +106,7 @@ const Login = () => {
   const handlePasswordResetComplete = () => {
     setShowPasswordReset(false);
   };
+
   return (
     <div>
       {!showPasswordReset && (

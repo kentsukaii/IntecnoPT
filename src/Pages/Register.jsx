@@ -1,11 +1,5 @@
 import React, { useState } from "react";
 import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {
   MDBInput,
   MDBBtn,
   MDBModal,
@@ -16,121 +10,25 @@ import {
   MDBModalFooter,
   MDBCheckbox,
 } from "mdb-react-ui-kit";
-import { auth, firestore } from "../firebase";
+import { useFirebaseRegister } from "./Backend";
+
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [receiveNews, setReceiveNews] = useState(false);
-  const [agreeTerms, setAgreeTerms] = useState(false);
-  
-  const isValidEmailFormat = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const checkDuplicateEmail = async (email) => {
-    const usersCollection = collection(firestore, "Users");
-    const q = query(usersCollection, where("email", "==", email));
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty;
-  };
-
-  const handleGoogleLogin = async () => {
-  };
-
-  const handleFacebookLogin = async () => {
-  };
-
-  const handleLogin = async () => {
-  };
-
-
-  const handleRegister = async () => {
-    try {
-      setLoading(true);
-
-
-      const passwordRequirements = [
-        {
-          test: (password) => password.length >= 12,
-          message: "Password must be at least 12 characters long",
-        },
-        {
-          test: (password) => /[A-Z]/.test(password),
-          message: "Password must contain at least one uppercase letter",
-        },
-        {
-          test: (password) => /[a-z]/.test(password),
-          message: "Password must contain at least one lowercase letter",
-        },
-        {
-          test: (password) => /[0-9]/.test(password),
-          message: "Password must contain at least one number",
-        },
-        {
-          test: (password) => /[^A-Za-z0-9]/.test(password),
-          message: "Password must contain at least one special character",
-        },
-      ];
-
-      for (let requirement of passwordRequirements) {
-        if (!requirement.test(password)) {
-          setError(requirement.message);
-          return;
-        }
-      }
-
-      if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
-      }
-
-      if (!isValidEmailFormat(email)) {
-        setError("Invalid email format");
-        return;
-      }
-
-      const emailExistsInDatabase = await checkDuplicateEmail(email);
-      if (emailExistsInDatabase) {
-        setError("Email already exists");
-        return;
-      }
-
-      const authUser = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      await sendEmailVerification(authUser.user);
-      
-      
-      const usersCollection = collection(firestore, "Users");
-      const userData = {
-        email: authUser.user.email,
-        Address: "",
-        Name: "",
-        Phone_number: "",
-        
-      };
-      await addDoc(usersCollection, userData);
-
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setError(null);
-    } catch (error) {
-      setError(
-        error instanceof Error ? error.message : "An unexpected error occurred"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    error,
+    setError,
+    loading,
+    setLoading,
+    handleGoogleRegister,
+    handleFacebookRegister,
+    handleRegister,
+  } = useFirebaseRegister();
 
   return (
     <div>
@@ -141,7 +39,7 @@ const Register = () => {
               <h2>Registration is easy and free!</h2>
               <div className="col-md-6">
                 <p></p>
-              <MDBInput label="E-Mail" id="form1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <MDBInput label="E-Mail" id="form1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <p></p>
               <div className="col-md-6">
