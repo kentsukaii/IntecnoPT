@@ -77,6 +77,7 @@ const Login = () => {
         Address: "",
         Name: "",
         Phone_number: "",
+        displayName: authUser.displayName,
       };
       await addDoc(usersCollection, userData);
     }

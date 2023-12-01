@@ -17,7 +17,7 @@ const getAllCollections = async () => {
     const firestore = getFirestore(app);
 
     // Get a list of all collections
-    const querySnapshot = await getDocs(collection(firestore, 'users'));
+    const querySnapshot = await getDocs(collection(firestore, 'Users'));
 
 
     const collections = querySnapshot.docs.map((doc) => doc.id);

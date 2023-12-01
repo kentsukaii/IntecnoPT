@@ -24,7 +24,9 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [receiveNews, setReceiveNews] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  
   const isValidEmailFormat = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -105,12 +107,15 @@ const Register = () => {
       );
 
       await sendEmailVerification(authUser.user);
+      
+      
       const usersCollection = collection(firestore, "Users");
       const userData = {
         email: authUser.user.email,
         Address: "",
         Name: "",
         Phone_number: "",
+        
       };
       await addDoc(usersCollection, userData);
 
@@ -136,15 +141,15 @@ const Register = () => {
               <h2>Registration is easy and free!</h2>
               <div className="col-md-6">
                 <p></p>
-                <MDBInput label="E-Mail" id="form1" type="text" />
+                <MDBInput label="E-Mail" id="form1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <p></p>
               <div className="col-md-6">
-                <MDBInput label="Password" id="form2" type="password" />
+              <MDBInput label="Password" id="form2" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
               <p></p>
               <div className="col-md-6">
-                <MDBInput label="Password Confirm" id="form3" type="password" />
+              <MDBInput label="Password Confirm" id="form3" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
               </div>
               <p></p>
               <p>The password must meet 3 of the following requirements:</p>
