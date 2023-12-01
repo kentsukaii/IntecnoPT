@@ -54,10 +54,6 @@ const Profile = () => {
   
     return () => unsubscribe();
   }, [auth]);
-  
-  
-
-  
 
   const handleSave = async () => {
     console.log('Saving user data...');
