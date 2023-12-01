@@ -141,7 +141,7 @@ const Register = () => {
               <h2>Registration is easy and free!</h2>
               <div className="col-md-6">
                 <p></p>
-                <MDBInput label="E-Mail" id="form1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <MDBInput label="E-Mail" id="form1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <p></p>
               <div className="col-md-6">
