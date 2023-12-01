@@ -1,21 +1,59 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { MDBBtn, MDBInput, MDBModal, MDBModalBody, MDBModalContent, MDBModalDialog, MDBModalFooter, MDBModalHeader } from 'mdb-react-ui-kit';
 import React, { useEffect, useState } from 'react';
+import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 const Profile = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      if (user) {
+        const userDocRef = doc(db, 'users', user.uid);
+        try {
+          const docSnap = await getDoc(userDocRef);
+  
+          if (docSnap.exists()) {
+            // Update the state with the user data from Firestore
+            setUser({
+              ...user,
+              additionalData: docSnap.data(),
+            });
+  
+            // Update the state variables for the input fields
+            const nameParts = user.displayName.split(' ');
+            setFirstName(nameParts[0] || '');
+            setLastName((nameParts.slice(1).join(' ') || '').trim());
+            setEmail(docSnap.data().Email || '');
+            setDateOfBirth(docSnap.data().DateOfBirth || '');
+          } else {
+            // If the document doesn't exist, set empty values
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setDateOfBirth('');
+          }
+        } catch (error) {
+          console.error('Error getting user document:', error);
+          // Handle errors, e.g., display an error message to the user
+        }
+      }
     });
-
+  
     // Cleanup subscription when the component is unmounted
     return () => unsubscribe();
   }, [auth]);
+  
+  
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -28,9 +66,9 @@ const Profile = () => {
   return (
     <div className="container-fluid mt-5">
       <div className="row">
-        <div className="col-md-13">
+        <div className="col-md-12">
           <div className="bg-light p-5">
-            <h1>Hello! - User</h1>
+          <h1>Hello! - {user ? user.displayName : 'User'}</h1>
           </div>
         </div>
         <div className="col-md-4 mt-5">
@@ -53,18 +91,19 @@ const Profile = () => {
               <div className="row mb-4">
               <p>My Account Information</p>
                 <div className="col-md-6">
-                  <MDBInput label='Name' id='form1' type='text' />
+                <MDBInput label='First Name'id='form1'type='text'value={user && user.displayName ? user.displayName.split(' ')[0] : ''}/>
+
                 </div>
                 <div className="col-md-6">
-                  <MDBInput label='Surname' id='form2' type='text' />
+                <MDBInput label='First Name'id='form1'type='text'value={user && user.displayName ? user.displayName.split(' ')[1] : ''}/>
                 </div>
               </div>
               <div className="row mb-4">
                 <div className="col-md-6">
-                  <MDBInput label='Email' id='form3' type='email' />
+                <MDBInput label='Email' id='form3'type='email'value={user ? user.email : ''}/>
                 </div>
                 <div className="col-md-6">
-                  <MDBInput label='Date of Birth' id='form4' type='date' />
+                <MDBInput label='Date of Birth' id='form4' type='date' value={user ? user.dateOfBirth : ''}/>
                 </div>
               </div>
               <MDBBtn className='mt-3'>Save</MDBBtn>
