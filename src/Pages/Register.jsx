@@ -32,12 +32,24 @@ const Register = () => {
 
   return (
     <div>
+<<<<<<< HEAD
     <div className="row">
       <div className="col-md-6 mt-5">
         <div className="bg-light p-5">
           <div className="container">
             <h2>Registration is easy and free!</h2>
             <div className="col-md-6">
+=======
+      <div className="row">
+        <div className="col-md-6 mt-5">
+          <div className="bg-light p-5">
+            <div className="container">
+              <h2>Registration is easy and free!</h2>
+              <div className="col-md-6">
+                <p></p>
+              <MDBInput label="E-Mail" id="form1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>
+>>>>>>> ce517d9966974b25dab5d74884c054dcd5d70c88
               <p></p>
               <MDBInput label="E-Mail" id="form1" type="text" />
             </div>
