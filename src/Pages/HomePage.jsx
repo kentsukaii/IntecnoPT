@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+// HomePage.jsx
+import React from "react";
 import ProductCard from "../Components/Cards/ProductCard";
 import "../Pages/CSS/HomePage.css";
+import { useFirebaseAuth } from "./Backend";
 import {
   MDBBtn,
   MDBInput,
@@ -17,25 +18,7 @@ import {
 } from "mdb-react-ui-kit";
 
 const HomePage = () => {
-  const auth = getAuth();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    // Limpar a assinatura quando o componente é desmontado
-    return () => unsubscribe();
-  }, [auth]);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Erro durante o logout:", error);
-    }
-  };
+  const { user, handleLogout } = useFirebaseAuth();
 
   // Replace these with your actual image paths and names
   const carousel_images = [

@@ -3,8 +3,7 @@ import React from 'react';
 import maguire from '../../assets/godmaguire.jpg';
 import logotype from '../../assets/logotype.png';
 import './Header.css';
-
-
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 // Defining the Header component as a function
 function Header() {
