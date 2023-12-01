@@ -45,81 +45,79 @@ const HomePage = () => {
   ];
   const names = ["Computadores", "Name 2", "Name 3", "Name 4", "Name 5"];
   return (
-    <div className="container-fluid custom-class p-0">
-    <div className="row m-0">
-      <div className="col-md-12 p-0">
-        <div className="bg-light p-5" style={{ height: "200px" }}></div>
-      </div>
-      <div className="col-md-12 mt-4 p-0">
-        <div
-          className="bg-light p-5 d-flex justify-content-around align-items-center"
-          style={{ height: "200px" }}
-        >
-          {images.map((image, i) => (
+<div className="container-fluid custom-class p-0">
+  <div className="row m-0">
+    <div className="col-md-12 p-0">
+      <div className="bg-light p-5" style={{ height: "200px" }}></div>
+    </div>
+    <div className="col-md-12 mt-4 p-0">
+      <div
+        className="bg-light p-5 d-flex justify-content-around align-items-center"
+        style={{ height: "200px" }}
+      >
+        {images.map((image, i) => (
+          <div
+            key={i}
+            className="text-center d-flex flex-column align-items-center"
+          >
             <div
-              key={i}
-              className="text-center d-flex flex-column align-items-center"
+              className="circle bg-primary rounded-circle d-flex justify-content-center align-items-center"
+              style={{ width: "50px", height: "50px" }}
             >
-              <div
-                className="circle bg-primary rounded-circle d-flex justify-content-center align-items-center"
-                style={{ width: "50px", height: "50px" }}
-              >
-                <img
-                  src={image}
-                  alt={`Circle ${i + 1}`}
-                  className="rounded-circle"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-              <div className="mt-2">{names[i]}</div>
+              <img
+                src={image}
+                alt={`Circle ${i + 1}`}
+                className="rounded-circle"
+                style={{ width: "100%", height: "100%" }}
+              />
             </div>
-          ))}
-        </div>
+            <div className="mt-2">{names[i]}</div>
+          </div>
+        ))}
       </div>
-      <div className="col-md-12 mt-4 p-0">
-        <div className="bg-light p-2">{"Sale of the day"}</div>
-      </div>
-      <div className="col-md-12 mt-4 p-0">
-        <div className="bg-light p-5 "style={{ height: "200px", maxWidth: "98.5%" }}>
-        </div>
-      </div>
-      <div className="col-md-12 mt-4 p-0" >
+    </div>
+    <div className="col-md-12 mt-4 p-0 ">
+      <div className="bg-light p-2">{"Sale of the day"}</div>
+    </div>
+    <div className="col-md-12 mt-4 p-0 ">
+      <div className="bg-light p-5 mx-auto"style={{ height: "200px", maxWidth: "98.5%" }}>
+    </div>
+    </div>
+    <div className="col-md-12 mt-4 p-0 " >
+      <div
+        className="bg-light p-0 d-flex flex-column align-items-center "
+        style={{ height: "690px" }}
+      >
         <div
-          className="bg-light p-5 d-flex flex-column align-items-center p-0"
-          style={{ height: "690px" }}
-        >
-          <div
-            className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class"
-            style={{
-              height: "28px",
-              width: "100%",
-            }}
-          ></div>
-          <div
-            className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class"
-            style={{
-              height: "28px",
-              width: "100%",
-            }}
-          ></div>
-          <div
-            className="bg-success p-3  d-flex justify-content-around align-items-center  custom-class"
-            style={{
-              height: "50px",
-              width: "100%",
-            }}>
-          </div>
+          className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class w-100"
+          style={{
+            height: "28px",
+          }}
+        ></div>
+        <div
+          className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class w-100"
+          style={{
+            height: "28px",
+          }}
+        ></div>
+        <div
+          className="bg-success p-3  d-flex justify-content-around align-items-center  custom-class w-100"
+          style={{
+            height: "50px",
+          }}>
         </div>
-        <div className="col-md-12 mt-4 p-0">
-          <div
-            className="bg-light p-5 "
-            style={{ height: "110px", maxWidth: "98.5%" }}>
-            {'SPECIAL CAMPAIGNS AND OFFERS'}
-          </div>
+      </div>
+      <div className="col-md-12 mt-4 p-0">
+        <div
+          className="bg-light p-5 mx-auto"
+          style={{ height: "110px", maxWidth: "98.5%" }}>
+          {'SPECIAL CAMPAIGNS AND OFFERS'}
         </div>
       </div>
     </div>
   </div>
+</div>
+
   
   );
 };
