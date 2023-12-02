@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
 import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
-import { collection, doc, getDoc, updateDoc, setDoc} from 'firebase/firestore';
-import {  firestore } from '../firebase';
+import { collection, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { useProfileFirebase } from './Backend'; //Import profile
+import { firestore } from '../firebase';
+import { auth } from '../firebase';
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -13,40 +16,58 @@ const Profile = () => {
   const [email, setEmail] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const usersCollection = collection(firestore, 'Users');
+  const { loadProfileInfo } = useProfileFirebase();
+  
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-
       if (user) {
-        
-        const userDocRef = doc(usersCollection, authUser.user.uid);
-        try {
-          await setDoc(userDocRef, userData);
-
+        const profileInfo = await loadProfileInfo();
+        if (profileInfo) {
+          const userDocRef = doc(usersCollection, user.uid);
+          try {
+            await setDoc(userDocRef, profileInfo);
+            const docSnap = await getDoc(userDocRef);
+            if (docSnap.exists()) {
+              const additionalData = docSnap.data();
+              console.log('User data from Firestore:', additionalData);
   
-          if (docSnap.exists()) {
-            const additionalData = docSnap.data();
-            console.log('User data from Firestore:', additionalData);
+              setFirstName(additionalData.Name.split(' ')[0] || '');
+              setLastName((additionalData.Name.split(' ').slice(1).join(' ') || '').trim());
+              setEmail(additionalData.Email || '');
+              setDateOfBirth(additionalData.DateOfBirth || '');
   
-            setFirstName(additionalData.Name.split(' ')[0] || '');
-            setLastName((additionalData.Name.split(' ').slice(1).join(' ') || '').trim());
-            setEmail(additionalData.Email || '');
-            setDateOfBirth(additionalData.DateOfBirth || '');
-  
-            setUser({
-              ...user,
-              additionalData: additionalData,
-            });
-          } else {
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setDateOfBirth('');
-            setUser(user);
+              setUser({
+                ...user,
+                additionalData: additionalData,
+              });
+            } else {
+              setFirstName('');
+              setLastName('');
+              setEmail('');
+              setDateOfBirth('');
+              setUser(user);
+            }
+          } catch (error) {
+            console.error('Error getting user document:', error);
           }
-        } catch (error) {
-          console.error('Error getting user document:', error);
-        }
   
+          setFirstName(profileInfo.firstName);
+          setLastName(profileInfo.lastName);
+          setEmail(profileInfo.email);
+          setDateOfBirth(profileInfo.dateOfBirth);
+  
+          setUser({
+            ...user,
+            additionalData: profileInfo,
+          });
+        } else {
+          setFirstName('');
+          setLastName('');
+          setEmail('');
+          setDateOfBirth('');
+          setUser(user);
+        }
       } else {
         setUser(null);
       }
@@ -54,6 +75,8 @@ const Profile = () => {
   
     return () => unsubscribe();
   }, [auth]);
+  
+
 
   const handleSave = async () => {
     console.log('Saving user data...');
@@ -63,13 +86,13 @@ const Profile = () => {
         displayName: `${firstName} ${lastName}`,
         email: email,
       });
-  
+
       console.log('Firebase Auth profile updated successfully');
-  
+
       // Update the user's document in Firestore
       const userDocRef = doc(firestore, 'Users', auth.currentUser.uid);
       const userDocSnap = await getDoc(userDocRef);
-  
+
       if (userDocSnap.exists()) {
         // If the document exists, update it
         await updateDoc(userDocRef, {
@@ -77,7 +100,7 @@ const Profile = () => {
           Email: email,
           DateOfBirth: dateOfBirth,
         });
-  
+
         console.log('Firestore document updated successfully');
       } else {
         // If the document does not exist, create it
@@ -86,16 +109,16 @@ const Profile = () => {
           Email: email,
           DateOfBirth: dateOfBirth,
         });
-  
+
         console.log('Firestore document created successfully');
       }
-  
+
       console.log('User profile updated successfully');
     } catch (error) {
       console.error('Error updating user profile:', error);
     }
   };
-    
+
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -139,7 +162,6 @@ const Profile = () => {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
-
                 </div>
                 <div className="col-md-6">
                   <MDBInput
@@ -163,8 +185,15 @@ const Profile = () => {
 
                 </div>
                 <div className="col-md-6">
-                  <MDBInput label='Date of Birth' id='form4' type='date' value={user ? user.dateOfBirth : ''} />
+                  <MDBInput
+                    label='Date of Birth'
+                    id='form4'
+                    type='date'
+                    value={dateOfBirth}
+                    onChange={(e) => setDateOfBirth(e.target.value)}
+                  />
                 </div>
+
               </div>
               <MDBBtn className='mt-3' onClick={handleSave}>Save</MDBBtn>
             </div>

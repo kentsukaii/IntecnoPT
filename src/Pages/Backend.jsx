@@ -16,6 +16,14 @@ import {
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { auth, firestore } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+
+
+
+
+
+
+
 
 
 //
@@ -254,6 +262,7 @@ export const useFirebaseLogin = () => {
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const navigate = useNavigate();
   const [resetEmail, setResetEmail] = useState("");
+  const { loadProfileInfo } = useProfileFirebase();
 
 
   const handleLogin = async () => {
@@ -261,21 +270,29 @@ export const useFirebaseLogin = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
+  
+      // Load profile info
+      const profileInfo = await loadProfileInfo();
+      // Do something with profileInfo...
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
       setLoggedInUser(null);
     }
   };
-
+  
   const handleLogingoogle = async () => {
     setAuthing(true);
-
+  
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       const authUser = result.user;
-
+  
       await handleAuthUser(authUser);
-
+  
+      // Load profile info
+      const profileInfo = await loadProfileInfo();
+      // Do something with profileInfo...
+  
       // Redirect after a successful login
       navigate('/');
     } catch (error) {
@@ -283,15 +300,20 @@ export const useFirebaseLogin = () => {
       setAuthing(false);
     }
   };
+  
   const handleLoginFacebook = async () => {
     setAuthing(true);
-
+  
     try {
       const result = await signInWithPopup(auth, new FacebookAuthProvider());
       const authUser = result.user;
-
+  
       await handleAuthUser(authUser);
-
+  
+      // Load profile info
+      const profileInfo = await loadProfileInfo();
+      // Do something with profileInfo...
+  
       // Redirect after a successful login
       navigate('/');
     } catch (error) {
@@ -354,11 +376,6 @@ export const useFirebaseLogin = () => {
     setShowPasswordReset(false);
   };
 
-
-
-  
-
-
   return {
     email,
     setEmail,
@@ -378,5 +395,46 @@ export const useFirebaseLogin = () => {
     handlePasswordReset,
     handlePasswordResetComplete,
     handleResetPassword,
+  };
+};
+
+
+export const useProfileFirebase = () => {
+  const loadProfileInfo = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(firestore, 'Users', user.uid);
+      const docSnap = await getDoc(userDocRef);
+  
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        const fullName = userData.displayName;
+        const email = userData.email;
+        const dateOfBirth = userData.dateofbirth || '';
+  
+        let firstName = '';
+        let lastName = '';
+  
+        if (fullName.includes(' ')) {
+          const nameParts = fullName.split(' ');
+          firstName = nameParts[0];
+          lastName = nameParts.slice(1).join(' ');
+        } else {
+          firstName = fullName;
+        }
+  
+        return {
+          firstName,
+          lastName,
+          email,
+          dateOfBirth,
+        };
+      }
+    }
+    return null;
+  };
+
+  return {
+    loadProfileInfo,
   };
 };
