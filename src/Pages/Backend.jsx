@@ -63,6 +63,10 @@ export const useFirebaseRegister = () => { // MAIN
   const [loading, setLoading] = useState(false);
   const [authing, setAuthing] = useState(false);
   const navigate = useNavigate();
+  const [lowercase, setLowercase] = useState(false);
+  const [uppercase, setUppercase] = useState(false);
+  const [specialChar, setSpecialChar] = useState(false);
+  const [number, setNumber] = useState(false);
 
   const isValidEmailFormat = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -76,6 +80,18 @@ export const useFirebaseRegister = () => { // MAIN
     return !querySnapshot.empty;
 
   };
+
+  const handlePasswordChange = (e) => {
+    const password = e.target.value;
+    setPassword(password);
+  
+    // Check password requirements
+    setLowercase(/[a-z]/.test(password));
+    setUppercase(/[A-Z]/.test(password));
+    setSpecialChar(/[^A-Za-z0-9]/.test(password));
+    setNumber(/[0-9]/.test(password));
+  };
+  
 
   const handleRegister = async () => {
     try {
@@ -232,6 +248,11 @@ export const useFirebaseRegister = () => { // MAIN
     handleGoogleRegister,
     handleFacebookRegister,
     handleRegister,
+    handlePasswordChange,
+    lowercase,
+    uppercase,
+    specialChar,
+    number,
   };
 };
 
@@ -356,7 +377,7 @@ export const useFirebaseLogin = () => {
 
 
 
-  
+
 
 
   return {

@@ -25,6 +25,11 @@ const Register = () => {
     handleGoogleRegister,
     handleFacebookRegister,
     handleRegister,
+    handlePasswordChange,
+    lowercase,
+    uppercase,
+    specialChar,
+    number,
   } = useFirebaseRegister();
 
   return (
@@ -40,18 +45,18 @@ const Register = () => {
               </div>
               <p></p>
               <div className="col-md-6">
-              <MDBInput label="Password" id="form2" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <MDBInput label="Password" id="form2" type="password" value={password} onChange={handlePasswordChange} />
               </div>
               <p></p>
               <div className="col-md-6">
-              <MDBInput label="Password Confirm" id="form3" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                <MDBInput label="Password Confirm" id="form3" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
               </div>
               <p></p>
               <p>The password must meet 3 of the following requirements:</p>
-              <p>Lowercase character</p>
-              <p>Capital character</p>
-              <p>Special character</p>
-              <p>Number</p>
+              <p style={{ color: lowercase ? 'green' : 'red' }}>Lowercase character</p>
+              <p style={{ color: uppercase ? 'green' : 'red' }}>Capital character</p>
+              <p style={{ color: specialChar ? 'green' : 'red' }}>Special character</p>
+              <p style={{ color: number ? 'green' : 'red' }}>Number</p>
               <MDBCheckbox label="I would like to receive personalized news and commercial communications from IntecnoPT via email and other means." />
               <p></p>
               <MDBCheckbox label="I agree to the Terms and Conditions" />
