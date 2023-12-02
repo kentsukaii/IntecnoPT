@@ -2,11 +2,19 @@
 import React from 'react';
 import maguire from '../../assets/godmaguire.jpg';
 import logotype from '../../assets/logotype.png';
+import { BrowserRouter } from 'react-router-dom';
 import './Header.css';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { useFirebaseLogin } from "../../Pages/Backend";
+
 
 // Defining the Header component as a function
 function Header() {
+
+    const {
+        handleLogout,
+      } = useFirebaseLogin();
+
     return (
         // JSX that represents the header element
 
@@ -61,7 +69,7 @@ function Header() {
                                     <li><a className="dropdown-item" href="/settings">Settings</a></li>
                                     <li><a className="dropdown-item" href="/notifications">Notifications</a></li>
                                     <li><hr className="dropdown-divider" /></li>
-                                    <li><a className="dropdown-item" href="/logout">Logout</a></li>
+                                    <li><a className="dropdown-item" href="/logout" onClick={handleLogout}>Logout</a></li>
                                 </ul>
                             </div>
                         </div>

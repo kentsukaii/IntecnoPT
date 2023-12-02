@@ -27,10 +27,11 @@ function App() {
   return (
     // JSX que representa a estrutura do aplicativo
     <div className="App">
-      {/* Renderizando o componente Header no topo */}
-      <Header />
+
       {/* Configurando as rotas com o BrowserRouter */}
       <Router>
+        {/* Renderizando o componente Header no topo */}
+        <Header />
         <Routes>
           {/* Definindo as rotas para os diferentes componentes */}
           <Route path="/" element={<HomePage className="home-page" />} />

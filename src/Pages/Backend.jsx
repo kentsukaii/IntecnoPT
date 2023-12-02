@@ -13,10 +13,15 @@ import {
   updateProfile,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
-import { auth, firestore } from "../firebase";
+import { collection, addDoc, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { auth, firestore } from "../firebase"; // import firestore from your firebase file
 import { useNavigate } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
+import { setDoc } from "firebase/firestore"; 
+
+
+
+
+
 
 
 
@@ -161,13 +166,14 @@ export const useFirebaseRegister = () => { // MAIN
       setConfirmPassword("");
       setError(null);
     } catch (error) {
+      console.error('Error registering user:', error.message);
       setError(
         error instanceof Error ? error.message : "An unexpected error occurred"
       );
     } finally {
       setLoading(false);
     }
-  };
+  }; //dwdwdwd
 
   const handleGoogleRegister = async () => { // HANDLE GOOGLE REGISTER
     setAuthing(true);
@@ -262,7 +268,7 @@ export const useFirebaseLogin = () => {
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const navigate = useNavigate();
   const [resetEmail, setResetEmail] = useState("");
-  const { loadProfileInfo } = useProfileFirebase();
+
   const [userProfile, setUserProfile] = useState(null);
 
 
@@ -272,10 +278,6 @@ export const useFirebaseLogin = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
-  
-      // Load profile info
-      const profileInfo = await loadProfileInfo();
-      setUserProfile(profileInfo); // Assuming setUserProfile is a state setter function for user's profile
 
       // Do something with profileInfo...
     } catch (error) {
@@ -292,10 +294,6 @@ export const useFirebaseLogin = () => {
       const authUser = result.user;
   
       await handleAuthUser(authUser);
-  
-      // Load profile info
-      const profileInfo = await loadProfileInfo();
-      setUserProfile(profileInfo);
       
       // Do something with profileInfo...
   
@@ -315,11 +313,6 @@ export const useFirebaseLogin = () => {
       const authUser = result.user;
   
       await handleAuthUser(authUser);
-  
-      // Load profile info
-      const profileInfo = await loadProfileInfo();
-      setUserProfile(profileInfo); // Assuming setUserProfile is a state setter function for user's profile
-      // Do something with profileInfo...
   
       // Redirect after a successful login
       navigate('/');
@@ -406,42 +399,52 @@ export const useFirebaseLogin = () => {
 };
 
 
-export const useProfileFirebase = () => {
-  const loadProfileInfo = async () => {
-    const user = auth.currentUser;
-    if (user) {
-      const userDocRef = doc(firestore, 'Users', user.uid);
-      const docSnap = await getDoc(userDocRef);
-  
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        const fullName = userData.displayName;
-        const email = userData.email;
-        const dateOfBirth = userData.dateofbirth || '';
-  
-        let firstName = '';
-        let lastName = '';
-  
-        if (fullName.includes(' ')) {
-          const nameParts = fullName.split(' ');
-          firstName = nameParts[0];
-          lastName = nameParts.slice(1).join(' ');
-        } else {
-          firstName = fullName;
-        }
-  
-        return {
-          firstName,
-          lastName,
-          email,
-          dateOfBirth,
-        };
-      }
-    }
-    return null;
-  };
+const usersCollection = collection(firestore, 'Users'); // use firestore to create the usersCollection
+
+export const getUserData = async () => {
+  const user = auth.currentUser;
+
+  if (!user) {
+    throw new Error('No user is currently signed in');
+  }
+
+  console.log('Current user ID:', user.uid);  // Log the user ID
+
+  // Get the user document from Firestore
+  const userDocRef = doc(usersCollection, user.uid);
+  let userDoc = await getDoc(userDocRef);
+
+  if (!userDoc.exists()) {
+    // The document does not exist, create it
+    await setDoc(userDocRef, {
+      displayName: user.displayName,
+      email: user.email,
+      // Add other fields as needed
+    });
+
+    // Fetch the document again
+    userDoc = await getDoc(userDocRef);
+  }
+
+  console.log('User document data:', userDoc.data());  // Log the document data
+
+  const userData = userDoc.data();
+
+  // Split the displayName into firstName and lastName
+  let firstName = userData.displayName;
+  let lastName = '';
+
+  const nameParts = userData.displayName.split(' ');
+  if (nameParts.length > 1) {
+    firstName = nameParts[0];
+    lastName = nameParts.slice(1).join(' ');
+  }
 
   return {
-    loadProfileInfo,
+    email: user.email,
+    firstName,
+    lastName,
+    dateOfBirth: userData.dateofbirth, // Add this line
+    // Add other fields as needed
   };
 };
