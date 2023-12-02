@@ -44,7 +44,7 @@ const Login = () => {
               <button onClick={() => handleLoginFacebook()} disabled={authing}>
                 Login with Facebook
               </button>
-              <button onClick={handlePasswordReset}>Forgot Password?</button>
+              <button>Forgot Password?</button>
               {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
           )}
