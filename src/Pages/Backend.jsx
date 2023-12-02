@@ -67,6 +67,8 @@ export const useFirebaseRegister = () => { // MAIN
   const [uppercase, setUppercase] = useState(false);
   const [specialChar, setSpecialChar] = useState(false);
   const [number, setNumber] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [receiveNews, setReceiveNews] = useState(false);
 
   const isValidEmailFormat = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -91,16 +93,30 @@ export const useFirebaseRegister = () => { // MAIN
       setUppercase(/[A-Z]/.test(password));
       setSpecialChar(/[^A-Za-z0-9]/.test(password));
       setNumber(/[0-9]/.test(password));
+    } else {
+      // Reset colors to default if there is no input
+      setLowercase(false);
+      setUppercase(false);
+      setSpecialChar(false);
+      setNumber(false);
     }
   };
   
   
   
+  
 
   const handleRegister = async () => {
+
+    if (!termsAccepted) {
+      setError("You must agree to the Terms and Conditions");
+      return;
+    }
+    
     try {
       setLoading(true);
 
+      
 
       const passwordRequirements = [
         {
@@ -257,6 +273,10 @@ export const useFirebaseRegister = () => { // MAIN
     uppercase,
     specialChar,
     number,
+    termsAccepted,
+    setTermsAccepted,
+    receiveNews, 
+    setReceiveNews,
   };
 };
 
@@ -403,5 +423,9 @@ export const useFirebaseLogin = () => {
     handlePasswordReset,
     handlePasswordResetComplete,
     handleResetPassword,
+    showPasswordReset,
+    setShowPasswordReset,
+    handlePasswordReset,
+    
   };
 };

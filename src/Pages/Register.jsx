@@ -30,6 +30,11 @@ const Register = () => {
     uppercase,
     specialChar,
     number,
+    termsAccepted,
+    setTermsAccepted,
+    receiveNews, 
+    setReceiveNews,
+    
   } = useFirebaseRegister();
 
   return (
@@ -45,7 +50,7 @@ const Register = () => {
               </div>
               <p></p>
               <div className="col-md-6">
-                <MDBInput label="Password" id="form2" type="password" value={password} onChange={handlePasswordChange} />
+              <MDBInput label="Password" id="form2" type="password" value={password} onChange={(e) => { setPassword(e.target.value); handlePasswordChange(e); }} />
               </div>
               <p></p>
               <div className="col-md-6">
@@ -57,9 +62,9 @@ const Register = () => {
               <p style={{ color: uppercase ? 'green' : 'red' }}>Capital character</p>
               <p style={{ color: specialChar ? 'green' : 'red' }}>Special character</p>
               <p style={{ color: number ? 'green' : 'red' }}>Number</p>
-              <MDBCheckbox label="I would like to receive personalized news and commercial communications from IntecnoPT via email and other means." />
+              <MDBCheckbox label="I would like to receive personalized news and commercial communications from IntecnoPT via email and other means." checked={receiveNews} onChange={(e) => setReceiveNews(e.target.checked)} />
               <p></p>
-              <MDBCheckbox label="I agree to the Terms and Conditions" />
+              <MDBCheckbox label="I agree to the Terms and Conditions" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} />
               <p></p>
               <MDBBtn onClick={handleRegister}>Register</MDBBtn>
               {error && <p style={{ color: 'red' }}>{error}</p>}

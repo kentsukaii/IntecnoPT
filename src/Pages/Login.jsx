@@ -16,13 +16,12 @@ const Login = () => {
     handleLoginFacebook,
     handleLogout,
     handlePasswordResetComplete,
+    showPasswordReset,
+    handlePasswordReset,
   } = useFirebaseLogin();
 
-  const [showPasswordReset, setShowPasswordReset] = useState(false);
 
-  const handlePasswordReset = () => {
-    setShowPasswordReset(true);
-  };
+  
 
   return (
     <div>
