@@ -18,6 +18,12 @@
 }
 
 
+.search-box::placeholder {
+    color: #bababa; /* Replace #yourColor with the color you want */
+  }
+
+
+
 .no-focus-outline .form-control:focus {
     border-color: rgb(216, 216, 216) !important;
     box-shadow: none !important;

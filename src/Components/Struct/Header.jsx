@@ -39,12 +39,12 @@ function Header() {
             >
               <div className="active-pink-3 active-pink-4 mb-4 position-relative no-focus-outline">
                 <input
-                  className="form-control pl-5"
+                  className="form-control pl-5 search-box"
                   type="text"
                   placeholder="Search"
                   aria-label="Search"
                   style={{
-                    backgroundColor: "#E0E0E0",
+                    backgroundColor: "#f6f6f6",
                     width: "600px",
                     height: "50px",
                   }}
@@ -52,7 +52,7 @@ function Header() {
                 <MDBIcon
                   icon="search"
                   className="position-absolute"
-                  style={{ left: "15px", top: "17px" }}
+                  style={{ left: "15px", top: "17px", color: "#bababa" }}
                 />
               </div>
             </MDBCol>
