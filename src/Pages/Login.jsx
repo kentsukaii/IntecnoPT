@@ -20,13 +20,6 @@ const Login = () => {
 
   const [showPasswordReset, setShowPasswordReset] = useState(false);
 
-<<<<<<< HEAD
-=======
-  const handlePasswordReset = () => {
-    setShowPasswordReset(true);
-  };
-
->>>>>>> c42110f6482c3c548d46c529852932ccaf4b9622
   return (
     <div>
       {!showPasswordReset && (
