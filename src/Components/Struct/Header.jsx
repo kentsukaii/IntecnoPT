@@ -104,7 +104,7 @@ function Header() {
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="/settings">
+                    <a className="dropdown-item" href="/login">
                       Settings
                     </a>
                   </li>

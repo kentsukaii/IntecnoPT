@@ -3,7 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AboutPage from './Pages/AboutPage';
 import HomePage from './Pages/HomePage';
 import Login from './Pages/Login';
-import Profile from './Pages/Profile';
+import Profile from './Pages/Profile.jsx';
 import Register from './Pages/Register';
 import TemplatePage from './Pages/TemplatePage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
