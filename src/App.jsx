@@ -5,6 +5,7 @@ import HomePage from './Pages/HomePage';
 import Login from './Pages/Login';
 import Profile from './Pages/Profile';
 import Register from './Pages/Register';
+import TemplatePage from './Pages/TemplatePage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
 
 
@@ -14,6 +15,9 @@ import { firebaseConfig } from "./firebase";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
 import './App.css';
 import Header from './Components/Struct/Header';
 
@@ -38,6 +42,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/templatepage" element={<TemplatePage />} />
           <Route path="/card" element={<Card />} />
         </Routes>
       </Router>

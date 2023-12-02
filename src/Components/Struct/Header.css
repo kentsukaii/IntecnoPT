@@ -1,3 +1,5 @@
+
+
 .form-check-input:checked {
     background-color: rgb(255, 204, 0) !important;
     border-color: rgb(255, 204, 0) !important;
@@ -13,4 +15,15 @@
 
 .header {
     box-shadow: none !important;
+}
+
+
+.no-focus-outline .form-control:focus {
+    border-color: rgb(216, 216, 216) !important;
+    box-shadow: none !important;
+}
+
+.menu-icon-prop {
+    color: black;
+    size: 0cm;
 }

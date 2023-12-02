@@ -3,7 +3,7 @@ import { MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBBtn }
 
 const App = () => {
   return (
-    <MDBCard className="p-3 border rounded" style={{ width: "22rem", marginTop: "1rem", position: "relative", backgroundColor: "#f8f9fa" }}>
+<MDBCard className="p-3 border rounded" style={{ width: "22rem", marginTop: "1rem", backgroundColor: "#f8f9fa" }}>
       <MDBCardImage className="img-fluid" src="https://via.placeholder.com/400" waves />
       <MDBCardBody>
         <MDBCardTitle>Product Title</MDBCardTitle>
