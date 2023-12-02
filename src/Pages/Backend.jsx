@@ -263,6 +263,8 @@ export const useFirebaseLogin = () => {
   const navigate = useNavigate();
   const [resetEmail, setResetEmail] = useState("");
   const { loadProfileInfo } = useProfileFirebase();
+  const [userProfile, setUserProfile] = useState(null);
+
 
 
   const handleLogin = async () => {
@@ -273,6 +275,8 @@ export const useFirebaseLogin = () => {
   
       // Load profile info
       const profileInfo = await loadProfileInfo();
+      setUserProfile(profileInfo); // Assuming setUserProfile is a state setter function for user's profile
+
       // Do something with profileInfo...
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
@@ -291,6 +295,8 @@ export const useFirebaseLogin = () => {
   
       // Load profile info
       const profileInfo = await loadProfileInfo();
+      setUserProfile(profileInfo);
+      
       // Do something with profileInfo...
   
       // Redirect after a successful login
@@ -312,6 +318,7 @@ export const useFirebaseLogin = () => {
   
       // Load profile info
       const profileInfo = await loadProfileInfo();
+      setUserProfile(profileInfo); // Assuming setUserProfile is a state setter function for user's profile
       // Do something with profileInfo...
   
       // Redirect after a successful login

@@ -22,44 +22,42 @@ const Profile = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const profileInfo = await loadProfileInfo();
-        if (profileInfo) {
-          const userDocRef = doc(usersCollection, user.uid);
-          try {
-            await setDoc(userDocRef, profileInfo);
-            const docSnap = await getDoc(userDocRef);
-            if (docSnap.exists()) {
-              const additionalData = docSnap.data();
-              console.log('User data from Firestore:', additionalData);
+        console.log('Auth state changed:', user);
+        const userDocRef = doc(usersCollection, user.uid);
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+          const additionalData = docSnap.data();
+          console.log('User data from Firestore:', additionalData);
+          
   
-              setFirstName(additionalData.Name.split(' ')[0] || '');
-              setLastName((additionalData.Name.split(' ').slice(1).join(' ') || '').trim());
-              setEmail(additionalData.Email || '');
-              setDateOfBirth(additionalData.DateOfBirth || '');
+          const fullName = additionalData.Name;
+          const email = additionalData.Email;
+          const dateOfBirth = additionalData.DateOfBirth || '';
   
-              setUser({
-                ...user,
-                additionalData: additionalData,
-              });
-            } else {
-              setFirstName('');
-              setLastName('');
-              setEmail('');
-              setDateOfBirth('');
-              setUser(user);
-            }
-          } catch (error) {
-            console.error('Error getting user document:', error);
+          let firstName = '';
+          let lastName = '';
+  
+          if (fullName.includes(' ')) {
+            const nameParts = fullName.split(' ');
+            firstName = nameParts[0];
+            lastName = nameParts.slice(1).join(' ');
+          } else {
+            firstName = fullName;
           }
   
-          setFirstName(profileInfo.firstName);
-          setLastName(profileInfo.lastName);
-          setEmail(profileInfo.email);
-          setDateOfBirth(profileInfo.dateOfBirth);
+          setFirstName(firstName);
+          setLastName(lastName);
+          setEmail(email);
+          setDateOfBirth(dateOfBirth);
   
           setUser({
             ...user,
-            additionalData: profileInfo,
+            additionalData: {
+              firstName,
+              lastName,
+              email,
+              dateOfBirth,
+            },
           });
         } else {
           setFirstName('');
@@ -75,6 +73,7 @@ const Profile = () => {
   
     return () => unsubscribe();
   }, [auth]);
+  
   
 
 
@@ -193,7 +192,11 @@ const Profile = () => {
                     onChange={(e) => setDateOfBirth(e.target.value)}
                   />
                 </div>
-
+                <div>
+    <h1>Welcome, {firstName} {lastName}!</h1>
+    <p>Your email: {email}</p>
+    <p>Your date of birth: {dateOfBirth}</p>
+  </div>
               </div>
               <MDBBtn className='mt-3' onClick={handleSave}>Save</MDBBtn>
             </div>
