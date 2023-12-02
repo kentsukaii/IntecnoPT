@@ -15,6 +15,7 @@ import { useFirebaseRegister } from "./Backend";
 
 const Register = () => {
   const {
+    error,
     email,
     setEmail,
     password,
@@ -56,6 +57,7 @@ const Register = () => {
               <MDBCheckbox label="I agree to the Terms and Conditions" />
               <p></p>
               <MDBBtn onClick={handleRegister}>Register</MDBBtn>
+              {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
           </div>
         </div>
