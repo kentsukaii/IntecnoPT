@@ -95,10 +95,7 @@ const Profile = () => {
       console.error('Error updating user profile:', error);
     }
   };
-  
-  
-  
-
+    
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
