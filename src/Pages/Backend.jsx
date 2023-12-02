@@ -85,12 +85,16 @@ export const useFirebaseRegister = () => { // MAIN
     const password = e.target.value;
     setPassword(password);
   
-    // Check password requirements
-    setLowercase(/[a-z]/.test(password));
-    setUppercase(/[A-Z]/.test(password));
-    setSpecialChar(/[^A-Za-z0-9]/.test(password));
-    setNumber(/[0-9]/.test(password));
+    // Only check password requirements if there is input
+    if (password) {
+      setLowercase(/[a-z]/.test(password));
+      setUppercase(/[A-Z]/.test(password));
+      setSpecialChar(/[^A-Za-z0-9]/.test(password));
+      setNumber(/[0-9]/.test(password));
+    }
   };
+  
+  
   
 
   const handleRegister = async () => {
