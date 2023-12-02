@@ -21,10 +21,6 @@ const Register = () => {
     setPassword,
     confirmPassword,
     setConfirmPassword,
-    error,
-    setError,
-    loading,
-    setLoading,
     handleGoogleRegister,
     handleFacebookRegister,
     handleRegister,
@@ -67,8 +63,8 @@ const Register = () => {
           <div className="bg-light p-5">
             <div className="container">
               <h2>Or sign in with a social network</h2>
-              <MDBBtn onClick={handleFacebookLogin}>Sign In with Facebook</MDBBtn>
-              <MDBBtn onClick={handleGoogleLogin}>Sign In with Google</MDBBtn>
+              <MDBBtn onClick={handleFacebookRegister}>Sign In with Facebook</MDBBtn>
+              <MDBBtn onClick={handleGoogleRegister}>Sign In with Google</MDBBtn>
               <p></p>
               <h7>Only used for authentication.</h7>
               <p></p>
@@ -76,7 +72,7 @@ const Register = () => {
               <p></p>
               <h2>Do you already have an IntecnoPT account?</h2>
               <p>Click below to Login!</p>
-              <MDBBtn onClick={handleLogin}>Login</MDBBtn>
+              <MDBBtn onClick={''}>Login</MDBBtn>
             </div>
           </div>
         </div>

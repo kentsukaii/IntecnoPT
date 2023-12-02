@@ -1,23 +1,13 @@
-import React, { useState } from 'react';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import React from 'react';
+import { useFirebaseLogin } from "./Backend";
 
-const PasswordReset = ({ onResetComplete }) => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState(null);
-  const auth = getAuth();
-
-  const handleResetPassword = async () => {
-  try {
-    await sendPasswordResetEmail(auth, email);
-    setError(null);
-    // Provide a user-friendly message to inform the user that a password reset email has been sent
-    alert('A password reset email has been sent to your email address. Please check your inbox.');
-    onResetComplete();
-  } catch (error) {
-    setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-  }
-};
-
+const PasswordReset = () => {
+  const {
+    email,
+    setEmail,
+    error,
+    handleResetPassword,
+  } = useFirebaseLogin();
 
   return (
     <div>
