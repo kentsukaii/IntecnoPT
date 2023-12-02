@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut, sendEmailVerification } from 'firebase/auth';
-import { auth, firestore } from '../firebase';
-import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
-import PasswordReset from './PasswordReset'; 
 import { useFirebaseLogin } from "./Backend";
-
+import PasswordReset from './PasswordReset'; // Adjust the import path as needed
 
 const Login = () => {
   const {
@@ -14,20 +9,24 @@ const Login = () => {
     password,
     setPassword,
     error,
-    setError,
     loggedInUser,
-    setLoggedInUser,
     authing,
-    setAuthing,
     handleLogin,
     handleLogingoogle,
     handleLoginFacebook,
     handleLogout,
+    handlePasswordResetComplete,
   } = useFirebaseLogin();
 
   const [showPasswordReset, setShowPasswordReset] = useState(false);
-  const navigate = useNavigate();
 
+<<<<<<< HEAD
+=======
+  const handlePasswordReset = () => {
+    setShowPasswordReset(true);
+  };
+
+>>>>>>> c42110f6482c3c548d46c529852932ccaf4b9622
   return (
     <div>
       {!showPasswordReset && (

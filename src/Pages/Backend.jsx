@@ -1,6 +1,7 @@
 // Backend.jsx
 import { useState, useEffect } from "react";
 import {
+  signInWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -9,11 +10,13 @@ import {
   FacebookAuthProvider,
   GoogleAuthProvider,
   signInWithPopup,
+  updateProfile,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { auth, firestore } from "../firebase";
-import PasswordReset from "./PasswordReset";
 import { useNavigate } from "react-router-dom";
+
 
 //
 //
@@ -58,6 +61,8 @@ export const useFirebaseRegister = () => { // MAIN
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [authing, setAuthing] = useState(false);
+  const navigate = useNavigate();
 
   const isValidEmailFormat = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,47 +74,147 @@ export const useFirebaseRegister = () => { // MAIN
     const q = query(usersCollection, where("email", "==", email));
     const querySnapshot = await getDocs(q);
     return !querySnapshot.empty;
+
+  };
+
+  const handleRegister = async () => {
+    try {
+      setLoading(true);
+
+
+      const passwordRequirements = [
+        {
+          test: (password) => password.length >= 12,
+          message: "Password must be at least 12 characters long",
+        },
+        {
+          test: (password) => /[A-Z]/.test(password),
+          message: "Password must contain at least one uppercase letter",
+        },
+        {
+          test: (password) => /[a-z]/.test(password),
+          message: "Password must contain at least one lowercase letter",
+        },
+        {
+          test: (password) => /[0-9]/.test(password),
+          message: "Password must contain at least one number",
+        },
+        {
+          test: (password) => /[^A-Za-z0-9]/.test(password),
+          message: "Password must contain at least one special character",
+        },
+      ];
+
+      for (let requirement of passwordRequirements) {
+        if (!requirement.test(password)) {
+          setError(requirement.message);
+          return;
+        }
+      }
+
+      if (password !== confirmPassword) {
+        setError("Passwords do not match");
+        return;
+      }
+
+      if (!isValidEmailFormat(email)) {
+        setError("Invalid email format");
+        return;
+      }
+
+      const emailExistsInDatabase = await checkDuplicateEmail(email);
+      if (emailExistsInDatabase) {
+        setError("Email already exists");
+        return;
+      }
+
+      const authUser = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await sendEmailVerification(authUser.user);
+      const displayName = email.split("@")[0];
+      await updateProfile(authUser.user, { displayName });
+      const usersCollection = collection(firestore, "Users");
+      const userData = {
+        displayName: displayName,
+        email: authUser.user.email,
+        Address: "",
+        Name: "",
+        Phone_number: "",
+        dateofbirth: "",
+      };
+      await addDoc(usersCollection, userData);
+
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setError(null);
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "An unexpected error occurred"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleRegister = async () => { // HANDLE GOOGLE REGISTER
+    setAuthing(true);
+
     try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const token = result.credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // ...
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const authUser = result.user;
+
+      await handleAuthUser(authUser);
+
+      // Redirect after a successful login
+      navigate('/');
     } catch (error) {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
+      console.log(error);
+      setAuthing(false);
     }
   };
 
   const handleFacebookRegister = async () => { // HANDLE FACEBOOK REGISTER
+    setAuthing(true);
+
     try {
-      const provider = new FacebookAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-      const token = result.credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // ...
+      const result = await signInWithPopup(auth, new FacebookAuthProvider());
+      const authUser = result.user;
+
+      await handleAuthUser(authUser);
+
+      // Redirect after a successful login
+      navigate('/');
     } catch (error) {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The AuthCredential type that was used.
-      const credential = FacebookAuthProvider.credentialFromError(error);
-      // ...
+      console.log(error);
+      setAuthing(false);
+    }
+  };
+  const handleAuthUser = async (authUser) => {
+    // Check if the user already exists in the Users collection
+    const usersCollection = collection(firestore, 'Users');
+    const userQuery = query(usersCollection, where('email', '==', authUser.email));
+    const userQuerySnapshot = await getDocs(userQuery);
+
+    if (userQuerySnapshot.empty) {
+      // Send email verification
+      authUser.emailVerified = false;
+      await sendEmailVerification(authUser);
+
+      // If the user doesn't exist, add them to the Users collection
+      const userData = {
+        displayName: authUser.displayName,
+        email: authUser.email,
+        Address: "",
+        Name: "",
+        Phone_number: "",
+        dateofbirth: "",
+      };
+      await addDoc(usersCollection, userData);
     }
   };
 
@@ -126,6 +231,7 @@ export const useFirebaseRegister = () => { // MAIN
     setLoading,
     handleGoogleRegister,
     handleFacebookRegister,
+    handleRegister,
   };
 };
 
@@ -138,74 +244,139 @@ export const useFirebaseRegister = () => { // MAIN
 // inside can be freely used.
 
 // Firebase Login Logic
-export const useFirebaseLogin = () => {  
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(null);
-    const [loggedInUser, setLoggedInUser] = useState(null);
-    const [authing, setAuthing] = useState(false);
-  
-    const handleLogin = async () => {
-      // Your existing login logic here...
-    };
-  
-    const handleLogingoogle = async () => {
-      setAuthing(true);
-  
-      try {
-        const result = await signInWithPopup(auth, new GoogleAuthProvider());
-        const authUser = result.user;
-  
-        await handleAuthUser(authUser);
-  
-        // Redirect after a successful login
-        navigate('/');
-      } catch (error) {
-        console.log(error);
-        setAuthing(false);
-      }
-    };
-  
-    const handleLoginFacebook = async () => {
-      setAuthing(true);
-  
-      try {
-        const result = await signInWithPopup(auth, new FacebookAuthProvider());
-        const authUser = result.user;
-  
-        await handleAuthUser(authUser);
-  
-        // Redirect after a successful login
-        navigate('/');
-      } catch (error) {
-        console.log(error);
-        setAuthing(false);
-      }
-    };
-  
-    const handleAuthUser = async (authUser) => {
-      // Your existing auth user logic here...
-    };
-  
-    const handleLogout = async () => {
-      // Your existing logout logic here...
-    };
-  
-    return {
-      email,
-      setEmail,
-      password,
-      setPassword,
-      error,
-      setError,
-      loggedInUser,
-      setLoggedInUser,
-      authing,
-      setAuthing,
-      handleLogin,
-      handleLogingoogle,
-      handleLoginFacebook,
-      handleAuthUser,
-      handleLogout,
-    };
+export const useFirebaseLogin = () => {
+  const auth = getAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [authing, setAuthing] = useState(false);
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const navigate = useNavigate();
+  const [resetEmail, setResetEmail] = useState("");
+
+
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      setLoggedInUser(userCredential);
+      setError(null); // Clear any previous errors
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+      setLoggedInUser(null);
+    }
   };
+
+  const handleLogingoogle = async () => {
+    setAuthing(true);
+
+    try {
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const authUser = result.user;
+
+      await handleAuthUser(authUser);
+
+      // Redirect after a successful login
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+      setAuthing(false);
+    }
+  };
+  const handleLoginFacebook = async () => {
+    setAuthing(true);
+
+    try {
+      const result = await signInWithPopup(auth, new FacebookAuthProvider());
+      const authUser = result.user;
+
+      await handleAuthUser(authUser);
+
+      // Redirect after a successful login
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+      setAuthing(false);
+    }
+  };
+
+  const handleAuthUser = async (authUser) => {
+    // Check if the user already exists in the Users collection
+    const usersCollection = collection(firestore, 'Users');
+    const userQuery = query(usersCollection, where('email', '==', authUser.email));
+    const userQuerySnapshot = await getDocs(userQuery);
+
+    if (userQuerySnapshot.empty) {
+      // Send email verification
+      authUser.emailVerified = false;
+      await sendEmailVerification(authUser);
+
+      // If the user doesn't exist, add them to the Users collection
+      const userData = {
+        email: authUser.email,
+        Address: "",
+        Name: "",
+        Phone_number: "",
+        displayName: authUser.displayName,
+        dateofbirth: "",
+      };
+      await addDoc(usersCollection, userData);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      // Sign out the user
+      await signOut(auth);
+      setLoggedInUser(null);
+      navigate('/login'); // Redirect to the login page after logout
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setError(null); // Clear any previous errors
+      alert('A password reset email has been sent to your email address. Please check your inbox.');
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+    }
+  };
+
+
+  const handlePasswordReset = () => {
+    setShowPasswordReset(true);
+  };
+
+  const handlePasswordResetComplete = () => {
+    setShowPasswordReset(false);
+  };
+
+
+
+  
+
+
+  return {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    setError,
+    loggedInUser,
+    setLoggedInUser,
+    authing,
+    setAuthing,
+    handleLogin,
+    handleLogingoogle,
+    handleLoginFacebook,
+    handleAuthUser,
+    handleLogout,
+    handlePasswordReset,
+    handlePasswordResetComplete,
+    handleResetPassword,
+  };
+};
