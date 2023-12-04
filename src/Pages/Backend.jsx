@@ -295,11 +295,25 @@ export const useFirebaseLogin = () => {
   const [authing, setAuthing] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const navigate = useNavigate();
-  const [resetEmail, setResetEmail] = useState("");
+
+
+  const checkEmailExistsInFirebaseAuth = async (email) => {
+    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+  
+    return signInMethods.length > 0;
+  };
 
 
   const handleLogin = async () => {
     try {
+      // Check if the email exists in the Users collection before signing in
+      const emailExists = await checkEmailExists(email);
+  
+      if (!emailExists) {
+        setError('Email does not exist');
+        return;
+      }
+  
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
@@ -311,13 +325,22 @@ export const useFirebaseLogin = () => {
 
   const handleLogingoogle = async () => {
     setAuthing(true);
-
+  
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       const authUser = result.user;
-
+  
+      // Check if the email exists in Firebase Authentication before proceeding
+      const emailExists = await checkEmailExistsInFirebaseAuth(authUser.email);
+  
+      if (!emailExists) {
+        setError('Email does not exist');
+        setAuthing(false);
+        return;
+      }
+  
       await handleAuthUser(authUser);
-
+  
       // Redirect after a successful login
       navigate('/');
     } catch (error) {
@@ -325,15 +348,25 @@ export const useFirebaseLogin = () => {
       setAuthing(false);
     }
   };
+
   const handleLoginFacebook = async () => {
     setAuthing(true);
-
+  
     try {
       const result = await signInWithPopup(auth, new FacebookAuthProvider());
       const authUser = result.user;
-
+  
+      // Check if the email exists in Firebase Authentication before proceeding
+      const emailExists = await checkEmailExistsInFirebaseAuth(authUser.email);
+  
+      if (!emailExists) {
+        setError('Email does not exist');
+        setAuthing(false);
+        return;
+      }
+  
       await handleAuthUser(authUser);
-
+  
       // Redirect after a successful login
       navigate('/');
     } catch (error) {
@@ -347,24 +380,17 @@ export const useFirebaseLogin = () => {
     const usersCollection = collection(firestore, 'Users');
     const userQuery = query(usersCollection, where('email', '==', authUser.email));
     const userQuerySnapshot = await getDocs(userQuery);
-
+  
     if (userQuerySnapshot.empty) {
-      // Send email verification
+      // If the user doesn't exist, redirect to the register page
+      navigate('/register');
+    } else {
+      // If the user exists, proceed as normal
       authUser.emailVerified = false;
-      await sendEmailVerification(authUser);
-
-      // If the user doesn't exist, add them to the Users collection
-      const userData = {
-        email: authUser.email,
-        Address: "",
-        Name: "",
-        Phone_number: "",
-        displayName: authUser.displayName,
-        dateofbirth: "",
-      };
-      await addDoc(usersCollection, userData);
+      
     }
   };
+  
 
   const handleLogout = async () => {
     try {
