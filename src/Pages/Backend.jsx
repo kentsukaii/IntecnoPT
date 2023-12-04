@@ -12,6 +12,7 @@ import {
   signInWithPopup,
   updateProfile,
   sendPasswordResetEmail,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { auth, firestore } from "../firebase";
@@ -294,15 +295,31 @@ export const useFirebaseLogin = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [authing, setAuthing] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
+  
   const navigate = useNavigate();
 
 
+  const checkEmailExists = async (email) => {
+    const usersCollection = collection(firestore, 'Users');
+    const userQuery = query(usersCollection, where('email', '==', email));
+    const userQuerySnapshot = await getDocs(userQuery);
+    
+    return !userQuerySnapshot.empty;
+  };
+  
   const checkEmailExistsInFirebaseAuth = async (email) => {
     const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+    const emailExistsInFirebaseAuth = signInMethods.length > 0;
   
-    return signInMethods.length > 0;
+    // Check Firestore database if email doesn't exist in Firebase Authentication
+    if (!emailExistsInFirebaseAuth) {
+      return await checkEmailExists(email);
+    }
+  
+    return emailExistsInFirebaseAuth;
   };
-
+  
+  
 
   const handleLogin = async () => {
     try {
@@ -318,10 +335,12 @@ export const useFirebaseLogin = () => {
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
     } catch (error) {
+      console.error("Login error:", error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
       setLoggedInUser(null);
     }
   };
+  
 
   const handleLogingoogle = async () => {
     setAuthing(true);
@@ -330,7 +349,7 @@ export const useFirebaseLogin = () => {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       const authUser = result.user;
   
-      // Check if the email exists in Firebase Authentication before proceeding
+      // Check email existence asynchronously
       const emailExists = await checkEmailExistsInFirebaseAuth(authUser.email);
   
       if (!emailExists) {
@@ -348,6 +367,8 @@ export const useFirebaseLogin = () => {
       setAuthing(false);
     }
   };
+  
+  
 
   const handleLoginFacebook = async () => {
     setAuthing(true);
