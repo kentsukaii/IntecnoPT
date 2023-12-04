@@ -102,9 +102,6 @@ export const useFirebaseRegister = () => { // MAIN
     }
   };
   
-  
-  
-  
 
   const handleRegister = async () => {
 
