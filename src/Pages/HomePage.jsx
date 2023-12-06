@@ -42,7 +42,7 @@ const HomePage = () => {
     "src/Components/Images/Carousel/pcdiga_vacuum_cleaner.jpg",
   ];
 
-  const names = ["Prebuilt Computers", "Components", "Peripherals", "Laptops"];
+  const names = ["Desktop Computers", "Components", "Peripherals", "Laptops"];
 
   const routes = [
     "/templatepage",
@@ -51,11 +51,23 @@ const HomePage = () => {
     "/templatepage",
   ];
 
+
+  // Function to chunk an array into smaller arrays
+  const chunkArray = (arr, size) => {
+    return Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
+      arr.slice(i * size, i * size + size)
+    );
+  };
+
+  // Generate rows based on the chunked circle_images
+  const rows = chunkArray(circle_images, 4);
+
   const productCards = Array.from({ length: 15 }, (_, i) => (
     <div className="m-2" key={i}>
       <ProductCard />
     </div>
   ));
+
 
   return (
     <div className="container-fluid custom-class p-0">
@@ -72,31 +84,35 @@ const HomePage = () => {
               </MDBCarouselItem>
             ))}
           </MDBCarousel>
+
+
+
           <div className="col-md-12 mt-4 p-0">
             <div
-              className="bg-white p-5 d-flex justify-content-around align-items-center"
-              style={{ height: "200px", color: "white" }}
+              className="bg-white p-5 d-flex justify-content-start align-items-start flex-wrap"
+              style={{ color: "white" }}
             >
               {circle_images.map((image, i) => (
-                <Link to={routes[i]}>
+                <Link to={routes[i]} style={{ width: "25%", padding: "1%" }}>
                   <div
                     key={i}
                     className="text-center d-flex flex-column align-items-center circle-container"
+                    style={{ width: "100%" }}
                   >
                     <div
                       className="circle bg-light rounded-circle d-flex justify-content-center align-items-center"
-                      style={{ width: "110px", height: "110px", margin: "0" }}
+                      style={{ width: "50%", height: "50%", margin: "0 auto" }}
                     >
                       <img
                         src={image}
                         alt={`Circle ${i + 1}`}
                         className="rounded-circle"
-                        style={{ width: "95%", height: "95%" }}
+                        style={{ width: "100%", height: "100%", objectFit: "contain" }} // Set the width and height to be the same
                       />
                     </div>
                     <div
                       className="mt-2 circle-text"
-                      style={{ color: "black", negrita: "bold"}}
+                      style={{ color: "black", fontWeight: "bold", fontSize: "1.5vmin" }}
                     >
                       {names[i]}
                     </div>
@@ -105,6 +121,11 @@ const HomePage = () => {
               ))}
             </div>
           </div>
+
+
+
+
+
           <div className="col-md-12 mt-4 p-0 ">
             <div
               className="bg-info p-0 d-flex flex-column align-items-center "
@@ -138,31 +159,31 @@ const HomePage = () => {
                 {"ADVERTISING"}
               </div>
               <div className="col-md-12 mt-4 p-0 ">
-            <div
-              className="bg-info p-0 d-flex flex-column align-items-center "
-              style={{ height: "690px" }}
-            >
-              <div
-                className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class w-100"
-                style={{
-                  height: "28px",
-                }}
-              ></div>
-              <div
-                className="bg-success p-3  d-flex justify-content-around align-items-center  custom-class w-100"
-                style={{
-                  height: "50px",
-                }}
-              ></div>
-              <div
-                className="bg-white p-3  d-flex justify-content-around align-items-center  custom-class w-100"
-                style={{
-                  height: "576px",
-                }}
-              >
+                <div
+                  className="bg-info p-0 d-flex flex-column align-items-center "
+                  style={{ height: "690px" }}
+                >
+                  <div
+                    className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class w-100"
+                    style={{
+                      height: "28px",
+                    }}
+                  ></div>
+                  <div
+                    className="bg-success p-3  d-flex justify-content-around align-items-center  custom-class w-100"
+                    style={{
+                      height: "50px",
+                    }}
+                  ></div>
+                  <div
+                    className="bg-white p-3  d-flex justify-content-around align-items-center  custom-class w-100"
+                    style={{
+                      height: "576px",
+                    }}
+                  >
+                  </div>
+                </div>
               </div>
-              </div>
-            </div>
             </div>
           </div>
         </div>
