@@ -2,3 +2,11 @@
     margin: 0 !important;
     background-color: rgb(184, 50, 205);
   }
+
+  .circle-container:hover {
+    transform: scale(1.1); /* Increase the size on hover */
+  }
+  
+  .circle-container:hover .circle-text {
+    color: grey !important; /* Change the text color on hover */
+  }
