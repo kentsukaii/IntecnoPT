@@ -1,24 +1,4 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
-import { useFirebaseLogin } from "./Backend";
-import PasswordReset from './PasswordReset'; // Adjust the import path as needed
-
-const Login = () => {
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    error,
-    loggedInUser,
-    authing,
-    handleLogin,
-    handleLogingoogle,
-    handleLoginFacebook,
-    handleLogout,
-    handlePasswordResetComplete,
-  } = useFirebaseLogin();
-=======
 import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut, sendEmailVerification } from 'firebase/auth';
 import { auth, firestore } from '../firebase';
 import { useNavigate } from 'react-router-dom';
@@ -57,7 +37,6 @@ const Login = () => {
       setLoggedInUser(null);
     }
   };
->>>>>>> 1195eeded3aa390852812d627c47fe4b40189486
 
   const [showPasswordReset, setShowPasswordReset] = useState(false);
 
@@ -97,28 +76,7 @@ const Login = () => {
               <div className="col-md-12">
                 {"By logging in, I declare that I have read and accept the Terms and Conditions, and the use of my personal data as explained in the Privacy Policy."}</div>
             </div>
-<<<<<<< HEAD
-          )}
-          {!loggedInUser && (
-            <div>
-              <label>Email:</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-              <label>Password:</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-              <button onClick={handleLogin}>Login</button>
-              <button onClick={() => handleLogingoogle()} disabled={authing}>
-                Login with Google
-              </button>
-              <button onClick={() => handleLoginFacebook()} disabled={authing}>
-                Login with Facebook
-              </button>
-              <button>Forgot Password?</button>
-              {error && <p style={{ color: 'red' }}>{error}</p>}
-            </div>
-          )}
-=======
           </div>
->>>>>>> 1195eeded3aa390852812d627c47fe4b40189486
         </div>
         <div className="col-md-6 mt-5 mx-auto">
           <div className="bg-light p-5">

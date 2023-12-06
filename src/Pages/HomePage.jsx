@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-// HomePage.jsx
-import React from "react";
-import ProductCard from "../Components/Cards/ProductCard";
-import "../Pages/CSS/HomePage.css";
-import { useFirebaseAuth } from "./Backend";
-import {
-  MDBBtn,
-  MDBInput,
-  MDBModal,
-  MDBModalBody,
-  MDBModalContent,
-  MDBModalDialog,
-  MDBModalFooter,
-  MDBModalHeader,
-  MDBCarousel,
-  MDBCarouselItem,
-  MDBCarouselCaption
-} from "mdb-react-ui-kit";
-
-const HomePage = () => {
-  const { user, handleLogout } = useFirebaseAuth();
-=======
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { MDBCarousel, MDBCarouselItem } from "mdb-react-ui-kit";
 import React, { useEffect, useState } from "react";
@@ -47,7 +24,6 @@ const HomePage = () => {
       console.error("Erro durante o logout:", error);
     }
   };
->>>>>>> 1195eeded3aa390852812d627c47fe4b40189486
 
   const circle_images = [
     "src/Components/Images/Circles/Prebuilt_Computers.png",
