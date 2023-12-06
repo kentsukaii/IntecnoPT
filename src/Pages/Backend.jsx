@@ -469,7 +469,7 @@ export const useFirebaseLogin = () => {
     handleResetPassword,
     showPasswordReset,
     setShowPasswordReset,
-    handlePasswordReset,
+  
     
   };
 };
