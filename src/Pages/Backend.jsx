@@ -12,6 +12,7 @@ import {
   signInWithPopup,
   updateProfile,
   sendPasswordResetEmail,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { collection, addDoc, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import { auth, firestore } from "../firebase"; // import firestore from your firebase file
@@ -76,6 +77,12 @@ export const useFirebaseRegister = () => { // MAIN
   const [loading, setLoading] = useState(false);
   const [authing, setAuthing] = useState(false);
   const navigate = useNavigate();
+  const [lowercase, setLowercase] = useState(false);
+  const [uppercase, setUppercase] = useState(false);
+  const [specialChar, setSpecialChar] = useState(false);
+  const [number, setNumber] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [receiveNews, setReceiveNews] = useState(false);
 
   const isValidEmailFormat = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -90,10 +97,37 @@ export const useFirebaseRegister = () => { // MAIN
 
   };
 
+  const handlePasswordChange = (e) => {
+    const password = e.target.value;
+    setPassword(password);
+  
+    // Only check password requirements if there is input
+    if (password) {
+      setLowercase(/[a-z]/.test(password));
+      setUppercase(/[A-Z]/.test(password));
+      setSpecialChar(/[^A-Za-z0-9]/.test(password));
+      setNumber(/[0-9]/.test(password));
+    } else {
+      // Reset colors to default if there is no input
+      setLowercase(false);
+      setUppercase(false);
+      setSpecialChar(false);
+      setNumber(false);
+    }
+  };
+  
+
   const handleRegister = async () => {
+
+    if (!termsAccepted) {
+      setError("You must agree to the Terms and Conditions");
+      return;
+    }
+    
     try {
       setLoading(true);
 
+      
 
       const passwordRequirements = [
         {
@@ -246,6 +280,15 @@ export const useFirebaseRegister = () => { // MAIN
     handleGoogleRegister,
     handleFacebookRegister,
     handleRegister,
+    handlePasswordChange,
+    lowercase,
+    uppercase,
+    specialChar,
+    number,
+    termsAccepted,
+    setTermsAccepted,
+    receiveNews, 
+    setReceiveNews,
   };
 };
 
@@ -266,21 +309,52 @@ export const useFirebaseLogin = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [authing, setAuthing] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
+  
   const navigate = useNavigate();
-  const [resetEmail, setResetEmail] = useState("");
 
   const [userProfile, setUserProfile] = useState(null);
 
 
 
+  const checkEmailExists = async (email) => {
+    const usersCollection = collection(firestore, 'Users');
+    const userQuery = query(usersCollection, where('email', '==', email));
+    const userQuerySnapshot = await getDocs(userQuery);
+    
+    return !userQuerySnapshot.empty;
+  };
+  
+  const checkEmailExistsInFirebaseAuth = async (email) => {
+    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+    const emailExistsInFirebaseAuth = signInMethods.length > 0;
+  
+    // Check Firestore database if email doesn't exist in Firebase Authentication
+    if (!emailExistsInFirebaseAuth) {
+      return await checkEmailExists(email);
+    }
+  
+    return emailExistsInFirebaseAuth;
+  };
+  
+  
+
   const handleLogin = async () => {
     try {
+      // Check if the email exists in the Users collection before signing in
+      const emailExists = await checkEmailExists(email);
+  
+      if (!emailExists) {
+        setError('Email does not exist');
+        return;
+      }
+  
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
 
       // Do something with profileInfo...
     } catch (error) {
+      console.error("Login error:", error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
       setLoggedInUser(null);
     }
@@ -293,9 +367,16 @@ export const useFirebaseLogin = () => {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       const authUser = result.user;
   
+      // Check email existence asynchronously
+      const emailExists = await checkEmailExistsInFirebaseAuth(authUser.email);
+  
+      if (!emailExists) {
+        setError('Email does not exist');
+        setAuthing(false);
+        return;
+      }
+  
       await handleAuthUser(authUser);
-      
-      // Do something with profileInfo...
   
       // Redirect after a successful login
       navigate('/');
@@ -305,12 +386,23 @@ export const useFirebaseLogin = () => {
     }
   };
   
+  
+
   const handleLoginFacebook = async () => {
     setAuthing(true);
   
     try {
       const result = await signInWithPopup(auth, new FacebookAuthProvider());
       const authUser = result.user;
+  
+      // Check if the email exists in Firebase Authentication before proceeding
+      const emailExists = await checkEmailExistsInFirebaseAuth(authUser.email);
+  
+      if (!emailExists) {
+        setError('Email does not exist');
+        setAuthing(false);
+        return;
+      }
   
       await handleAuthUser(authUser);
   
@@ -327,24 +419,17 @@ export const useFirebaseLogin = () => {
     const usersCollection = collection(firestore, 'Users');
     const userQuery = query(usersCollection, where('email', '==', authUser.email));
     const userQuerySnapshot = await getDocs(userQuery);
-
+  
     if (userQuerySnapshot.empty) {
-      // Send email verification
+      // If the user doesn't exist, redirect to the register page
+      navigate('/register');
+    } else {
+      // If the user exists, proceed as normal
       authUser.emailVerified = false;
-      await sendEmailVerification(authUser);
-
-      // If the user doesn't exist, add them to the Users collection
-      const userData = {
-        email: authUser.email,
-        Address: "",
-        Name: "",
-        Phone_number: "",
-        displayName: authUser.displayName,
-        dateofbirth: "",
-      };
-      await addDoc(usersCollection, userData);
+      
     }
   };
+  
 
   const handleLogout = async () => {
     try {
@@ -376,6 +461,11 @@ export const useFirebaseLogin = () => {
     setShowPasswordReset(false);
   };
 
+
+
+
+
+
   return {
     email,
     setEmail,
@@ -395,6 +485,10 @@ export const useFirebaseLogin = () => {
     handlePasswordReset,
     handlePasswordResetComplete,
     handleResetPassword,
+    showPasswordReset,
+    setShowPasswordReset,
+  
+    
   };
 };
 

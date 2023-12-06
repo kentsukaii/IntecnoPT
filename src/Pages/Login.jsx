@@ -19,26 +19,25 @@ import {
 
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [authing, setAuthing] = useState(false);
-  const [showPasswordReset, setShowPasswordReset] = useState(false);
-  const navigate = useNavigate();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    loggedInUser,
+    authing,
+    handleLogin,
+    handleLogingoogle,
+    handleLoginFacebook,
+    handleLogout,
+    handlePasswordResetComplete,
+    showPasswordReset,
+    handlePasswordReset,
+  } = useFirebaseLogin();
 
-  const handleLogin = async () => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      setLoggedInUser(userCredential);
-      setError(null); // Clear any previous errors
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-      setLoggedInUser(null);
-    }
-  };
 
-  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  
 
   return (
     <div>
