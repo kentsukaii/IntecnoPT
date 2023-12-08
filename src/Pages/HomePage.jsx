@@ -140,22 +140,6 @@ const HomePage = () => {
 
 
           <div className="col-md-12 mt-4 p-0 ">
-            <div
-              className="bg-info p-0 d-flex flex-column align-items-center "
-              style={{ height: "690px" }}
-            >
-              <div
-                className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class w-100"
-                style={{
-                  height: "28px",
-                }}
-              ></div>
-              <div
-                className="bg-success p-3  d-flex justify-content-around align-items-center  custom-class w-100"
-                style={{
-                  height: "50px",
-                }}
-              ></div>
               <div
                 className="bg-white p-3  d-flex justify-content-around align-items-center  custom-class w-100"
                 style={{
@@ -163,7 +147,11 @@ const HomePage = () => {
                 }}
               >
               </div>
-            </div>
+
+
+
+
+              
             <div className="col-md-12 mt-4 p-0">
               <div
                 className="bg-black p-5 mx-auto"
@@ -172,22 +160,6 @@ const HomePage = () => {
                 {"ADVERTISING"}
               </div>
               <div className="col-md-12 mt-4 p-0 ">
-                <div
-                  className="bg-info p-0 d-flex flex-column align-items-center "
-                  style={{ height: "690px" }}
-                >
-                  <div
-                    className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class w-100"
-                    style={{
-                      height: "28px",
-                    }}
-                  ></div>
-                  <div
-                    className="bg-success p-3  d-flex justify-content-around align-items-center  custom-class w-100"
-                    style={{
-                      height: "50px",
-                    }}
-                  ></div>
                   <div
                     className="bg-white p-3  d-flex justify-content-around align-items-center  custom-class w-100"
                     style={{
@@ -195,7 +167,6 @@ const HomePage = () => {
                     }}
                   >
                   </div>
-                </div>
               </div>
             </div>
           </div>
