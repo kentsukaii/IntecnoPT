@@ -53,7 +53,7 @@ const HomePage = () => {
   const names = ["Desktop Computers", "Components", "Peripherals", "Laptops"];
 
   const routes = [
-    "/templatepage",
+    "/card",
     "/templatepage",
     "/templatepage",
     "/templatepage",
