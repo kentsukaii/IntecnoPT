@@ -4,10 +4,18 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "../Components/Cards/ProductCard";
 import "../Pages/CSS/HomePage.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLaptop, faBars } from '@fortawesome/free-solid-svg-icons';
+import { Button, Container, Row, Col } from 'react-bootstrap';import { useMediaQuery } from 'react-responsive';
+
+
 
 const HomePage = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
+  const isBigScreen = useMediaQuery({ minDeviceWidth: 1824 });
+  const isTabletOrMobile = useMediaQuery({ maxWidth: 1224 });
+  const isPortrait = useMediaQuery({ orientation: 'portrait' });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -87,6 +95,12 @@ const HomePage = () => {
 
 
 
+      
+    
+
+
+
+
           <div className="col-md-12 mt-4 p-0">
             <div
               className="bg-white p-5 d-flex justify-content-start align-items-start flex-wrap"
@@ -121,7 +135,6 @@ const HomePage = () => {
               ))}
             </div>
           </div>
-
 
 
 
