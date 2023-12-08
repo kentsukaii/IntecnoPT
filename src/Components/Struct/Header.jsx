@@ -10,9 +10,9 @@ import "./Header.css";
 const Header = () => {
   return (
     <Navbar bg="light" expand="lg" style={{ padding: '20px 5%' }}>
-      <Navbar.Brand href="/" className="d-none d-lg-block" style={{ fontFamily: "QuartzoBold", fontSize: "40px", marginRight: '20px' }}>
-        <span style={{ color: "#ff0000" }}>Intecno</span>
-        <span style={{ color: "#0000ff" }}>PT</span>
+      <Navbar.Brand href="/" className="d-none d-lg-block" style={{ fontFamily: "AusterBlack", fontSize: "40px", marginRight: '20px' }}>
+        <span style={{ color: "#4eadfe" }}>INTECNO</span>
+        <span style={{ color: "#4eadfe" }}>PT</span>
       </Navbar.Brand>
 
       <div className="d-flex justify-content-center w-100" style={{ maxWidth: "100%" }}>
