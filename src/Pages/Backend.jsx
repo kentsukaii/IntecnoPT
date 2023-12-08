@@ -1,4 +1,4 @@
-// Backend.jsx
+
 import { useState, useEffect } from "react";
 import {
   signInWithEmailAndPassword,
@@ -18,18 +18,6 @@ import { collection, addDoc, getDocs, query, where, doc, getDoc } from "firebase
 import { auth, firestore } from "../firebase"; // import firestore from your firebase file
 import { useNavigate } from "react-router-dom";
 import { setDoc } from "firebase/firestore"; 
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //
@@ -85,9 +73,11 @@ export const useFirebaseRegister = () => { // MAIN
   const [receiveNews, setReceiveNews] = useState(false);
 
   const isValidEmailFormat = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
+  
+  
 
   const checkDuplicateEmail = async (email) => {
     const usersCollection = collection(firestore, "Users");
@@ -289,6 +279,7 @@ export const useFirebaseRegister = () => { // MAIN
     setTermsAccepted,
     receiveNews, 
     setReceiveNews,
+    authing,
   };
 };
 
@@ -309,28 +300,29 @@ export const useFirebaseLogin = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [authing, setAuthing] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
-  
+  const [saveSession, setSaveSession] = useState(false);
   const navigate = useNavigate();
-
   const [userProfile, setUserProfile] = useState(null);
 
 
 
-  const checkEmailExists = async (email) => {
-    const usersCollection = collection(firestore, 'Users');
-    const userQuery = query(usersCollection, where('email', '==', email));
-    const userQuerySnapshot = await getDocs(userQuery);
-    
-    return !userQuerySnapshot.empty;
+
+
+  const handleCheckboxChange = () => {
+    setSaveSession(!saveSession);
   };
-  
-  const checkEmailExistsInFirebaseAuth = async (email) => {
+
+
+  const checkEmailExists = async (email) => {
+    const auth = getAuth();
     const signInMethods = await fetchSignInMethodsForEmail(auth, email);
     const emailExistsInFirebaseAuth = signInMethods.length > 0;
   
-    // Check Firestore database if email doesn't exist in Firebase Authentication
     if (!emailExistsInFirebaseAuth) {
-      return await checkEmailExists(email);
+      const usersCollection = collection(firestore, 'Users');
+      const userQuery = query(usersCollection, where('email', '==', email));
+      const userQuerySnapshot = await getDocs(userQuery);
+      return !userQuerySnapshot.empty;
     }
   
     return emailExistsInFirebaseAuth;
@@ -351,8 +343,7 @@ export const useFirebaseLogin = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
-
-      // Do something with profileInfo...
+      navigate('/');
     } catch (error) {
       console.error("Login error:", error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
@@ -368,7 +359,7 @@ export const useFirebaseLogin = () => {
       const authUser = result.user;
   
       // Check email existence asynchronously
-      const emailExists = await checkEmailExistsInFirebaseAuth(authUser.email);
+      const emailExists = await checkEmailExists(authUser.email);
   
       if (!emailExists) {
         setError('Email does not exist');
@@ -395,8 +386,8 @@ export const useFirebaseLogin = () => {
       const result = await signInWithPopup(auth, new FacebookAuthProvider());
       const authUser = result.user;
   
-      // Check if the email exists in Firebase Authentication before proceeding
-      const emailExists = await checkEmailExistsInFirebaseAuth(authUser.email);
+      // Check email existence asynchronously
+      const emailExists = await checkEmailExists(authUser.email);
   
       if (!emailExists) {
         setError('Email does not exist');
@@ -410,9 +401,19 @@ export const useFirebaseLogin = () => {
       navigate('/');
     } catch (error) {
       console.log(error);
+  
+      // Handle specific error messages
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        setError('This email is already in use with a different login method. Try logging in with the other provider.');
+      } else {
+        setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+      }
+  
       setAuthing(false);
     }
   };
+  
+  
 
   const handleAuthUser = async (authUser) => {
     // Check if the user already exists in the Users collection
@@ -426,9 +427,12 @@ export const useFirebaseLogin = () => {
     } else {
       // If the user exists, proceed as normal
       authUser.emailVerified = false;
-      
+      setLoggedInUser(authUser);
+       // Add this line for debugging
+      navigate('/');
     }
   };
+  
   
 
   const handleLogout = async () => {
@@ -487,7 +491,11 @@ export const useFirebaseLogin = () => {
     handleResetPassword,
     showPasswordReset,
     setShowPasswordReset,
-  
+    saveSession, 
+    userProfile, 
+    setUserProfile,
+    setSaveSession,
+    handleCheckboxChange,
     
   };
 };
