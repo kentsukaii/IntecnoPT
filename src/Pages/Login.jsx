@@ -57,10 +57,10 @@ const Login = () => {
                 </div>
                 {!loggedInUser && (
                 <div>
-                <div className="col-md-12 mb-4">
-                  <MDBInput label="E-Mail" id="typeEmail" type="email" size='lg' className="p-3 w-50" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <div className="col-md-12 mb-4 w-75">
+                  <MDBInput label="E-Mail" id="typeEmail" type="email" size='lg' className="p-3 w-100" value={email} onChange={(e) => setEmail(e.target.value)} />
                   <br />
-                  <MDBInput label="Password" id="typePassword" type="password" size='lg' className="p-3 w-50" value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <MDBInput label="Password" id="typePassword" type="password" size='lg' className="p-3 w-100" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <div className="col-md-12">
                   <a href="#" onClick={handlePasswordReset}>Forgot your Password?</a>
