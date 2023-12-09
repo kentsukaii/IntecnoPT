@@ -3,7 +3,7 @@ import { faShoppingCart, faMoon, faSun } from '@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from "react";
 import { Dropdown, Form, FormControl, Nav, Navbar } from 'react-bootstrap';
-import maguire from "../../assets/godmaguire.jpg";
+import maguire from "../../assets/godmaguire.png";
 import "../../fonts/fonts.css";
 import "./Header.css";
 
@@ -43,13 +43,12 @@ const Header = () => {
             <span className="badge badge-warning">5</span>
           </Nav.Link>
           <Dropdown className="order-2" align="end" style={{ marginLeft: '20px' }}>
-            <Dropdown.Toggle variant="success" id="dropdown-basic" as="img" src={maguire} alt="menu icon" width="75" height="75" style={{ borderRadius: "50%", border: "2px solid blue" }}>
+          <Dropdown.Toggle variant="success" id="dropdown-basic" as="img" src={maguire} alt="menu icon" width="75" height="75" style={{ borderRadius: "50%", border: "2px solid #4eadfe" }}>
             </Dropdown.Toggle>
 
             <Dropdown.Menu alignRight style={{ width: "80%" }}>
               <Dropdown.Item href="/profile" className="text-center">Profile</Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item href="/settings" className="text-center">Settings</Dropdown.Item>
+              <Dropdown.Item href="/myordersinvoices" className="text-center">My Orders / Invoices</Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item href="/logout" className="text-center">Logout</Dropdown.Item>
             </Dropdown.Menu>
