@@ -19,7 +19,7 @@ import { auth, firestore } from "../../firebase"; // import firestore from your 
 import { useNavigate } from "react-router-dom";
 import { setDoc } from "firebase/firestore";
 import { useQuery } from 'react-query';
-import axios from './axiosConfig';
+//import axios from './axiosConfig';
 
 
 //
@@ -552,7 +552,7 @@ export const getUserData = async () => {
   };
 };
 
-
+/*
 export const API_Fetch = {
   fetchDesktopComputers: async () => {
     try {
@@ -565,3 +565,4 @@ export const API_Fetch = {
   },
   // other fetch functions...
 };
+*/
