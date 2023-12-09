@@ -1,6 +1,7 @@
 // Import the necessary modules and functions
 import { addProduct } from '../firebaseAPI';
 import productData from './products.json';
+import { collection, addDoc, doc, getDoc, setDoc } from "firebase/firestore";
 
 console.log('Successfully imported addProduct and productData');
 

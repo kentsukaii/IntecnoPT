@@ -7,6 +7,7 @@ import Login from './Pages/Login';
 import Profile from './Pages/Profile.jsx';
 import Register from './Pages/Register';
 import TemplatePage from './Pages/TemplatePage.jsx';
+import Dashboard from './Pages/Dashboard.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
 
 import { initializeApp } from "firebase/app";
@@ -45,6 +46,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/templatepage" element={<TemplatePage />} />
           <Route path="/card" element={<Card />} />
+          <Route path="/admin" element={<Dashboard />} />
         </Routes>
       </Router>
     </div>
