@@ -10,7 +10,7 @@ import {
   MDBModalFooter,
   MDBCheckbox,
 } from "mdb-react-ui-kit";
-import { useFirebaseRegister } from "./Backend";
+import { useFirebaseRegister } from "./BackendFiles/Backend";
 
 
 const Register = () => {
