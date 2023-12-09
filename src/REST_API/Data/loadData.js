@@ -1,27 +1,24 @@
 // Import the necessary modules and functions
 import { addProduct } from '../firebaseAPI';
 import productData from './products.json';
-import categories from './categories.json'; // Import categories.json
 
-console.log('Successfully imported addProduct, productData, and categories');
+console.log('Successfully imported addProduct and productData');
 
 // Function to load data into the database
 async function loadData() {
     console.log('Starting to load data...');
     
-    // Loop through each category in the categories
-    for (let category of categories.Categories) {
-        // Loop through each subcategory in the category
-        for (let subcategory of category.Subcategories) {
-            // Loop through each product in the subcategory
-            for (let product of productData.Products[subcategory]) {
+    // Loop through each subcategory in productData.Products
+    for (let subcategoryKey in productData.Products) {
+        // Loop through each product in the subcategory
+        for (let product of productData.Products[subcategoryKey]) {
+            // Check if the product has a Category field and it's not undefined
+            if (product.Category !== undefined) {
                 // Add the product to the Firebase database
-                await addProduct({
-                    ...product,
-                    category: category.Name,
-                    subcategory: subcategory
-                });
+                await addProduct(product);
                 console.log('Added product: ' + product.Name);
+            } else {
+                console.log('Skipped product due to undefined Category: ', product);
             }
         }
     }
@@ -29,5 +26,8 @@ async function loadData() {
     console.log('Finished loading data');
 }
 
-// Call the function to load data
 loadData();
+
+
+// Export the function so it can be used elsewhere
+export { loadData };

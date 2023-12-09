@@ -1,4 +1,5 @@
 // Importando os módulos necessários do React e react-router-dom
+import { useEffect } from 'react'; // Import useEffect from react
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AboutPage from './Pages/AboutPage';
 import HomePage from './Pages/HomePage';
@@ -8,9 +9,10 @@ import Register from './Pages/Register';
 import TemplatePage from './Pages/TemplatePage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
 
-
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebase";
+
+
 // Importando o componente Header
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
@@ -20,8 +22,6 @@ import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import './App.css';
 import Header from './Components/Struct/Header';
-
-
 
 // Inicializando o aplicativo Firebase
 initializeApp(firebaseConfig);

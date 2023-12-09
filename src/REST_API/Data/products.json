@@ -3,96 +3,30 @@
     "DesktopNormal": [
       {
         "Category": "Desktop Computers",
+        "Subcategory": "Desktop Normal",
         "Description": "Powerful desktop computer for everyday use",
         "ImageReference": "desktop_computer_image_1.jpg",
         "Name": "Desktop PC Pro",
         "Price": 799.99,
         "StockAvailable": 10,
         "StockStored": 50
-      },
-      {
-        "Category": "Desktop Computers",
-        "Description": "Compact desktop computer with high performance",
-        "ImageReference": "desktop_computer_image_2.jpg",
-        "Name": "Compact Desktop Elite",
-        "Price": 649.99,
-        "StockAvailable": 15,
-        "StockStored": 30
-      },
-      {
-        "Category": "Desktop Computers",
-        "Description": "Multitasking powerhouse for professional use",
-        "ImageReference": "desktop_computer_image_3.jpg",
-        "Name": "Workstation Master",
-        "Price": 1299.99,
-        "StockAvailable": 5,
-        "StockStored": 20
-      },
-      {
-        "Category": "Desktop Computers",
-        "Description": "Energy-efficient desktop computer with sleek design",
-        "ImageReference": "desktop_computer_image_4.jpg",
-        "Name": "Green Desktop Plus",
-        "Price": 899.99,
-        "StockAvailable": 8,
-        "StockStored": 25
-      },
-      {
-        "Category": "Desktop Computers",
-        "Description": "Budget-friendly desktop computer for home use",
-        "ImageReference": "desktop_computer_image_5.jpg",
-        "Name": "Home Desktop Basic",
-        "Price": 499.99,
-        "StockAvailable": 12,
-        "StockStored": 40
       }
+    
     ],
     "DesktopGaming": [
       {
         "Category": "Desktop Gaming",
+        "Subcategory": "Desktop Gaming",
         "Description": "High-performance gaming desktop with RGB lighting",
         "ImageReference": "gaming_desktop_image_1.jpg",
         "Name": "Gaming Beast X",
         "Price": 1499.99,
         "StockAvailable": 7,
         "StockStored": 15
-      },
-      {
-        "Category": "Desktop Gaming",
-        "Description": "VR-ready gaming desktop for immersive gaming experience",
-        "ImageReference": "gaming_desktop_image_2.jpg",
-        "Name": "VR Gaming Pro",
-        "Price": 1899.99,
-        "StockAvailable": 3,
-        "StockStored": 10
-      },
-      {
-        "Category": "Desktop Gaming",
-        "Description": "Compact gaming desktop for LAN parties",
-        "ImageReference": "gaming_desktop_image_3.jpg",
-        "Name": "LAN Gaming Mini",
-        "Price": 1299.99,
-        "StockAvailable": 6,
-        "StockStored": 18
-      },
-      {
-        "Category": "Desktop Gaming",
-        "Description": "Ultra-fast gaming desktop for competitive gamers",
-        "ImageReference": "gaming_desktop_image_4.jpg",
-        "Name": "Speedster Gaming Ultimate",
-        "Price": 1799.99,
-        "StockAvailable": 4,
-        "StockStored": 12
-      },
-      {
-        "Category": "Desktop Gaming",
-        "Description": "Entry-level gaming desktop for beginners",
-        "ImageReference": "gaming_desktop_image_5.jpg",
-        "Name": "Gaming Starter",
-        "Price": 999.99,
-        "StockAvailable": 10,
-        "StockStored": 22
       }
     ]
+
+
+    
   }
 }
