@@ -34,7 +34,5 @@ async function addProduct(product) {
     });
 }
 
-
-
 // Export the function so it can be used elsewhere
 export { addProduct };
