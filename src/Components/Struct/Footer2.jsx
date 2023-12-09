@@ -22,12 +22,16 @@ const Footer2 = () => {
     { title: 'Useful links', options: ['Customer area', 'Blog', 'Refurbished'] }
   ];
 
+  const handleClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className="footer py-4">
       <Container>
         <Row className="no-gutters align-items-start">
           <Col>
-            <Link to="/" style={{ textDecoration: 'none' }}>
+            <Link to="/" onClick={handleClick} style={{ textDecoration: 'none' }}>
               <div className="d-lg-block" style={{ fontFamily: "AusterBlack", fontSize: "40px", marginRight: '20px', userSelect: 'none' }}>
                 <span style={{ color: "#4eadfe" }}>INTECNO</span>
                 <span style={{ color: "#4eadfe" }}>PT</span>
