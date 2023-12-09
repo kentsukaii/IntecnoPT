@@ -16,7 +16,7 @@ const Header = () => {
   };
 
   return (
-    <Navbar bg="light" expand="lg" style={{ padding: '20px 5%' }}>
+    <Navbar className="mt-4" bg="light" expand="lg" style={{ padding: '20px 5%' }}>
       <Navbar.Brand href="/" className="d-none d-lg-block" style={{ fontFamily: "AusterBlack", fontSize: "40px", marginRight: '20px' }}>
         <span style={{ color: "#4eadfe" }}>INTECNO</span>
         <span style={{ color: "#4eadfe" }}>PT</span>

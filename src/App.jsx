@@ -22,6 +22,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import './App.css';
+import Footer from '../src/Components/Struct/Footer';
 import Header from './Components/Struct/Header';
 
 // Inicializando o aplicativo Firebase
@@ -49,6 +50,7 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
         </Routes>
       </Router>
+      <Footer />
     </div>
   );
 }
