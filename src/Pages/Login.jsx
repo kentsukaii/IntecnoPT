@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useFirebaseLogin } from './Backend';
+import { useFirebaseLogin } from './BackendFiles/Backend';
 import PasswordReset from './PasswordReset';
 import {
   MDBInput,
@@ -32,7 +32,7 @@ const Login = () => {
     handlePasswordReset,
     handleCheckboxChange,
     saveSession,
-    
+
   } = useFirebaseLogin();
 
 
@@ -56,32 +56,32 @@ const Login = () => {
                   <p>-----------------------------or-------------------------</p>
                 </div>
                 {!loggedInUser && (
-                <div>
-                <div className="col-md-12 mb-4 w-75">
-                  <MDBInput label="E-Mail" id="typeEmail" type="email" size='lg' className="p-3 w-100" value={email} onChange={(e) => setEmail(e.target.value)} />
-                  <br />
-                  <MDBInput label="Password" id="typePassword" type="password" size='lg' className="p-3 w-100" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-                <div className="col-md-12">
-                  <a href="#" onClick={handlePasswordReset}>Forgot your Password?</a>
-                  <MDBCheckbox label="Save Session" checked={saveSession} onChange={handleCheckboxChange} />
-                </div>
-                
-                <div className="col-md-12">
-                  {/*<ReCAPTCHA sitekey="6Ldu3igpAAAAAIubuBWKw9YLJ-_mIaBd2EnYm8m1" onChange={handleCaptchaChange} />*/}
-                </div>
-                <div className="col-md-12">
-                  <MDBBtn onClick={handleLogin} disabled={authing}>LOGIN</MDBBtn></div>
+                  <div>
+                    <div className="col-md-12 mb-4 w-75">
+                      <MDBInput label="E-Mail" id="typeEmail" type="email" size='lg' className="p-3 w-100" value={email} onChange={(e) => setEmail(e.target.value)} />
+                      <br />
+                      <MDBInput label="Password" id="typePassword" type="password" size='lg' className="p-3 w-100" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                    <div className="col-md-12">
+                      <a href="#" onClick={handlePasswordReset}>Forgot your Password?</a>
+                      <MDBCheckbox label="Save Session" checked={saveSession} onChange={handleCheckboxChange} />
+                    </div>
+
+                    <div className="col-md-12">
+                      {/*<ReCAPTCHA sitekey="6Ldu3igpAAAAAIubuBWKw9YLJ-_mIaBd2EnYm8m1" onChange={handleCaptchaChange} />*/}
+                    </div>
+                    <div className="col-md-12">
+                      <MDBBtn onClick={handleLogin} disabled={authing}>LOGIN</MDBBtn></div>
                   </div>)}
-                  {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
                 <div className="col-md-12">
                   {"By logging in, I declare that I have read and accept the Terms and Conditions, and the use of my personal data as explained in the Privacy Policy."}
                 </div>
               </div>
-              
+
             </div>
           </div>
-          
+
           <div className="col-md-6 mt-5 mx-auto">
             <div className="bg-light p-5">
               <div className="container">
