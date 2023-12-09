@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
+import Footer2 from "../Components/Struct/Footer2";
 import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
 import { collection, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { getUserData } from './Backend';
@@ -191,7 +192,10 @@ const Profile = () => {
       </div>
     </div>
   </div>
+  <Footer2 />
 </div>
+
+
 
 
 

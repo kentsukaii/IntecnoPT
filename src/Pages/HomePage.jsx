@@ -10,6 +10,7 @@ import { Button, Container, Row, Col } from 'react-bootstrap'; import { useMedia
 import { FaCheckCircle, FaStar } from 'react-icons/fa'; // Importing icons
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import ProductCard from '../Components/Cards/ProductCard';
+import Footer2 from "../Components/Struct/Footer2";
 
 
 const HomePage = () => {
@@ -50,8 +51,8 @@ const HomePage = () => {
   const names = ["Desktop Computers", "Components", "Peripherals", "Laptops"];
 
   const routes = [
-    "/card",
-    "/templatepage",
+    "/login",
+    "/register",
     "/templatepage",
     "/templatepage",
   ];
@@ -214,6 +215,7 @@ const HomePage = () => {
 
         </div>
       </div>
+      <Footer2 />
     </div>
 
   );
