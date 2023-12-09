@@ -1,13 +1,20 @@
 // Importing React, react-router-dom, and MDB modules
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from "react";
+import React, { useState } from "react";
 import { Dropdown, Form, FormControl, Nav, Navbar } from 'react-bootstrap';
 import maguire from "../../assets/godmaguire.jpg";
 import "../../fonts/fonts.css";
 import "./Header.css";
 
 const Header = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    // Here you can add functionality to switch the theme of your application
+  };
+
   return (
     <Navbar bg="light" expand="lg" style={{ padding: '20px 5%' }}>
       <Navbar.Brand href="/" className="d-none d-lg-block" style={{ fontFamily: "AusterBlack", fontSize: "40px", marginRight: '20px' }}>
@@ -24,6 +31,9 @@ const Header = () => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ position: 'absolute', top: '20px', right: '5%' }} />
       <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end align-items-center">
         <Nav>
+          <Nav.Link onClick={toggleDarkMode} className="order-0 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block">
+            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="2x" />
+          </Nav.Link>
           <Nav.Link href="/cart" className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-lg-none" style={{ position: 'absolute', top: '20px', left: '5%' }}>
             <FontAwesomeIcon icon={faShoppingCart} size="2x" />
             <span className="badge badge-warning">5</span>
@@ -43,8 +53,6 @@ const Header = () => {
               <Dropdown.Divider />
               <Dropdown.Item href="/logout" className="text-center">Logout</Dropdown.Item>
             </Dropdown.Menu>
-
-
           </Dropdown>
         </Nav>
       </Navbar.Collapse>
