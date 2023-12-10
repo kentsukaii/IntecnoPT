@@ -333,16 +333,23 @@ export const useFirebaseLogin = () => {
 
 
   const handleLogin = async () => {
+    console.log("Starting login process...");
+    setAuthing(true);
+  
     try {
       // Check if the email exists in the Users collection before signing in
       const emailExists = await checkEmailExists(email);
-
+      console.log(`Email exists: ${emailExists}`);
+  
       if (!emailExists) {
         setError('Email does not exist');
         return;
       }
-
+  
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log("User signed in successfully");
+      console.log(`User ID: ${userCredential.user.uid}`); // Print the user's ID
+  
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
       navigate('/');
@@ -350,8 +357,10 @@ export const useFirebaseLogin = () => {
       console.error("Login error:", error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
       setLoggedInUser(null);
+      setAuthing(false);
     }
   };
+  
 
   const handleLogingoogle = async () => {
     setAuthing(true);
@@ -566,3 +575,5 @@ export const API_Fetch = {
   // other fetch functions...
 };
 */
+
+export default useFirebaseLogin;

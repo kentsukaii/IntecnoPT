@@ -1,8 +1,15 @@
 import React from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { MDBIcon } from "mdb-react-ui-kit";
+import useFirebaseLogin from './BackendFiles/Backend';
 
 const Login = () => {
+  
+  const {
+    handleLogin,
+  } = useFirebaseLogin();
+
+
   return (
     <Container fluid className="p-0 mt-4 h-100">
       <Row noGutters className="w-100">
@@ -39,7 +46,7 @@ const Login = () => {
                 </div>
               </div>
               <div className="text-start">
-                <Button variant="primary" type="submit" className="mb-4 btn-lg py-3">
+                <Button onClick={handleLogin} variant="primary" type="submit" className="mb-4 btn-lg py-3">
                   Login
                 </Button>
                 <div style={{ width: '65%' }}>
