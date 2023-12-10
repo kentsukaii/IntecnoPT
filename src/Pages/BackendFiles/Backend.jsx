@@ -369,7 +369,12 @@ export const useFirebaseLogin = () => {
     setAuthing(true);
 
     try {
-      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+
+      const result = await signInWithPopup(auth, provider);
       const authUser = result.user;
 
       // Check email existence asynchronously
@@ -378,6 +383,10 @@ export const useFirebaseLogin = () => {
       if (!emailExists) {
         setError('Email does not exist');
         setAuthing(false);
+
+        // Delete the user from Firebase Authentication
+        await deleteUser(authUser);
+
         return;
       }
 
@@ -390,6 +399,7 @@ export const useFirebaseLogin = () => {
       setAuthing(false);
     }
   };
+
 
 
 
