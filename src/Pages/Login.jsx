@@ -1,25 +1,32 @@
 import React from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { MDBIcon } from "mdb-react-ui-kit";
+import useFirebaseLogin from './BackendFiles/Backend';
 
 const Login = () => {
+  
+  const {
+    handleLogin,
+  } = useFirebaseLogin();
+
+
   return (
-    <Container fluid className="p-0 mt-4 h-100 d-flex justify-content-center align-items-center">
-      <Row noGutters className="w-100 d-flex align-items-center">
-        <Col className="d-flex flex-column align-items-start justify-content-center p-4 bg-light" xs={12} md={8} lg={6}>
-          <div className="d-flex flex-column align-items-start justify-content-center w-100">
+    <Container fluid className="p-0 mt-4 h-100">
+      <Row noGutters className="w-100">
+        <Col xs={12} md={8} lg={6} className="p-4 bg-light">
+          <div className="d-flex flex-column align-items-center justify-content-center w-100">
             <Row className="mb-2 mt-4">
               <h4>Login to your IntecnoPT account</h4>
             </Row>
             <Row className="mb-4">
               <Col xs={12} md={6} className="mb-2 mb-md-0">
-                <Button variant="primary" className="w-100 btn-lg">
+                <Button variant="primary" className="w-100 btn-lg py-3">
                   <MDBIcon fab icon="facebook" className="me-2" />
                   Facebook
                 </Button>
               </Col>
               <Col xs={12} md={6}>
-                <Button variant="danger" className="w-100 btn-lg">
+                <Button variant="danger" className="w-100 btn-lg py-3">
                   <MDBIcon fab icon="google" className="me-2" />
                   Google
                 </Button>
@@ -39,7 +46,7 @@ const Login = () => {
                 </div>
               </div>
               <div className="text-start">
-                <Button variant="primary" type="submit" className="mb-4 btn-lg">
+                <Button onClick={handleLogin} variant="primary" type="submit" className="mb-4 btn-lg py-3">
                   Login
                 </Button>
                 <div style={{ width: '65%' }}>
@@ -52,8 +59,8 @@ const Login = () => {
             </Form>
           </div>
         </Col>
-        <Col className="d-flex flex-column align-items-start justify-content-center p-4 bg-primary text-white" xs={12} md={8} lg={6}>
-          <div className="d-flex flex-column align-items-start justify-content-center w-100">
+        <Col xs={12} md={8} lg={6} className="p-4 bg-primary text-white">
+          <div className="d-flex flex-column align-items-center justify-content-center w-100">
             {/* Content for the second container, similar to the first one */}
           </div>
         </Col>

@@ -2,6 +2,7 @@ import React from 'react';
 import { loadData } from '..//REST_API/Data/loadData';
 import { Container, Row, Col, Button, Nav } from 'react-bootstrap';
 import { setDoc } from "firebase/firestore"; 
+import { addRandomOrders } from '../REST_API/firebaseAPI';
 
 
 function Dashboard() {
@@ -26,9 +27,11 @@ function Dashboard() {
                     <Button variant="primary" onClick={loadData}>
                         Load Data
                     </Button>
-                    <h1>Dashboard</h1>
-                    {/* Your dashboard code here */}
+                    <Button variant="primary" onClick={addRandomOrders}>
+                        Load random Orders
+                    </Button>
                 </Col>
+                
             </Row>
         </Container>
     );

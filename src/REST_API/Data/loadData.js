@@ -1,8 +1,8 @@
 // Import the necessary modules and functions
-import { addProduct } from '../firebaseAPI';
+import { addProduct, getTopSellingProducts } from '../firebaseAPI';
 import productData from './products.json';
 
-console.log('Successfully imported addProduct and productData');
+console.log('Successfully imported addProduct, getTopSellingProducts and productData');
 
 // Function to load data into the database
 async function loadData() {
@@ -23,6 +23,8 @@ async function loadData() {
             }
         }
     }
+
+
     
     console.log('Finished loading data');
 }

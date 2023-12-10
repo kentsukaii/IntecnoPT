@@ -11,6 +11,8 @@ import { FaCheckCircle, FaStar } from 'react-icons/fa'; // Importing icons
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import ProductCard from '../Components/Cards/ProductCard';
 import Footer2 from "../Components/Struct/Footer2";
+import { getTopSellingProducts } from '../REST_API/firebaseAPI';
+import { getOnSaleProducts } from '../REST_API/firebaseAPI';
 
 
 const HomePage = () => {
@@ -19,22 +21,26 @@ const HomePage = () => {
   const isBigScreen = useMediaQuery({ minDeviceWidth: 1824 });
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1224 });
   const isPortrait = useMediaQuery({ orientation: 'portrait' });
+  const [onSaleProducts, setOnSaleProducts] = useState([]);
+  const [topSellingProducts, setTopSellingProducts] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
+    const fetchTopSellingProducts = async () => {
+      const products = await getTopSellingProducts();
+      setTopSellingProducts(products);
+    };
+    getOnSaleProducts().then(setOnSaleProducts);
+    fetchTopSellingProducts();
+  }, []);
 
-    return () => unsubscribe();
-  }, [auth]);
 
-  const handleLogout = async () => {
+  /*const handleLogout = async () => {
     try {
       await signOut(auth);
     } catch (error) {
       console.error("Erro durante o logout:", error);
     }
-  };
+  };*/
 
   const carousel_images = [
     "src/Components/Images/Carousel/pcdiga_camera.jpg",
@@ -110,14 +116,13 @@ const HomePage = () => {
 
 
 
-
           <div className="col-md-12 mt-4 p-0">
             <div
               className="bg-white p-5 d-flex justify-content-start align-items-start flex-wrap"
               style={{ color: "white" }}
             >
               {circle_images.map((image, i) => (
-                <Link to={routes[i]} style={{ width: "25%", padding: "1%" }}>
+                <div onClick={() => window.location.href = routes[i]} style={{ width: "25%", padding: "1%", cursor: 'pointer' }}>
                   <div
                     key={i}
                     className="text-center d-flex flex-column align-items-center circle-container"
@@ -125,7 +130,9 @@ const HomePage = () => {
                   >
                     <div
                       className="circle bg-light rounded-circle d-flex justify-content-center align-items-center"
-                      style={{ width: "50%", height: "50%", margin: "0 auto" }}
+                      style={{ width: "50%", height: "50%", margin: "0 auto", transition: 'transform .2s, border-color .2s', border: 'solid 3px transparent' }}
+                      onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.borderColor = '#4EADFE'; }}
+                      onMouseOut={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'transparent'; }}
                     >
                       <img
                         src={image}
@@ -141,7 +148,7 @@ const HomePage = () => {
                       {names[i]}
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </div>
@@ -150,24 +157,24 @@ const HomePage = () => {
 
 
 
-          <div style={{ backgroundColor: "#f1f1f1" }}>
 
-            <div className="col-12 p-0 overflow-auto"> {/* TOP SALES TITLE */}
+
+
+
+
+
+          <div style={{ backgroundColor: "#f1f1f1" }}>
+            <div className="col-12 p-0 overflow-auto">
               <div className="d-flex align-items-center p-4">
-                <div style={{ height: '2rem', width: '0.3rem', backgroundColor: 'blue', marginRight: '8px' }}></div>
+                <div style={{ height: '2rem', width: '0.3rem', backgroundColor: '#4EADFE', marginRight: '8px' }}></div>
                 <h2 style={{ margin: 0, fontSize: '2.3rem', lineHeight: '2rem' }}><b>TOP SALES</b></h2>
               </div>
             </div>
-
-            <div className="col-12 p-0 overflow-x-auto"> {/* TOP SALES CONTAINER */}
-
+            <div className="col-12 p-0 overflow-x-auto">
               <div className="d-flex flex-row flex-nowrap p-3 align-items-start custom-class w-100" style={{ gap: '1rem' }}>
-                {/* RENDER THE CARDS HERE */}
-                {renderCards()}
+                {topSellingProducts.map(product => <ProductCard key={product.Name} product={product} isBestSeller={product.isBestSeller} />)}
               </div>
-
             </div>
-
           </div>
 
 
@@ -194,24 +201,23 @@ const HomePage = () => {
 
 
           <div className="mt-4" style={{ backgroundColor: "#f1f1f1" }}>
-
-            <div className="col-12 p-0 overflow-auto"> {/* PROMOTIONS TITLE */}
+            <div className="col-12 p-0 overflow-auto">
               <div className="d-flex align-items-center p-4">
-                <div style={{ height: '2rem', width: '0.3rem', backgroundColor: 'blue', marginRight: '8px' }}></div>
-                <h2 style={{ margin: 0, fontSize: '2.3rem', lineHeight: '2rem' }}><b>PROMOTIONS</b></h2>
+                <div style={{ height: '2rem', width: '0.3rem', backgroundColor: '#4EADFE', marginRight: '8px' }}></div>
+                <h2 style={{ margin: 0, fontSize: '2.3rem', lineHeight: '2rem' }}><b>ON SALE</b></h2>
               </div>
             </div>
-
-            <div className="col-12 p-0 overflow-x-auto"> {/* TOP SALES CONTAINER */}
-
+            <div className="col-12 p-0 overflow-x-auto">
               <div className="d-flex flex-row flex-nowrap p-3 align-items-start custom-class w-100" style={{ gap: '1rem' }}>
-                {/* RENDER THE CARDS HERE */}
-                {renderCards()}
+                {onSaleProducts.map(product => <ProductCard key={product.Name} product={product} />)}
               </div>
-
             </div>
-
           </div>
+
+
+
+
+
 
 
         </div>
