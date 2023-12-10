@@ -50,7 +50,6 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
         </Routes>
       </Router>
-      <Footer />
     </div>
   );
 }
