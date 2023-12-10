@@ -1,9 +1,11 @@
+import { onAuthStateChanged, updateProfile } from 'firebase/auth';
+import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { MDBBtn, MDBInput } from 'mdb-react-ui-kit';
 import React, { useEffect, useState } from 'react';
-import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
-import { getAuth, updatePassword, onAuthStateChanged, updateProfile, updateEmail, reauthenticateWithCredential, EmailAuthProvider  } from 'firebase/auth';
-import { collection, getDocs, query, where, updateDoc } from 'firebase/firestore';
-import { getUserData } from './Backend';
+import Footer2 from "../Components/Struct/Footer2";
 import { auth, firestore } from '../firebase';
+import { getUserData } from './BackendFiles/Backend';
+
 
 
 const Profile = () => {
@@ -309,6 +311,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <Footer2 />
     </div>
   );
 };

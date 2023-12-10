@@ -3,3 +3,7 @@
     src: url('QuartzoBold.ttf') format('truetype');
   }
   
+  @font-face {
+    font-family: 'AusterBlack';
+    src: url('AusterBlack.ttf') format('truetype');
+  }

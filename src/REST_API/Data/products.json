@@ -1,0 +1,35 @@
+{
+  "Products": {
+    "Desktop Computers": {
+      "Desktop Normal": [
+        {
+          "Description": "Powerful desktop computer for everyday use",
+          "ImageReference": "desktop_computer_image_1.jpg",
+          "Name": "Desktop PC Pro",
+          "Price": 799.99,
+          "StockAvailable": 10,
+          "StockStored": 50
+        }
+      ],
+      "Desktop Gaming": [
+        {
+          "Description": "High-performance gaming desktop with RGB lighting",
+          "ImageReference": "gaming_desktop_image_1.jpg",
+          "Name": "Gaming Beast X",
+          "Price": 1499.99,
+          "StockAvailable": 7,
+          "StockStored": 15
+        }
+      ]
+    },
+    "Components": {
+     
+    },
+    "Peripherals": {
+     
+    },
+    "Laptops": {
+      
+    }
+  }
+}

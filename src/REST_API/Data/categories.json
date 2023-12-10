@@ -1,0 +1,48 @@
+{
+    "Categories": [
+      {
+        "Name": "Desktop Computers",
+        "Subcategories": [
+          "Desktop Normal",
+          "Desktop Gaming"
+        ]
+      },
+      {
+        "Name": "Components",
+        "Subcategories": [
+          "CPU",
+          "RAM",
+          "GPU",
+          "Motherboard",
+          "Storage",
+          "Power Supply",
+          "Cooling",
+          "Case",
+          "Networking",
+          "Sound Card"
+        ]
+      },
+      {
+        "Name": "Peripherals",
+        "Subcategories": [
+          "Keyboard",
+          "Mouse",
+          "Monitor",
+          "Headphones",
+          "Speakers",
+          "Webcam",
+          "Printer",
+          "Microphone",
+          "Tablets"
+        ]
+      },
+      {
+        "Name": "Laptops",
+        "Subcategories": [
+          "Laptop Normal",
+          "Laptop Gaming"
+        ]
+      }
+    ]
+  }
+  

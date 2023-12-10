@@ -2,12 +2,23 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { MDBCarousel, MDBCarouselItem } from "mdb-react-ui-kit";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import ProductCard from "../Components/Cards/ProductCard";
+
 import "../Pages/CSS/HomePage.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLaptop, faBars } from '@fortawesome/free-solid-svg-icons';
+import { Button, Container, Row, Col } from 'react-bootstrap'; import { useMediaQuery } from 'react-responsive';
+import { FaCheckCircle, FaStar } from 'react-icons/fa'; // Importing icons
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import ProductCard from '../Components/Cards/ProductCard';
+import Footer2 from "../Components/Struct/Footer2";
+
 
 const HomePage = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
+  const isBigScreen = useMediaQuery({ minDeviceWidth: 1824 });
+  const isTabletOrMobile = useMediaQuery({ maxWidth: 1224 });
+  const isPortrait = useMediaQuery({ orientation: 'portrait' });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -25,6 +36,11 @@ const HomePage = () => {
     }
   };
 
+  const carousel_images = [
+    "src/Components/Images/Carousel/pcdiga_camera.jpg",
+    "src/Components/Images/Carousel/intecno1.png",
+  ];
+
   const circle_images = [
     "src/Components/Images/Circles/Prebuilt_Computers.png",
     "src/Components/Images/Circles/Components.png",
@@ -32,21 +48,11 @@ const HomePage = () => {
     "src/Components/Images/Circles/Laptops.png",
   ];
 
-  const carousel_images = [
-    "src/Components/Images/Carousel/pcdiga_camera.jpg",
-    "src/Components/Images/Carousel/pcdiga_christmas.jpg",
-    "src/Components/Images/Carousel/pcdiga_christmas_2.jpg",
-    "src/Components/Images/Carousel/pcdiga_christmas_3.jpg",
-    "src/Components/Images/Carousel/pcdiga_christmas_4.jpg",
-    "src/Components/Images/Carousel/pcdiga_computer.jpg",
-    "src/Components/Images/Carousel/pcdiga_vacuum_cleaner.jpg",
-  ];
-
   const names = ["Desktop Computers", "Components", "Peripherals", "Laptops"];
 
   const routes = [
-    "/templatepage",
-    "/templatepage",
+    "/login",
+    "/register",
     "/templatepage",
     "/templatepage",
   ];
@@ -68,6 +74,17 @@ const HomePage = () => {
     </div>
   ));
 
+  // TEMPORARY FUNCTION N TOCA ROSA XE
+
+  const renderCards = () => {
+    const cards = [];
+    for (let i = 0; i < 15; i++) {
+      cards.push(<ProductCard key={i} />);
+    }
+    return cards;
+  };
+
+
 
   return (
     <div className="container-fluid custom-class p-0">
@@ -75,15 +92,22 @@ const HomePage = () => {
         <div className="col-md-12 mt-3 p-0">
           <MDBCarousel showIndicators showControls fade>
             {carousel_images.map((image, i) => (
-              <MDBCarouselItem itemId={i + 1} key={i}>
+              <MDBCarouselItem itemId={i + 1} key={i} >
                 <img
                   src={image}
                   className="d-block w-100"
                   alt={`Slide ${i + 1}`}
+                  style={{ height: "300px", width: "1584px" }}
                 />
               </MDBCarouselItem>
             ))}
           </MDBCarousel>
+
+
+
+
+
+
 
 
 
@@ -126,69 +150,75 @@ const HomePage = () => {
 
 
 
-          <div className="col-md-12 mt-4 p-0 ">
-            <div
-              className="bg-info p-0 d-flex flex-column align-items-center "
-              style={{ height: "690px" }}
-            >
-              <div
-                className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class w-100"
-                style={{
-                  height: "28px",
-                }}
-              ></div>
-              <div
-                className="bg-success p-3  d-flex justify-content-around align-items-center  custom-class w-100"
-                style={{
-                  height: "50px",
-                }}
-              ></div>
-              <div
-                className="bg-white p-3  d-flex justify-content-around align-items-center  custom-class w-100"
-                style={{
-                  height: "576px",
-                }}
-              >
+          <div style={{ backgroundColor: "#f1f1f1" }}>
+
+            <div className="col-12 p-0 overflow-auto"> {/* TOP SALES TITLE */}
+              <div className="d-flex align-items-center p-4">
+                <div style={{ height: '2rem', width: '0.3rem', backgroundColor: 'blue', marginRight: '8px' }}></div>
+                <h2 style={{ margin: 0, fontSize: '2.3rem', lineHeight: '2rem' }}><b>TOP SALES</b></h2>
               </div>
             </div>
-            <div className="col-md-12 mt-4 p-0">
-              <div
-                className="bg-black p-5 mx-auto"
-                style={{ height: "110px", maxWidth: "98.5%", color: "white" }}
-              >
-                {"ADVERTISING"}
+
+            <div className="col-12 p-0 overflow-x-auto"> {/* TOP SALES CONTAINER */}
+
+              <div className="d-flex flex-row flex-nowrap p-3 align-items-start custom-class w-100" style={{ gap: '1rem' }}>
+                {/* RENDER THE CARDS HERE */}
+                {renderCards()}
               </div>
-              <div className="col-md-12 mt-4 p-0 ">
-                <div
-                  className="bg-info p-0 d-flex flex-column align-items-center "
-                  style={{ height: "690px" }}
-                >
-                  <div
-                    className="bg-dark p-3 d-flex justify-content-around align-items-center m-0 custom-class w-100"
-                    style={{
-                      height: "28px",
-                    }}
-                  ></div>
-                  <div
-                    className="bg-success p-3  d-flex justify-content-around align-items-center  custom-class w-100"
-                    style={{
-                      height: "50px",
-                    }}
-                  ></div>
-                  <div
-                    className="bg-white p-3  d-flex justify-content-around align-items-center  custom-class w-100"
-                    style={{
-                      height: "576px",
-                    }}
-                  >
-                  </div>
-                </div>
-              </div>
+
             </div>
+
           </div>
+
+
+
+
+
+
+
+
+
+
+
+
+          <div className="col-md-12 mt-4 p-0">
+            <div
+              className="bg-black p-5 mx-auto"
+              style={{ height: "110px", maxWidth: "98.5%", color: "white" }}
+            >
+              {"ADVERTISING"}
+            </div>
+
+          </div>
+
+
+
+          <div className="mt-4" style={{ backgroundColor: "#f1f1f1" }}>
+
+            <div className="col-12 p-0 overflow-auto"> {/* PROMOTIONS TITLE */}
+              <div className="d-flex align-items-center p-4">
+                <div style={{ height: '2rem', width: '0.3rem', backgroundColor: 'blue', marginRight: '8px' }}></div>
+                <h2 style={{ margin: 0, fontSize: '2.3rem', lineHeight: '2rem' }}><b>PROMOTIONS</b></h2>
+              </div>
+            </div>
+
+            <div className="col-12 p-0 overflow-x-auto"> {/* TOP SALES CONTAINER */}
+
+              <div className="d-flex flex-row flex-nowrap p-3 align-items-start custom-class w-100" style={{ gap: '1rem' }}>
+                {/* RENDER THE CARDS HERE */}
+                {renderCards()}
+              </div>
+
+            </div>
+
+          </div>
+
+
         </div>
       </div>
+      <Footer2 />
     </div>
+
   );
 };
 
