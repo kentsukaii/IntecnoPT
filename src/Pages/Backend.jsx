@@ -13,11 +13,15 @@ import {
   updateProfile,
   sendPasswordResetEmail,
   fetchSignInMethodsForEmail,
+ 
 } from "firebase/auth";
-import { collection, addDoc, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../firebase"; // import firestore from your firebase file
 import { useNavigate } from "react-router-dom";
-import { setDoc } from "firebase/firestore"; 
+
+
+
+
 
 
 //
@@ -179,7 +183,6 @@ export const useFirebaseRegister = () => { // MAIN
         displayName: displayName,
         email: authUser.user.email,
         Address: "",
-        Name: "",
         Phone_number: "",
         dateofbirth: "",
       };
@@ -248,13 +251,14 @@ export const useFirebaseRegister = () => { // MAIN
         displayName: authUser.displayName,
         email: authUser.email,
         Address: "",
-        Name: "",
         Phone_number: "",
         dateofbirth: "",
       };
       await addDoc(usersCollection, userData);
     }
   };
+
+  
 
   return {
     email,
@@ -466,7 +470,16 @@ export const useFirebaseLogin = () => {
   };
 
 
-
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in
+      setLoggedInUser(user);
+      navigate('/');
+    } else {
+      // User is signed out
+      setLoggedInUser(null);
+    }
+  });
 
 
 
@@ -496,57 +509,44 @@ export const useFirebaseLogin = () => {
     setUserProfile,
     setSaveSession,
     handleCheckboxChange,
+    onAuthStateChanged,
     
   };
 };
 
 
-const usersCollection = collection(firestore, 'Users'); // use firestore to create the usersCollection
+
 
 export const getUserData = async () => {
-  const user = auth.currentUser;
+  // Get the current user
+  const user = getAuth().currentUser;
 
-  if (!user) {
-    throw new Error('No user is currently signed in');
-  }
 
-  console.log('Current user ID:', user.uid);  // Log the user ID
+  if (user) {
+    // Get the user's email
+    const email = user.email;
 
-  // Get the user document from Firestore
-  const userDocRef = doc(usersCollection, user.uid);
-  let userDoc = await getDoc(userDocRef);
+    // Query for the user document where the email field matches the user's email
+    const q = query(collection(firestore, "Users"), where("email", "==", email));
 
-  if (!userDoc.exists()) {
-    // The document does not exist, create it
-    await setDoc(userDocRef, {
-      displayName: user.displayName,
-      email: user.email,
-      // Add other fields as needed
-    });
+    // Execute the query
+    const querySnapshot = await getDocs(q);
 
-    // Fetch the document again
-    userDoc = await getDoc(userDocRef);
-  }
+    // Get the first document from the query result (assuming email is unique)
+    const userDocSnap = querySnapshot.docs[0];
 
-  console.log('User document data:', userDoc.data());  // Log the document data
+    if (userDocSnap) {
 
-  const userData = userDoc.data();
-
-  // Split the displayName into firstName and lastName
-  let firstName = userData.displayName;
-  let lastName = '';
-
-  const nameParts = userData.displayName.split(' ');
-  if (nameParts.length > 1) {
-    firstName = nameParts[0];
-    lastName = nameParts.slice(1).join(' ');
-  }
-
-  return {
-    email: user.email,
-    firstName,
-    lastName,
-    dateOfBirth: userData.dateofbirth, // Add this line
-    // Add other fields as needed
+      // Return the document data
+      return userDocSnap.data();
+    } else {
+      throw new Error('No document found for the current user');
+    }
+  } else {
+    throw new Error('No user signed in');
   };
+
+  
+  
 };
+
