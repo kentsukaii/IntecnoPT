@@ -10,10 +10,14 @@ import {
   getDocs,
   orderBy,
   limit,
+  updateDoc
+ 
 } from "firebase/firestore";
 import { firestore, storage } from "../firebase"; // Import the already initialized Firestore and Storage
 import { ref, listAll, uploadBytes } from "firebase/storage";
 import { getAuth } from "firebase/auth";
+import { arrayUnion } from "firebase/firestore";
+
 
 console.log("Load imports from firebaseAPI.js");
 
@@ -103,13 +107,14 @@ async function getTopSellingProducts() {
     const product = doc.data();
     if (index === 0) {
       // If the product is the first one in the array (most sold)
-      return { ...product, isBestSeller: true };
+      return { ...product, id: doc.id, isBestSeller: true };
     }
-    return product;
+    return { ...product, id: doc.id };
   });
   console.log(products); // Log the products to the console
   return products;
 }
+
 
 // Function to get the top 15 products that are on sale
 export async function getOnSaleProducts() {
@@ -119,8 +124,9 @@ export async function getOnSaleProducts() {
     limit(15)
   );
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map((doc) => doc.data());
+  return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
+
 
 async function addRandomOrders() {
   // Fetch all products
@@ -142,18 +148,22 @@ async function addRandomOrders() {
   }
 }
 
-// Function to bookmark a product
 export async function bookmarkProduct(productId) {
-    const auth = getAuth();
-    const userId = auth.currentUser.uid;
-    const bookmarkedProductRef = doc(collection(db, 'BookmarkedProducts'));
-  
-    // Create a new document in the 'BookmarkedProducts' collection
-    await setDoc(bookmarkedProductRef, { 
-      userId: userId,
-      productId: productId
-    });
-  }
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  console.log('userId:', userId); // Debugging line
+  console.log('productId:', productId); // Debugging line
+
+  const userBookmarksRef = doc(collection(firestore, 'Bookmarks'), userId);
+
+  // Add the product ID to the array of bookmarked products
+  await setDoc(userBookmarksRef, {
+    bookmarkedProducts: arrayUnion(productId)
+  }, { merge: true });
+}
+
+
+
 
 
 export { addProduct, addOrder, getTopSellingProducts, addRandomOrders };

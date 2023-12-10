@@ -17,6 +17,8 @@ const ProductCard = ({ product, isBestSeller }) => {
         .catch((error) => {
           console.error('Error getting image URL: ', error);
         });
+        console.log('product.id:', product.id); // Debugging line
+
     }
   }, [product]);
 
@@ -48,6 +50,7 @@ const ProductCard = ({ product, isBestSeller }) => {
     window.location.href = '/placeholder-url'; // Replace with the actual URL
   }
 
+
   return (
     <div className="card p-3 border rounded text-left" style={{ flex: '0 0 22rem', marginTop: "1rem", backgroundColor: "#f8f9fa", display: 'inline-block', height: '100%' }}>
       <div style={{ position: 'relative' }}>
@@ -68,6 +71,7 @@ const ProductCard = ({ product, isBestSeller }) => {
 
         <button className="btn text" style={{ backgroundColor: "transparent", color: "#4eadfe", fontSize: "0.8rem" }} onClick={() => bookmarkProduct(product.id)}><FaStar /> Bookmark</button>
 
+    
 
 
 
