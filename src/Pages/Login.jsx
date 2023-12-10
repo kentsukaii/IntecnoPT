@@ -1,127 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { useFirebaseLogin } from './BackendFiles/Backend';
-import { useNavigate } from 'react-router-dom';
-import PasswordReset from './PasswordReset';
-import {
-  MDBInput,
-  MDBIcon,
-  MDBBtn,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalBody,
-  MDBModalFooter,
-  MDBCheckbox,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-} from "mdb-react-ui-kit";
+import React from 'react';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { MDBIcon } from "mdb-react-ui-kit";
 
 const Login = () => {
-
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    error,
-    loggedInUser,
-    authing,
-    handleLogin,
-    handleLogingoogle,
-    handleLoginFacebook,
-    handlePasswordResetComplete,
-    showPasswordReset,
-    handlePasswordReset,
-    handleCheckboxChange,
-    saveSession,
-    
-  } = useFirebaseLogin();
-
-
   return (
-    <MDBContainer>
-      {!showPasswordReset && (
-        <MDBRow>
-          <MDBCol md="6" xs="12" className="mt-5 mb-6 mx-auto">
-            <div className="bg-light p-5">
-              <div className="container text-left">
-                <h4>Log in to your IntecnoPT account!</h4>
-                <div className="d-flex mt-4">
-                  <MDBCol md="6" sm="12" className="mb-3 mb-md-0">
-                    <MDBBtn
-                      color="indigo"
-                      className="text-white w-100"
-                      onClick={handleLoginFacebook}
-                      disabled={authing}
-                    >
-                      <MDBIcon fab icon="facebook" /> Facebook
-                    </MDBBtn>
-                  </MDBCol>
-                  <MDBCol md="6" sm="12">
-                    <MDBBtn
-                      color="danger"
-                      className="text-white w-100"
-                      onClick={handleLogingoogle}
-                      disabled={authing}
-                    >
-                      <MDBIcon fab icon="google" /> Google
-                    </MDBBtn>
-                  </MDBCol>
-                </div>
-                <div className="col-md-12 mt-4"></div>
-                {!loggedInUser && (
-                  <div>
-                    <div className="col-md-12 mb-4 w-75">
-                      <MDBInput label="E-Mail" id="typeEmail" type="email" size='lg' className="p-3 w-100" value={email} onChange={(e) => setEmail(e.target.value)} />
-                      <br />
-                      <MDBInput label="Password" id="typePassword" type="password" size='lg' className="p-3 w-100" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    </div>
-                    <div className="col-md-12 d-flex justify-content-between align-items-center">
-                      <a href="#" onClick={handlePasswordReset}>Forgot your Password?</a>
-                      <MDBCheckbox label="Save Session" checked={saveSession} onChange={handleCheckboxChange} />
-                    </div>
-
-                    <div className="col-md-12">
-                      {/*<ReCAPTCHA sitekey="6Ldu3igpAAAAAIubuBWKw9YLJ-_mIaBd2EnYm8m1" onChange={handleCaptchaChange} />*/}
-                    </div>
-                    <div className="col-md-12 mt-2">
-                      <MDBBtn onClick={handleLogin} disabled={authing}>LOGIN</MDBBtn></div>
-                  </div>)}
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <div className="col-md-12 mt-2 d-flex align-items-center">
-                  <span><MDBIcon fas icon="check-circle" className="mr-2" />By logging in, I declare that I have read and accept the Terms and Conditions, and the use of my personal data as explained in the Privacy Policy.</span>
+    <Container fluid className="p-0 mt-4 h-100 d-flex justify-content-center align-items-center">
+      <Row noGutters className="w-100 d-flex align-items-center">
+        <Col className="d-flex flex-column align-items-start justify-content-center p-4 bg-light" xs={12} md={8} lg={6}>
+          <div className="d-flex flex-column align-items-start justify-content-center w-100">
+            <Row className="mb-2 mt-4">
+              <h4>Login to your IntecnoPT account</h4>
+            </Row>
+            <Row className="mb-4">
+              <Col xs={12} md={6} className="mb-2 mb-md-0">
+                <Button variant="primary" className="w-100 btn-lg">
+                  <MDBIcon fab icon="facebook" className="me-2" />
+                  Facebook
+                </Button>
+              </Col>
+              <Col xs={12} md={6}>
+                <Button variant="danger" className="w-100 btn-lg">
+                  <MDBIcon fab icon="google" className="me-2" />
+                  Google
+                </Button>
+              </Col>
+            </Row>
+            <Form className="w-100">
+              <Form.Group className="mb-4">
+                <Form.Control type="email" placeholder="E-Mail" className="form-control-md" style={{ backgroundColor: '#e0e0e0', width: '80%' }} />
+              </Form.Group>
+              <Form.Group className="mb-4">
+                <Form.Control type="password" placeholder="Password" className="form-control-md" style={{ backgroundColor: '#e0e0e0', width: '80%' }} />
+              </Form.Group>
+              <div className="d-flex justify-content-between align-items-center w-100 mb-2">
+                <a href="#" className="text-decoration-none">Forgot your password?</a>
+                <div className="ms-5">
+                  <Form.Check type="checkbox" label="Save Session" />
                 </div>
               </div>
-            </div>
-          </MDBCol>
-
-          <MDBCol md="6" className="mt-5 mx-auto">
-            <div className="bg-light p-5">
-              <div className="container text-left">
-                <h2>Don't have an account yet? Register now!</h2>
-                <div className="col-md-12">
-                  <h4>Fast and quick!</h4>
-                </div>
-                <div className="col-md-12 mt-5">
-                  <h4>Track your orders</h4>
-                  <h4>Save your payment and shipping details and save time</h4>
-                  <h4>Make returns online</h4>
-                </div>
-                <div className="col-md-12 mt-5"></div>
-                <div className="col-md-12">
-                  <MDBBtn>REGISTER</MDBBtn>
+              <div className="text-start">
+                <Button variant="primary" type="submit" className="mb-4 btn-lg">
+                  Login
+                </Button>
+                <div style={{ width: '65%' }}>
+                  <p>
+                    <MDBIcon icon="check-circle" className="me-2" />
+                    By logging in, I declare that I have read and accept the Terms and Conditions, and the use of my personal data as explained in the Privacy Policy.
+                  </p>
                 </div>
               </div>
-            </div>
-          </MDBCol>
-        </MDBRow>
-      )}
-      {showPasswordReset && (
-        <PasswordReset onComplete={handlePasswordResetComplete} />
-      )}
-    </MDBContainer>
+            </Form>
+          </div>
+        </Col>
+        <Col className="d-flex flex-column align-items-start justify-content-center p-4 bg-primary text-white" xs={12} md={8} lg={6}>
+          <div className="d-flex flex-column align-items-start justify-content-center w-100">
+            {/* Content for the second container, similar to the first one */}
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

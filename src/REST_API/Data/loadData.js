@@ -27,7 +27,5 @@ async function loadData() {
     console.log('Finished loading data');
 }
 
-loadData();
-
 // Export the function so it can be used elsewhere
 export { loadData };
