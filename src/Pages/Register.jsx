@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBInput,
   MDBBtn,
@@ -10,10 +10,14 @@ import {
   MDBModalFooter,
   MDBCheckbox,
 } from "mdb-react-ui-kit";
-import { useFirebaseRegister } from "./BackendFiles/Backend";
-
+import { useFirebaseRegister, useFirebaseAuth  } from "./BackendFiles/Backend";
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+
+  const navigate = useNavigate();
+  const { user } = useFirebaseAuth(); 
+
   const {
     error,
     email,
@@ -36,6 +40,15 @@ const Register = () => {
     setReceiveNews,
 
   } = useFirebaseRegister();
+
+
+  useEffect(() => {
+    // Check if a user is already logged in
+    if (user) {
+      // If a user is logged in, navigate away to another page (e.g., home page)
+      navigate('/'); // Change the path to the desired page
+    }
+  }, [user, navigate]);
 
   return (
     <div>

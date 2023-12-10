@@ -76,6 +76,9 @@ export const useFirebaseRegister = () => { // MAIN
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [receiveNews, setReceiveNews] = useState(false);
 
+
+ 
+  
   const isValidEmailFormat = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
@@ -311,9 +314,6 @@ export const useFirebaseLogin = () => {
   const [userProfile, setUserProfile] = useState(null);
 
 
-
-
-
   const handleCheckboxChange = () => {
     setSaveSession(!saveSession);
   };
@@ -491,7 +491,9 @@ export const useFirebaseLogin = () => {
     setShowPasswordReset(false);
   };
 
+  
 
+ 
 
 
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
-import { getAuth, onAuthStateChanged, updateProfile, updateEmail, reauthenticateWithCredential } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, updateProfile, updateEmail, reauthenticateWithCredential, EmailAuthProvider, updatePassword,  GoogleAuthProvider, FacebookAuthProvider} from 'firebase/auth';
 import { collection, getDocs, query, where, updateDoc } from 'firebase/firestore';
 import Footer2 from "../Components/Struct/Footer2";
 import { auth, firestore } from '../firebase';
@@ -11,6 +11,7 @@ import { getUserData } from './BackendFiles/Backend';
 
 const Profile = () => {
 
+  const authInstance = getAuth();
   const [user, setUser] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -18,7 +19,7 @@ const Profile = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(null);
-
+  
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -88,6 +89,7 @@ const Profile = () => {
     try {
 
       const user = getAuth().currentUser;
+      const newEmail = user.email; 
       const email = user.email;
       const birthDate = new Date(dateOfBirth);
       const today = new Date();
@@ -101,9 +103,12 @@ const Profile = () => {
         setError("You must be at least be alive");
         return;
       }
-
+      if (newEmail !== user.email) {
+        // Update the user's email in Firebase Authentication
+        await updateEmail(user, newEmail);
+      }
       // Update the user's profile in Firebase Auth
-      await updateEmail(user, email);
+      
       await updateProfile(auth.currentUser, {
         displayName: `${firstName} ${lastName}`,
         email: email,
@@ -142,17 +147,33 @@ const Profile = () => {
     }
   };
 
-  const handlePasswordChange = async (currentPassword, newPassword) => {
-
-    // Re-authenticate the user
-    const credential = EmailAuthProvider.credential(user.email, currentPassword);
-    await reauthenticateWithCredential(user, credential);
-
-    // Update the user's password
-    await updatePassword(user, newPassword);
+  const handlePasswordChange = async () => {
+    try {
+      const currentPassword = document.getElementById('form5').value;
+      const newPassword = document.getElementById('form6').value;
+      const confirmNewPassword = document.getElementById('form7').value;
+  
+      const user = auth.currentUser;
+  
+      // Check if the current password matches the user's password
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      await reauthenticateWithCredential(user, credential);
+  
+      // Check if the new password and confirm new password fields match
+      if (newPassword !== confirmNewPassword) {
+        console.error('New password and confirm new password fields do not match');
+        return;
+      }
+  
+      // Update the user's password
+      await updatePassword(user, newPassword);
+      console.log('Password updated successfully');
+    } catch (error) {
+      console.error('Error updating password:', error.message);
+    }
   };
-
-
+  
+  
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -233,7 +254,6 @@ const Profile = () => {
                 </div>
               </div>
               <div>
-
                 <MDBBtn className='mt-3' onClick={handleSave}>Save</MDBBtn>
               </div>
               {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -243,18 +263,18 @@ const Profile = () => {
                 <div className="row mb-4">
                   <p>Change Password</p>
                   <div className="col-md-6">
-                    <MDBInput label='Current Password' id='form5' type={showPassword ? 'text' : 'password'} />
+                  <MDBInput label='Current Password' id='form5' type={showPassword ? 'text' : 'password'} />
                   </div>
                   <div className="col-md-6">
-                    <MDBInput label='New Password' id='form6' type={showPassword ? 'text' : 'password'} />
+                  <MDBInput label='New Password' id='form6' type={showPassword ? 'text' : 'password'} />
                   </div>
                 </div>
                 <div className="row mb-4">
                   <div className="col-md-6">
-                    <MDBInput label='Confirm New Password' id='form7' type={showPassword ? 'text' : 'password'} />
+                  <MDBInput label='Confirm New Password' id='form7' type={showPassword ? 'text' : 'password'} />
                   </div>
                 </div>
-                <MDBBtn className='mt-3' onClick={() => handlePasswordChange(currentPassword, newPassword)}>Save</MDBBtn>
+                <MDBBtn className='mt-3' onClick={handlePasswordChange}>Save</MDBBtn>
               </div>
 
             </div>

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { MDBIcon } from "mdb-react-ui-kit";
-import useFirebaseLogin from './BackendFiles/Backend';
+import {useFirebaseLogin, useFirebaseAuth } from './BackendFiles/Backend';
 import { useNavigate } from 'react-router-dom';
 import PasswordReset from './PasswordReset';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { user } = useFirebaseAuth(); 
 
   const {
     email,
@@ -25,6 +27,14 @@ const Login = () => {
     saveSession,
     
   } = useFirebaseLogin();
+
+  useEffect(() => {
+    // Check if a user is already logged in
+    if (user) {
+      // If a user is logged in, navigate away to another page (e.g., home page)
+      navigate('/'); // Change the path to the desired page
+    }
+  }, [user, navigate]);
 
 
   return (
