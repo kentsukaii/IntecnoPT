@@ -253,21 +253,13 @@ export const useFirebaseRegister = () => { // MAIN
         email: authUser.email,
         Address: "",
         Phone_number: "",
-        dateofbirth: "",
+        dateOfBirth: "",
       };
       await addDoc(usersCollection, userData);
     }
   };
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log('User is signed in');
-      navigate('/');
-    } else {
-      console.log('User is signed out');
-      
-    }
-  });
+
 
   return {
     email,
@@ -373,6 +365,13 @@ export const useFirebaseLogin = () => {
     }
   };
   
+  const deleteUser = async (user) => {
+    try {
+      await user.delete();
+    } catch (error) {
+      console.log(`Error deleting user: ${error}`);
+    }
+  };
 
   const handleLogingoogle = async () => {
     setAuthing(true);
@@ -414,34 +413,38 @@ export const useFirebaseLogin = () => {
 
   const handleLoginFacebook = async () => {
     setAuthing(true);
-
+  
     try {
       const result = await signInWithPopup(auth, new FacebookAuthProvider());
       const authUser = result.user;
-
+  
       // Check email existence asynchronously
       const emailExists = await checkEmailExists(authUser.email);
-
+  
       if (!emailExists) {
         setError('Email does not exist');
         setAuthing(false);
+  
+        // Delete the user from Firebase Authentication
+        await deleteUser(authUser);
+  
         return;
       }
-
+  
       await handleAuthUser(authUser);
-
+  
       // Redirect after a successful login
       navigate('/');
     } catch (error) {
       console.log(error);
-
+  
       // Handle specific error messages
       if (error.code === 'auth/account-exists-with-different-credential') {
         setError('This email is already in use with a different login method. Try logging in with the other provider.');
       } else {
         setError(error instanceof Error ? error.message : 'An unexpected error occurred');
       }
-
+  
       setAuthing(false);
     }
   };
@@ -489,15 +492,6 @@ export const useFirebaseLogin = () => {
   };
 
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      
-      navigate('/');
-    } else {
-      
-      navigate('/login');
-    }
-  });
 
 
 

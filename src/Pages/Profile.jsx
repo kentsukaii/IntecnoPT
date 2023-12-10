@@ -96,9 +96,9 @@ const Profile = () => {
       if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
-      if (age < 18) {
-        console.error('You must be at least 18 years old');
-        setError("You must be at least 18 years old");
+      if (age > 101 || age < 6) {
+        console.error('You must be at least be alive');
+        setError("You must be at least be alive");
         return;
       }
 
