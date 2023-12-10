@@ -1,6 +1,6 @@
 import { onAuthStateChanged, updateProfile } from 'firebase/auth';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { MDBBtn, MDBInput } from 'mdb-react-ui-kit';
+import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
 import React, { useEffect, useState } from 'react';
 import Footer2 from "../Components/Struct/Footer2";
 import { auth, firestore } from '../firebase';
