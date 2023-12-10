@@ -8,7 +8,12 @@
           "Name": "Desktop PC Pro",
           "Price": 799.99,
           "StockAvailable": 10,
-          "StockStored": 50
+          "StockStored": 50,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0
         }
       ],
       "Desktop Gaming": [
@@ -18,18 +23,110 @@
           "Name": "Gaming Beast X",
           "Price": 1499.99,
           "StockAvailable": 7,
-          "StockStored": 15
+          "StockStored": 15,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.2
         }
       ]
     },
     "Components": {
-     
+      "CPU": [
+        {
+          "Description": "High-performance CPU for gaming",
+          "ImageReference": "cpu_image_1.jpg",
+          "Name": "CPU Pro",
+          "Price": 299.99,
+          "StockAvailable": 20,
+          "StockStored": 100,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0
+        }
+      ],
+      "RAM": [
+        {
+          "Description": "16GB RAM for high-speed performance",
+          "ImageReference": "ram_image_1.jpg",
+          "Name": "RAM Pro",
+          "Price": 79.99,
+          "StockAvailable": 30,
+          "StockStored": 150,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.1
+        }
+      ]
     },
     "Peripherals": {
-     
+      "Keyboard": [
+        {
+          "Description": "Mechanical keyboard for professional use",
+          "ImageReference": "keyboard_image_1.jpg",
+          "Name": "Keyboard Pro",
+          "Price": 49.99,
+          "StockAvailable": 25,
+          "StockStored": 125,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0
+        }
+      ],
+      "Mouse": [
+        {
+          "Description": "Ergonomic mouse for comfortable use",
+          "ImageReference": "mouse_image_1.jpg",
+          "Name": "Mouse Pro",
+          "Price": 29.99,
+          "StockAvailable": 35,
+          "StockStored": 175,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.15
+        }
+      ]
     },
     "Laptops": {
-      
+      "Laptop Normal": [
+        {
+          "Description": "Portable laptop for everyday use",
+          "ImageReference": "laptop_normal_image_1.jpg",
+          "Name": "Laptop Normal Pro",
+          "Price": 599.99,
+          "StockAvailable": 15,
+          "StockStored": 75,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0
+        }
+      ],
+      "Laptop Gaming": [
+        {
+          "Description": "High-performance gaming laptop",
+          "ImageReference": "laptop_gaming_image_1.jpg",
+          "Name": "Gaming Laptop X",
+          "Price": 1299.99,
+          "StockAvailable": 10,
+          "StockStored": 50,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.25
+        }
+      ]
     }
   }
 }
