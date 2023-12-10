@@ -6,15 +6,18 @@ import { Dropdown, Form, FormControl, Nav, Navbar } from 'react-bootstrap';
 import maguire from "../../assets/godmaguire.png";
 import "../../fonts/fonts.css";
 import "./Header.css";
+import { useFirebaseAuth, useFirebaseLogin } from '../../Pages/BackendFiles/Backend';
+
 
 const Header = () => {
+  const { handleLogout } = useFirebaseAuth();
+  const { user} = useFirebaseLogin();
   const [darkMode, setDarkMode] = useState(false);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-    // Here you can add functionality to switch the theme of your application
-  };
 
+  };
   return (
     <Navbar className="mt-4" bg="light" expand="lg" style={{ padding: '20px 5%' }}>
       <Navbar.Brand href="/" className="d-none d-lg-block" style={{ fontFamily: "AusterBlack", fontSize: "40px", marginRight: '20px' }}>
@@ -50,7 +53,7 @@ const Header = () => {
               <Dropdown.Item href="/profile" className="text-center">Profile</Dropdown.Item>
               <Dropdown.Item href="/myordersinvoices" className="text-center">My Orders / Invoices</Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item href="/logout" className="text-center">Logout</Dropdown.Item>
+              <Dropdown.Item href="/" className="text-center" onClick={handleLogout}>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Nav>

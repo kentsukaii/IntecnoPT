@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   signInWithEmailAndPassword,
@@ -41,9 +40,11 @@ export const useFirebaseAuth = () => {
     return () => unsubscribe();
   }, [auth]);
 
-  const handleLogout = async () => {
+ const handleLogout = async () => {
     try {
       await signOut(auth);
+      setLoggedInUser(null);
+      navigate('/login');
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -183,7 +184,7 @@ export const useFirebaseRegister = () => { // MAIN
         email: authUser.user.email,
         Address: "",
         Phone_number: "",
-        dateofbirth: "",
+        dateOfBirth: "",
       };
       await addDoc(usersCollection, userData);
 
@@ -191,6 +192,7 @@ export const useFirebaseRegister = () => { // MAIN
       setPassword("");
       setConfirmPassword("");
       setError(null);
+      navigate('/');
     } catch (error) {
       console.error('Error registering user:', error.message);
       setError(
@@ -257,7 +259,15 @@ export const useFirebaseRegister = () => { // MAIN
     }
   };
 
-  
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log('User is signed in');
+      navigate('/');
+    } else {
+      console.log('User is signed out');
+      
+    }
+  });
 
   return {
     email,
@@ -283,6 +293,7 @@ export const useFirebaseRegister = () => { // MAIN
     receiveNews,
     setReceiveNews,
     authing,
+    onAuthStateChanged,
   };
 };
 
@@ -438,16 +449,6 @@ export const useFirebaseLogin = () => {
 
 
 
-  const handleLogout = async () => {
-    try {
-      // Sign out the user
-      await signOut(auth);
-      setLoggedInUser(null);
-      navigate('/login'); // Redirect to the login page after logout
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
 
   const handleResetPassword = async () => {
     try {
@@ -471,12 +472,11 @@ export const useFirebaseLogin = () => {
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // User is signed in
-      setLoggedInUser(user);
+      
       navigate('/');
     } else {
-      // User is signed out
-      setLoggedInUser(null);
+      
+      navigate('/login');
     }
   });
 
@@ -497,7 +497,6 @@ export const useFirebaseLogin = () => {
     handleLogingoogle,
     handleLoginFacebook,
     handleAuthUser,
-    handleLogout,
     handlePasswordReset,
     handlePasswordResetComplete,
     handleResetPassword,

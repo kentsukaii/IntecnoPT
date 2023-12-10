@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFirebaseLogin } from './BackendFiles/Backend';
+import { useNavigate } from 'react-router-dom';
 import PasswordReset from './PasswordReset';
 import {
   MDBInput,
@@ -18,6 +19,7 @@ import {
 } from "mdb-react-ui-kit";
 
 const Login = () => {
+
   const {
     email,
     setEmail,
@@ -34,7 +36,9 @@ const Login = () => {
     handlePasswordReset,
     handleCheckboxChange,
     saveSession,
+    
   } = useFirebaseLogin();
+
 
   return (
     <MDBContainer>
@@ -75,9 +79,9 @@ const Login = () => {
                       <MDBInput label="Password" id="typePassword" type="password" size='lg' className="p-3 w-100" value={password} onChange={(e) => setPassword(e.target.value)} />
                     </div>
                     <div className="col-md-12 d-flex justify-content-between align-items-center">
-  <a href="#" onClick={handlePasswordReset}>Forgot your Password?</a>
-  <MDBCheckbox label="Save Session" checked={saveSession} onChange={handleCheckboxChange} />
-</div>
+                      <a href="#" onClick={handlePasswordReset}>Forgot your Password?</a>
+                      <MDBCheckbox label="Save Session" checked={saveSession} onChange={handleCheckboxChange} />
+                    </div>
 
                     <div className="col-md-12">
                       {/*<ReCAPTCHA sitekey="6Ldu3igpAAAAAIubuBWKw9YLJ-_mIaBd2EnYm8m1" onChange={handleCaptchaChange} />*/}
@@ -87,8 +91,8 @@ const Login = () => {
                   </div>)}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <div className="col-md-12 mt-2 d-flex align-items-center">
-  <span><MDBIcon fas icon="check-circle" className="mr-2" />By logging in, I declare that I have read and accept the Terms and Conditions, and the use of my personal data as explained in the Privacy Policy.</span>
-</div>
+                  <span><MDBIcon fas icon="check-circle" className="mr-2" />By logging in, I declare that I have read and accept the Terms and Conditions, and the use of my personal data as explained in the Privacy Policy.</span>
+                </div>
               </div>
             </div>
           </MDBCol>

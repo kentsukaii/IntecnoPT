@@ -1,10 +1,11 @@
-import { onAuthStateChanged, updateProfile } from 'firebase/auth';
-import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
 import React, { useEffect, useState } from 'react';
+import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
+import { getAuth, onAuthStateChanged, updateProfile, updateEmail, reauthenticateWithCredential } from 'firebase/auth';
+import { collection, getDocs, query, where, updateDoc } from 'firebase/firestore';
 import Footer2 from "../Components/Struct/Footer2";
 import { auth, firestore } from '../firebase';
 import { getUserData } from './BackendFiles/Backend';
+
 
 
 
@@ -26,7 +27,7 @@ const Profile = () => {
           displayName: '',
           email: '',
           additionalData: {
-            dateOfBirth: '',
+            dateOfbirth: '',
             firstName: '',
             lastName: '',
           },
@@ -81,79 +82,77 @@ const Profile = () => {
 
 
   const handleSave = async () => {
-      
-      console.log('Saving user data...');
-  
-      try {
-        
-        const user = getAuth().currentUser;
-        const email = user.email;
 
-        
-        const birthDate = new Date(dateOfBirth);
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-          age--;
-        }
-        if (age < 18) {
-          console.error('You must be at least 18 years old');
-          setError("You must be at least 18 years old");
-          return;
-        }
-  
-        // Update the user's profile in Firebase Auth
-        await updateEmail(user, email);
-        await updateProfile(auth.currentUser, {
+    console.log('Saving user data...');
+
+    try {
+
+      const user = getAuth().currentUser;
+      const email = user.email;
+      const birthDate = new Date(dateOfBirth);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      if (age < 18) {
+        console.error('You must be at least 18 years old');
+        setError("You must be at least 18 years old");
+        return;
+      }
+
+      // Update the user's profile in Firebase Auth
+      await updateEmail(user, email);
+      await updateProfile(auth.currentUser, {
+        displayName: `${firstName} ${lastName}`,
+        email: email,
+      });
+
+      console.log('Firebase Auth profile updated successfully');
+
+      // Query for the user document where the email field matches the user's uid
+      const q = query(collection(firestore, "Users"), where("email", "==", email));
+
+      // Execute the query
+      const querySnapshot = await getDocs(q);
+
+      // Get the first document from the query result (assuming uid is unique)
+      const userDocSnap = querySnapshot.docs[0];
+
+      if (userDocSnap) {
+        // If the document exists, update it
+        await updateDoc(userDocSnap.ref, {
           displayName: `${firstName} ${lastName}`,
           email: email,
+          dateOfBirth: dateOfBirth,
         });
-  
-        console.log('Firebase Auth profile updated successfully');
-  
-        // Query for the user document where the email field matches the user's uid
-        const q = query(collection(firestore, "Users"), where("email", "==", email));
-  
-        // Execute the query
-        const querySnapshot = await getDocs(q);
-  
-        // Get the first document from the query result (assuming uid is unique)
-        const userDocSnap = querySnapshot.docs[0];
-  
-        if (userDocSnap) {
-          // If the document exists, update it
-          await updateDoc(userDocSnap.ref, {
-            displayName: `${firstName} ${lastName}`,
-            email: email,
-            dateOfBirth: dateOfBirth,
-          });
-  
-          console.log('Firestore document updated successfully');
-        } else {
-          console.log('Firestore document does not exist, no changes made');
-          setErrorMessage(error.message);
-        }
-  
-        console.log('User profile updated successfully');
-        setError("User profile updated successfully");
-      } catch (error) {
-        console.error('Error updating user profile:', error);
-        setError("Error updating user profile");
-      }
-    };
-  
-    const handlePasswordChange = async (currentPassword, newPassword) => {
-    
-      // Re-authenticate the user
-      const credential = EmailAuthProvider.credential(user.email, currentPassword);
-      await reauthenticateWithCredential(user, credential);
-    
-      // Update the user's password
-      await updatePassword(user, newPassword);
-    };
 
-  
+        console.log('Firestore document updated successfully');
+      } else {
+        console.log('Firestore document does not exist, no changes made');
+        setErrorMessage(error.message);
+      }
+
+      console.log('User profile updated successfully');
+      setError("User profile updated successfully");
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      setError("Error updating user profile");
+    }
+  };
+
+  const handlePasswordChange = async (currentPassword, newPassword) => {
+
+    // Re-authenticate the user
+    const credential = EmailAuthProvider.credential(user.email, currentPassword);
+    await reauthenticateWithCredential(user, credential);
+
+    // Update the user's password
+    await updatePassword(user, newPassword);
+  };
+
+
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -234,7 +233,7 @@ const Profile = () => {
                 </div>
               </div>
               <div>
-            
+
                 <MDBBtn className='mt-3' onClick={handleSave}>Save</MDBBtn>
               </div>
               {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -257,7 +256,7 @@ const Profile = () => {
                 </div>
                 <MDBBtn className='mt-3' onClick={() => handlePasswordChange(currentPassword, newPassword)}>Save</MDBBtn>
               </div>
-            
+
             </div>
             <div className="p-5" style={{ backgroundColor: 'lightpink', marginTop: '20px' }}>
               <h2>Sub Container 3</h2>
