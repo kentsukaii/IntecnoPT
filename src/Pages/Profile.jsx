@@ -1,98 +1,215 @@
 import React, { useEffect, useState } from "react";
-import { onAuthStateChanged, updateProfile } from "firebase/auth";
-import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged, updateProfile, reauthenticateWithCredential, EmailAuthProvider, updatePassword} from "firebase/auth";
+import { collection, getDocs, query, where, updateDoc } from 'firebase/firestore';
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { auth, firestore } from "../firebase";
 import { getUserData } from "./BackendFiles/Backend";
 import Image from "react-bootstrap/Image";
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
 
+  const authInstance = getAuth();
+  const [user, setUser] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const usersCollection = collection(firestore, "Users");
+  const [error, setError] = useState(null);
+  const [email, setEmail] = useState(user ? user.email : '');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        console.log("Auth state changed:", user);
-        try {
-          const additionalData = await getUserData();
-          console.log("User data from Firestore:", additionalData);
+      if (!user) {
+        setUser({
+          displayName: '',
+          email: '',
+          additionalData: {
+            dateOfbirth: '',
+            firstName: '',
+            lastName: '',
+          },
+        });
+        setDateOfBirth('');
+        setEmail('');
+        return;
+      }
 
-          setUser((prevUser) => ({
-            ...prevUser,
-            ...user,
-            additionalData: prevUser
-              ? { ...prevUser.additionalData, ...additionalData }
-              : additionalData,
-          }));
-          setDateOfBirth(additionalData.dateOfBirth); // Add this line
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          setUser(user);
+      try {
+        const additionalData = await getUserData();
+        const displayName = additionalData?.displayName || user.displayName;
+        const names = displayName.split(' ');
+        const [firstName, ...lastNameParts] = names;
+        const lastName = lastNameParts.join(' ');
+        const email = user.email;
+
+
+
+        setUser(prevUser => ({
+          ...prevUser,
+          displayName,
+          email: user.email,
+          additionalData: {
+            ...prevUser.additionalData,
+            ...additionalData,
+            firstName,
+            lastName,
+          },
+        }));
+
+        setDateOfBirth(additionalData?.dateOfBirth || '');
+        setEmail(email);
+
+        if (additionalData?.displayName) {
+          setFirstName(firstName);
+          setLastName(lastName);
         }
-      } else {
-        setUser(null);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setError("No data");
+        setUser(prevUser => ({
+          ...prevUser,
+          displayName: user.displayName,
+          email: user.email,
+        }));
+        setDateOfBirth('');
+        setEmail('');
       }
     });
 
     return () => unsubscribe();
   }, [auth]);
 
+
   const handleSave = async () => {
-    console.log("Saving user data...");
+    console.log('Saving user data...');
+  
     try {
+      const user = getAuth().currentUser;
+      const currentEmail = user.email;
+      const birthDate = new Date(dateOfBirth);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      if (age > 101 || age < 6) {
+        console.error('You must be at least alive');
+        setError('You must be at least alive');
+        return;
+      }
+  
+  
       // Update the user's profile in Firebase Auth
       await updateProfile(auth.currentUser, {
         displayName: `${firstName} ${lastName}`,
-        email: email,
+        email,
       });
-
-      console.log("Firebase Auth profile updated successfully");
-
-      // Update the user's document in Firestore
-      const userDocRef = doc(firestore, "Users", auth.currentUser.uid);
-      const userDocSnap = await getDoc(userDocRef);
-
-      if (userDocSnap.exists()) {
+  
+      console.log('Firebase Auth profile updated successfully');
+  
+      // Query for the user document where the email field matches the user's uid
+      const q = query(collection(firestore, 'Users'), where('email', '==', currentEmail));
+  
+      // Execute the query
+      const querySnapshot = await getDocs(q);
+  
+      // Get the first document from the query result (assuming uid is unique)
+      const userDocSnap = querySnapshot.docs[0];
+  
+      if (userDocSnap) {
         // If the document exists, update it
-        await updateDoc(userDocRef, {
-          Name: `${firstName} ${lastName}`,
-          Email: email,
-          DateOfBirth: dateOfBirth,
+        await updateDoc(userDocSnap.ref, {
+          displayName: `${firstName} ${lastName}`,
+          email,
+          dateOfBirth: dateOfBirth,
         });
-
-        console.log("Firestore document updated successfully");
+  
+        console.log('Firestore document updated successfully');
       } else {
-        // If the document does not exist, create it
-        await setDoc(userDocRef, {
-          Name: `${firstName} ${lastName}`,
-          Email: email,
-          DateOfBirth: dateOfBirth,
-        });
-
-        console.log("Firestore document created successfully");
+        console.log('Firestore document does not exist, no changes made');
+        setErrorMessage('Firestore document does not exist, no changes made');
       }
-
-      console.log("User profile updated successfully");
+  
+      console.log('User profile updated successfully');
+      setError('User profile updated successfully');
     } catch (error) {
-      console.error("Error updating user profile:", error);
+      console.error('Error updating user profile:', error);
+      setError('Error updating user profile');
     }
   };
+  
+  
+  
+  
 
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
 
-  const toggleShowModal = () => {
-    setIsOpen(!isOpen);
+
+  const handlePasswordChange = async () => {
+    try {
+      const currentPassword = document.getElementById('formCurrentPassword').value;
+      const newPassword = document.getElementById('formNewPassword').value;
+      const confirmNewPassword = document.getElementById('formConfirmNewPassword').value;
+  
+      // Check if all fields are filled
+      if (!currentPassword || !newPassword || !confirmNewPassword) {
+        setError("All fields are required");
+        return;
+      }
+  
+      // Check if the new password meets all requirements
+      const passwordRequirements = [
+        {
+          test: (password) => password.length >= 12,
+          message: "Password must be at least 12 characters long",
+        },
+        {
+          test: (password) => /[A-Z]/.test(password),
+          message: "Password must contain at least one uppercase letter",
+        },
+        {
+          test: (password) => /[a-z]/.test(password),
+          message: "Password must contain at least one lowercase letter",
+        },
+        {
+          test: (password) => /[0-9]/.test(password),
+          message: "Password must contain at least one number",
+        },
+        {
+          test: (password) => /[^A-Za-z0-9]/.test(password),
+          message: "Password must contain at least one special character",
+        },
+      ];
+  
+      for (let requirement of passwordRequirements) {
+        if (!requirement.test(newPassword)) {
+          setError(requirement.message);
+          return;
+        }
+      }
+  
+      // Check if the new password and confirm new password fields match
+      if (newPassword !== confirmNewPassword) {
+        setError('New password and confirm new password fields do not match');
+        return;
+      }
+  
+      const user = auth.currentUser;
+  
+      // Check if the current password matches the user's password
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      await reauthenticateWithCredential(user, credential);
+  
+      // Update the user's password
+      await updatePassword(user, newPassword);
+      console.log('Password updated successfully');
+    } catch (error) {
+      console.error('Error updating password:', error.message);
+    }
   };
+  
+
 
 
 return (
@@ -112,11 +229,15 @@ return (
                       <Form.Control
                         type="text"
                         placeholder="Jonh"
+                        
                         style={{
                           backgroundColor: "#e0e0e0",
                           width: "100%",
                           minWidth: "18vw",
+                          
                         }}
+                        value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                       />
                     </Form.Group>
                   </Col>
@@ -126,11 +247,14 @@ return (
                       <Form.Control
                         type="text"
                         placeholder="Smith"
+                        
                         style={{
                           backgroundColor: "#e0e0e0",
                           width: "100%",
                           minWidth: "18vw",
                         }}
+                        value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                       />
                     </Form.Group>
                   </Col>
@@ -142,11 +266,14 @@ return (
                       <Form.Control
                         type="text"
                         placeholder="jonhsmith123@example.com"
+                        
                         style={{
                           backgroundColor: "#e0e0e0",
                           width: "100%",
                           minWidth: "18vw",
                         }}
+                        value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                       />
                     </Form.Group>
                   </Col>
@@ -156,18 +283,25 @@ return (
                       <Form.Control
                         type="date"
                         placeholder="dd/mm/yyyy"
+                        
                         style={{
                           backgroundColor: "#e0e0e0",
                           width: "100%",
                           minWidth: "18vw",
                         }}
+                        value={dateOfBirth}
+                    onChange={(e) => {
+                      const newDateOfBirth = e.target.value;
+                      setDateOfBirth(newDateOfBirth);
+                    }}
                       />
                     </Form.Group>
                   </Col>
                 </Row>
-                <Button variant="primary" type="submit" className="mt-4">
+                <Button variant="primary" type="submit" className="mt-4" onClick={(e) => {e.preventDefault(); handleSave();}}>
                   Save
                 </Button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
               </Form>
             </div>
           </div>
@@ -191,6 +325,7 @@ return (
                       >
                         <Form.Label>Current Password</Form.Label>
                         <Form.Control
+                        
                           type="password"
                           placeholder="••••••••••"
                           style={{
@@ -236,7 +371,7 @@ return (
                       </Form.Group>
                     </Col>
                   </Row>
-                  <Button variant="primary" type="submit" className="mt-5">
+                  <Button variant="primary" type="submit" className="mt-5" onClick={(e) => {e.preventDefault();handlePasswordChange();}}>
                     Save
                   </Button>
                 </Form>

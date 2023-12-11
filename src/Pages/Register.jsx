@@ -1,21 +1,17 @@
-import React, { useState } from "react";
+import React, {  useEffect } from "react";
 import { Form, Button, FormControl, FormCheck } from "react-bootstrap";
 import {
-  MDBInput,
-  MDBBtn,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalBody,
-  MDBModalFooter,
-  MDBCheckbox,
   MDBIcon,
 } from "mdb-react-ui-kit";
 import "../Pages/CSS/Register.css";
-import { useFirebaseRegister } from "./BackendFiles/Backend";
+import { useFirebaseRegister, useFirebaseAuth } from "./BackendFiles/Backend";
+import { useNavigate, Link } from 'react-router-dom';
 
 const Register = () => {
+
+  const navigate = useNavigate();
+  const { user } = useFirebaseAuth(); 
+
   const {
     error,
     email,
@@ -37,6 +33,16 @@ const Register = () => {
     receiveNews,
     setReceiveNews,
   } = useFirebaseRegister();
+
+
+  useEffect(() => {
+    // Check if a user is already logged in
+    if (user) {
+      // If a user is logged in, navigate away to another page (e.g., home page)
+      navigate('/'); // Change the path to the desired page
+    }
+    
+  }, [user, navigate]);
 
   return (
     <div className="container-fluid p-0 mt-4 h-100 d-flex justify-content-center align-items-center">
@@ -69,7 +75,7 @@ const Register = () => {
                     type="password"
                     placeholder="Password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => { setPassword(e.target.value); handlePasswordChange(e); }}
                     style={{
                       backgroundColor: "#e0e0e0",
                       width: "100%",
@@ -104,7 +110,7 @@ const Register = () => {
                   className="mb-3"
                   style={{ color: lowercase ? "lightgreen" : "white" }}
                 >
-                  Lowercase character
+                 Lowercase character
                 </div>
                 <div
                   className="mb-3"
@@ -146,11 +152,12 @@ const Register = () => {
                     onChange={(e) => setTermsAccepted(e.target.checked)}
                   />
                 </div>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
                 <Button
                   variant="light"
                   type="submit"
                   className="mt-3"
-                  onClick={handleRegister}
+                  onClick={(e) => { e.preventDefault(); handleRegister(); }}
                 >
                   Register
                 </Button>
@@ -194,9 +201,11 @@ const Register = () => {
               </h4>
             </div>
             <div className="row mt-3">Click below to Login!</div>
+            <Link to="/login">
             <Button className="row mt-3" variant="primary" onClick={""}>
               Login
             </Button>
+            </Link>
           </div>
         </div>
       </div>
