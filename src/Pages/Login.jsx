@@ -1,8 +1,32 @@
 import React from 'react';
 import { InputGroup, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { MDBIcon } from "mdb-react-ui-kit";
+import useFirebaseLogin from './BackendFiles/Backend';
+import { useNavigate } from 'react-router-dom';
+import PasswordReset from './PasswordReset';
 
 const Login = () => {
+
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    loggedInUser,
+    authing,
+    handleLogin,
+    handleLogingoogle,
+    handleLoginFacebook,
+    handlePasswordResetComplete,
+    showPasswordReset,
+    handlePasswordReset,
+    handleCheckboxChange,
+    saveSession,
+    
+  } = useFirebaseLogin();
+
+
   return (
     <Container fluid className="p-0 mt-4 h-100 d-flex justify-content-center align-items-center">
       <Row noGutters className="w-100">

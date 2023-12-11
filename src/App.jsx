@@ -4,9 +4,11 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AboutPage from './Pages/AboutPage';
 import HomePage from './Pages/HomePage';
 import Login from './Pages/Login';
+import ProductsPage from './Pages/ProductPage.jsx';
 import Profile from './Pages/Profile.jsx';
 import Register from './Pages/Register';
 import TemplatePage from './Pages/TemplatePage.jsx';
+import ProductPage from './Pages/ProductPage.jsx';
 import Dashboard from './Pages/Dashboard.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
 
@@ -41,6 +43,8 @@ function App() {
         {location.pathname === '/register' || location.pathname === '/login' ? <Header2 /> : <Header />}
         
         <Routes>
+        <Route path="/products/:id" element={<ProductPage />} />
+          {/* Definindo as rotas para os diferentes componentes */}
           <Route path="/" element={<HomePage className="home-page" />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/register" element={<Register />} />
@@ -49,6 +53,7 @@ function App() {
           <Route path="/templatepage" element={<TemplatePage />} />
           <Route path="/card" element={<Card />} />
           <Route path="/admin" element={<Dashboard />} />
+          <Route path="/products" element={<ProductsPage />} />
         </Routes>
       </Router>
     </div>

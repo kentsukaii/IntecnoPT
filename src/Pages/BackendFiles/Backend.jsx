@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   signInWithEmailAndPassword,
@@ -13,6 +12,7 @@ import {
   updateProfile,
   sendPasswordResetEmail,
   fetchSignInMethodsForEmail,
+ 
 } from "firebase/auth";
 import { collection, addDoc, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import { auth, firestore } from "../../firebase"; // import firestore from your firebase file
@@ -40,9 +40,11 @@ export const useFirebaseAuth = () => {
     return () => unsubscribe();
   }, [auth]);
 
-  const handleLogout = async () => {
+ const handleLogout = async () => {
     try {
       await signOut(auth);
+      setLoggedInUser(null);
+      navigate('/login');
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -181,9 +183,8 @@ export const useFirebaseRegister = () => { // MAIN
         displayName: displayName,
         email: authUser.user.email,
         Address: "",
-        Name: "",
         Phone_number: "",
-        dateofbirth: "",
+        dateOfBirth: "",
       };
       await addDoc(usersCollection, userData);
 
@@ -191,6 +192,7 @@ export const useFirebaseRegister = () => { // MAIN
       setPassword("");
       setConfirmPassword("");
       setError(null);
+      navigate('/');
     } catch (error) {
       console.error('Error registering user:', error.message);
       setError(
@@ -250,13 +252,14 @@ export const useFirebaseRegister = () => { // MAIN
         displayName: authUser.displayName,
         email: authUser.email,
         Address: "",
-        Name: "",
         Phone_number: "",
-        dateofbirth: "",
+        dateOfBirth: "",
       };
       await addDoc(usersCollection, userData);
     }
   };
+
+
 
   return {
     email,
@@ -282,6 +285,7 @@ export const useFirebaseRegister = () => { // MAIN
     receiveNews,
     setReceiveNews,
     authing,
+    onAuthStateChanged,
   };
 };
 
@@ -333,16 +337,23 @@ export const useFirebaseLogin = () => {
 
 
   const handleLogin = async () => {
+    console.log("Starting login process...");
+    setAuthing(true);
+  
     try {
       // Check if the email exists in the Users collection before signing in
       const emailExists = await checkEmailExists(email);
-
+      console.log(`Email exists: ${emailExists}`);
+  
       if (!emailExists) {
         setError('Email does not exist');
         return;
       }
-
+  
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log("User signed in successfully");
+      console.log(`User ID: ${userCredential.user.uid}`); // Print the user's ID
+  
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
       navigate('/');
@@ -350,6 +361,15 @@ export const useFirebaseLogin = () => {
       console.error("Login error:", error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
       setLoggedInUser(null);
+      setAuthing(false);
+    }
+  };
+  
+  const deleteUser = async (user) => {
+    try {
+      await user.delete();
+    } catch (error) {
+      console.log(`Error deleting user: ${error}`);
     }
   };
 
@@ -357,7 +377,12 @@ export const useFirebaseLogin = () => {
     setAuthing(true);
 
     try {
-      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+
+      const result = await signInWithPopup(auth, provider);
       const authUser = result.user;
 
       // Check email existence asynchronously
@@ -366,6 +391,10 @@ export const useFirebaseLogin = () => {
       if (!emailExists) {
         setError('Email does not exist');
         setAuthing(false);
+
+        // Delete the user from Firebase Authentication
+        await deleteUser(authUser);
+
         return;
       }
 
@@ -381,36 +410,41 @@ export const useFirebaseLogin = () => {
 
 
 
+
   const handleLoginFacebook = async () => {
     setAuthing(true);
-
+  
     try {
       const result = await signInWithPopup(auth, new FacebookAuthProvider());
       const authUser = result.user;
-
+  
       // Check email existence asynchronously
       const emailExists = await checkEmailExists(authUser.email);
-
+  
       if (!emailExists) {
         setError('Email does not exist');
         setAuthing(false);
+  
+        // Delete the user from Firebase Authentication
+        await deleteUser(authUser);
+  
         return;
       }
-
+  
       await handleAuthUser(authUser);
-
+  
       // Redirect after a successful login
       navigate('/');
     } catch (error) {
       console.log(error);
-
+  
       // Handle specific error messages
       if (error.code === 'auth/account-exists-with-different-credential') {
         setError('This email is already in use with a different login method. Try logging in with the other provider.');
       } else {
         setError(error instanceof Error ? error.message : 'An unexpected error occurred');
       }
-
+  
       setAuthing(false);
     }
   };
@@ -437,16 +471,6 @@ export const useFirebaseLogin = () => {
 
 
 
-  const handleLogout = async () => {
-    try {
-      // Sign out the user
-      await signOut(auth);
-      setLoggedInUser(null);
-      navigate('/login'); // Redirect to the login page after logout
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
 
   const handleResetPassword = async () => {
     try {
@@ -467,6 +491,10 @@ export const useFirebaseLogin = () => {
     setShowPasswordReset(false);
   };
 
+
+
+
+
   return {
     email,
     setEmail,
@@ -482,7 +510,6 @@ export const useFirebaseLogin = () => {
     handleLogingoogle,
     handleLoginFacebook,
     handleAuthUser,
-    handleLogout,
     handlePasswordReset,
     handlePasswordResetComplete,
     handleResetPassword,
@@ -493,63 +520,44 @@ export const useFirebaseLogin = () => {
     setUserProfile,
     setSaveSession,
     handleCheckboxChange,
-
+    onAuthStateChanged,
+    
   };
 };
 
 
-//const usersCollection = collection(firestore, 'Users'); // use firestore to create the usersCollection
-
-// Load data from Firebase Logic
-// Basicly this const is exported to whatever page we need and the functions
-// inside can be freely used.
 
 export const getUserData = async () => {
-  const user = auth.currentUser;
+  // Get the current user
+  const user = getAuth().currentUser;
 
-  if (!user) {
-    throw new Error('No user is currently signed in');
-  }
 
-  console.log('Current user ID:', user.uid);  // Log the user ID
+  if (user) {
+    // Get the user's email
+    const email = user.email;
 
-  // Get the user document from Firestore
-  const userDocRef = doc(usersCollection, user.uid);
-  let userDoc = await getDoc(userDocRef);
+    // Query for the user document where the email field matches the user's email
+    const q = query(collection(firestore, "Users"), where("email", "==", email));
 
-  if (!userDoc.exists()) {
-    // The document does not exist, create it
-    await setDoc(userDocRef, {
-      displayName: user.displayName,
-      email: user.email,
-      // Add other fields as needed
-    });
+    // Execute the query
+    const querySnapshot = await getDocs(q);
 
-    // Fetch the document again
-    userDoc = await getDoc(userDocRef);
-  }
+    // Get the first document from the query result (assuming email is unique)
+    const userDocSnap = querySnapshot.docs[0];
 
-  console.log('User document data:', userDoc.data());  // Log the document data
+    if (userDocSnap) {
 
-  const userData = userDoc.data();
-
-  // Split the displayName into firstName and lastName
-  let firstName = userData.displayName;
-  let lastName = '';
-
-  const nameParts = userData.displayName.split(' ');
-  if (nameParts.length > 1) {
-    firstName = nameParts[0];
-    lastName = nameParts.slice(1).join(' ');
-  }
-
-  return {
-    email: user.email,
-    firstName,
-    lastName,
-    dateOfBirth: userData.dateofbirth, // Add this line
-    // Add other fields as needed
+      // Return the document data
+      return userDocSnap.data();
+    } else {
+      throw new Error('No document found for the current user');
+    }
+  } else {
+    throw new Error('No user signed in');
   };
+
+  
+  
 };
 
 /*
@@ -566,3 +574,5 @@ export const API_Fetch = {
   // other fetch functions...
 };
 */
+
+export default useFirebaseLogin;

@@ -1,0 +1,14 @@
+.card-title:hover {
+    color: #4EADFE;
+    cursor: pointer;
+  }
+  
+  .card-image:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+  }
+  
+  .card-image {
+    transition: transform .2s; /* Animation */
+  }
+  

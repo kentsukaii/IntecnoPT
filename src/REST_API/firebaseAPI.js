@@ -10,10 +10,15 @@ import {
   getDocs,
   orderBy,
   limit,
+  updateDoc,
+  arrayRemove
+ 
 } from "firebase/firestore";
 import { firestore, storage } from "../firebase"; // Import the already initialized Firestore and Storage
 import { ref, listAll, uploadBytes } from "firebase/storage";
 import { getAuth } from "firebase/auth";
+import { arrayUnion } from "firebase/firestore";
+
 
 console.log("Load imports from firebaseAPI.js");
 
@@ -103,13 +108,14 @@ async function getTopSellingProducts() {
     const product = doc.data();
     if (index === 0) {
       // If the product is the first one in the array (most sold)
-      return { ...product, isBestSeller: true };
+      return { ...product, id: doc.id, isBestSeller: true };
     }
-    return product;
+    return { ...product, id: doc.id };
   });
   console.log(products); // Log the products to the console
   return products;
 }
+
 
 // Function to get the top 15 products that are on sale
 export async function getOnSaleProducts() {
@@ -119,9 +125,10 @@ export async function getOnSaleProducts() {
     limit(15)
   );
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map((doc) => doc.data());
+  return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
+// add random orders to Orders
 async function addRandomOrders() {
   // Fetch all products
   const productsSnapshot = await getDocs(collection(firestore, "Products"));
@@ -142,18 +149,92 @@ async function addRandomOrders() {
   }
 }
 
-// Function to bookmark a product
-export async function bookmarkProduct(productId) {
-    const auth = getAuth();
+// Create bookmarks into database
+export async function bookmarkProduct(productId, setShowModal) {
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  console.log('userId:', userId); // Debugging line
+  console.log('productId:', productId); // Debugging line
+
+  const userBookmarksRef = doc(collection(firestore, 'Bookmarks'), userId);
+
+  // Add the product ID to the array of bookmarked products
+  await setDoc(userBookmarksRef, {
+    bookmarkedProducts: arrayUnion(productId)
+  }, { merge: true });
+
+  // Show the modal
+  setShowModal(true);
+}
+
+
+// Load products in user bookmark list
+export async function loadBookmarkedProducts() {
+  const auth = getAuth();
+  if (auth.currentUser) {
     const userId = auth.currentUser.uid;
-    const bookmarkedProductRef = doc(collection(db, 'BookmarkedProducts'));
-  
-    // Create a new document in the 'BookmarkedProducts' collection
-    await setDoc(bookmarkedProductRef, { 
-      userId: userId,
-      productId: productId
-    });
+    console.log('Loading bookmarked products for user:', userId);
+    const userBookmarksRef = doc(collection(firestore, 'Bookmarks'), userId);
+    const docSnapshot = await getDoc(userBookmarksRef);
+    if (docSnapshot.exists()) {
+      console.log('Bookmarked products loaded:', docSnapshot.data().bookmarkedProducts);
+      const bookmarkedProductIds = docSnapshot.data().bookmarkedProducts;
+      const productCollectionRef = collection(firestore, 'Products');
+      const productDocs = await Promise.all(bookmarkedProductIds.map((productId) => getDoc(doc(productCollectionRef, productId))));
+      const bookmarkedProducts = productDocs.map((productDoc) => ({ id: productDoc.id, ...productDoc.data() }));
+      console.log('Bookmarked product details loaded:', bookmarkedProducts);
+      return bookmarkedProducts;
+    } else {
+      console.error('No such document!');
+    }
+  } else {
+    console.log('No user is currently signed in.');
   }
+  return [];
+}
+
+// Remove the desired product from your bookmarks and update it to the client
+export async function removeBookmarkedProduct(productId) {
+  const auth = getAuth();
+  if (auth.currentUser) {
+    const userId = auth.currentUser.uid;
+    console.log('Removing bookmarked product for user:', userId);
+    const userBookmarksRef = doc(collection(firestore, 'Bookmarks'), userId);
+    await updateDoc(userBookmarksRef, {
+      bookmarkedProducts: arrayRemove(productId)
+    });
+    console.log('Product removed from bookmarks:', productId);
+  } else {
+    console.log('No user is currently signed in.');
+  }
+}
 
 
-export { addProduct, addOrder, getTopSellingProducts, addRandomOrders };
+// Load products in user cart
+export async function loadCartProducts() {
+  const auth = getAuth();
+  if (auth.currentUser) {
+    const userId = auth.currentUser.uid;
+    console.log('Loading cart products for user:', userId);
+    const userCartRef = doc(collection(firestore, 'Cart'), userId);
+    const docSnapshot = await getDoc(userCartRef);
+    if (docSnapshot.exists()) {
+      console.log('Cart products loaded:', docSnapshot.data().productsList);
+      const cartProductIds = docSnapshot.data().productsList;
+      const productCollectionRef = collection(firestore, 'Products');
+      const productDocs = await Promise.all(cartProductIds.map((productId) => getDoc(doc(productCollectionRef, productId))));
+      const cartProducts = productDocs.map((productDoc) => ({ id: productDoc.id, ...productDoc.data() }));
+      console.log('Cart product details loaded:', cartProducts);
+      return cartProducts;
+    } else {
+      console.error('No such document!');
+    }
+  } else {
+    console.log('No user is currently signed in.');
+  }
+  return [];
+}
+
+
+
+export { addProduct, addOrder, getTopSellingProducts, addRandomOrders,  };
