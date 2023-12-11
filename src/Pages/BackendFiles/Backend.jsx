@@ -115,16 +115,21 @@ export const useFirebaseRegister = () => { // MAIN
 
 
   const handleRegister = async () => {
-
-    if (!termsAccepted) {
-      setError("You must agree to the Terms and Conditions");
+    
+  
+    
+    if (!email || !password || !confirmPassword) {
+      setError("All fields are required");
       return;
     }
 
     try {
       setLoading(true);
 
-
+      if (!termsAccepted) {
+        setError("You must agree to the Terms and Conditions");
+        return;
+      }
 
       const passwordRequirements = [
         {
@@ -204,7 +209,7 @@ export const useFirebaseRegister = () => { // MAIN
     } finally {
       setLoading(false);
     }
-  }; //dwdwdwd
+  }; 
 
   const handleGoogleRegister = async () => { // HANDLE GOOGLE REGISTER
     setAuthing(true);
@@ -414,8 +419,12 @@ export const useFirebaseLogin = () => {
   const handleLoginFacebook = async () => {
     setAuthing(true);
   
-    try {
-      const result = await signInWithPopup(auth, new FacebookAuthProvider());
+    try { 
+      const provider = new FacebookAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+      const result = await signInWithPopup(auth, provider);
       const authUser = result.user;
   
       // Check email existence asynchronously
@@ -448,6 +457,8 @@ export const useFirebaseLogin = () => {
       setAuthing(false);
     }
   };
+  
+  
 
 
 
