@@ -11,9 +11,8 @@ import TemplatePage from './Pages/TemplatePage.jsx';
 import ProductPage from './Pages/ProductPage.jsx';
 import Dashboard from './Pages/Dashboard.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
+import { getProductCount } from './REST_API/firebaseAPI.js';
 
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./firebase";
 
 
 // Importando o componente Header
@@ -26,12 +25,20 @@ import 'mdbreact/dist/css/mdb.css';
 import './App.css';
 import Footer from '../src/Components/Struct/Footer';
 import Header from './Components/Struct/Header';
-
-// Inicializando o aplicativo Firebase
-initializeApp(firebaseConfig);
+import React, { useState } from "react";
 
 // Definindo o componente funcional App
 function App() {
+  const [productCount, setProductCount] = useState(0);
+
+  useEffect(() => {
+    const fetchProductCount = async () => {
+      const count = await getProductCount();
+      setProductCount(count);
+    }
+  
+    fetchProductCount();
+  }, []); // Add dependencies if any
   return (
     // JSX que representa a estrutura do aplicativo
     <div className="App">
@@ -39,7 +46,7 @@ function App() {
       {/* Configurando as rotas com o BrowserRouter */}
       <Router>
         {/* Renderizando o componente Header no topo */}
-        <Header />
+        <Header productCount={productCount} />
         <Routes>
         <Route path="/products/:id" element={<ProductPage />} />
           {/* Definindo as rotas para os diferentes componentes */}

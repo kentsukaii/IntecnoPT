@@ -235,22 +235,92 @@ export async function loadCartProducts() {
   return [];
 }
 
-// Add product to user cart
 export async function addProductToCart(productId) {
   const auth = getAuth();
   const userId = auth.currentUser.uid;
-  console.log('userId:', userId); // Debugging line
-  console.log('productId:', productId); // Debugging line
 
   const userCartRef = doc(collection(firestore, 'Cart'), userId);
 
-  // Add the product ID to the array of products in the cart
-  await setDoc(userCartRef, {
-    productsList: arrayUnion(productId)
-  }, { merge: true });
+  // Get the current document
+  const docSnap = await getDoc(userCartRef);
 
+  let currentCount = 0;
+  let productsList = [];
+  if (docSnap.exists()) {
+    // Get the current count and products list
+    currentCount = docSnap.data().count || 0;
+    productsList = docSnap.data().productsList || [];
+  }
+
+  // Only increment the count if the product is not already in the cart
+  if (!productsList.includes(productId)) {
+    currentCount++;
+    productsList.push(productId);
+  }
+
+  // Update the products list and the count
+  await setDoc(userCartRef, {
+    productsList: productsList,
+    count: currentCount
+  }, { merge: true });
+  
+  getProductCount()
   console.log('Product added to cart');
 }
 
+export async function removeCartItem(productId) {
+  const auth = getAuth();
+  if (auth.currentUser) {
+    const userId = auth.currentUser.uid;
+    const userCartRef = doc(collection(firestore, 'Cart'), userId);
 
-export { addProduct, addOrder, getTopSellingProducts, addRandomOrders,  };
+    // Get the current document
+    const docSnap = await getDoc(userCartRef);
+
+    let currentCount = docSnap.data().count || 0;
+    let productsList = docSnap.data().productsList || [];
+
+    // Only decrement the count if the product is in the cart
+    if (productsList.includes(productId)) {
+      currentCount = currentCount > 0 ? currentCount - 1 : 0;
+      const index = productsList.indexOf(productId);
+      if (index > -1) {
+        productsList.splice(index, 1);
+      }
+    }
+
+    // Update the products list and the count
+    await updateDoc(userCartRef, {
+      productsList: productsList,
+      count: currentCount
+    });
+
+    getProductCount()
+    console.log('Product removed from cart:', productId);
+  } else {
+    console.log('No user is currently signed in.');
+  }
+}
+
+async function getProductCount() {
+  const auth = getAuth();
+  if (auth.currentUser) {
+    const userId = auth.currentUser.uid;
+
+    const userCartRef = doc(collection(firestore, 'Cart'), userId);
+    const docSnap = await getDoc(userCartRef);
+
+    if (docSnap.exists()) {
+      const count = docSnap.data().count || 0;
+      return count;
+    }
+  }
+  return 0;
+}
+
+
+
+
+
+
+export { addProduct, addOrder, getTopSellingProducts, addRandomOrders, getProductCount };

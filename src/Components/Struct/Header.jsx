@@ -10,16 +10,25 @@ import SideMenu from '../../Components/Cards/SideMenu';
 import SideMenu2 from '../../Components/Cards/SideMenu2';
 import { useFirebaseAuth, useFirebaseLogin } from '../../Pages/BackendFiles/Backend';
 import { loadBookmarkedProducts } from '../../REST_API/firebaseAPI';
+import { loadCartProducts } from '../../REST_API/firebaseAPI';
+import { getProductCount } from '../../REST_API/firebaseAPI';
+import { getAuth } from "firebase/auth";
+import { firestore } from '../../firebase';
+import { doc, getDoc, collection } from "firebase/firestore";
 
-
-const Header = () => {
+const Header = ({ productCount }) => {
   const { handleLogout } = useFirebaseAuth();
   const { user } = useFirebaseLogin();
   const [darkMode, setDarkMode] = useState(false);
-  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isBookmarkMenuOpen, setBookmarkMenuOpen] = useState(false);
   const [bookmarkedProducts, setBookmarkedProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isBookmarkLoading, setBookmarkLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [cartProducts, setCartProducts] = useState([]);
+  const [isCartMenuOpen, setCartMenuOpen] = useState(false);
+  const [isCartLoading, setCartLoading] = useState(false);
+
+
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -37,13 +46,26 @@ const Header = () => {
 
   // ------------------------------------------
 
+  // Load bookmarks both client and server sided 
   const loadBookmarks = async () => {
-    setIsLoading(true);
+    setBookmarkLoading(true);
     const products = await loadBookmarkedProducts();
     setBookmarkedProducts(products);
-    setIsLoading(false);
-    setMenuOpen(true);
+    setBookmarkLoading(false);
+    setBookmarkMenuOpen(true);
   };
+
+  // Do the same but with item carts
+  const loadCart = async () => {
+    setCartLoading(true);
+    const products = await loadCartProducts();
+    setCartProducts(products);
+    setCartLoading(false);
+    setCartMenuOpen(true);
+  };
+
+
+
 
   return (
     <Navbar className="mt-4" bg="light" expand="lg" style={{ padding: '20px 5%' }}>
@@ -65,22 +87,18 @@ const Header = () => {
             <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="2x" />
           </Nav.Link>
 
-          <Nav.Link href="/cart" className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-lg-none" style={{ position: 'absolute', top: '20px', left: '5%' }}>
-            <FontAwesomeIcon icon={faShoppingCart} size="2x" />
-            <span className="badge badge-warning">5</span>
-          </Nav.Link>
 
-          <Nav.Link className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block" onClick={handleOpen}>
-            <FontAwesomeIcon icon={faShoppingCart} size="2x" />
-            <span className="badge badge-warning">5</span>
-          </Nav.Link>
-          <SideMenu2 isOpen={isOpen} onClose={handleClose} />
-
-          <Nav.Link onClick={loadBookmarks} className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block">
+          <Nav.Link className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block" onClick={loadBookmarks}>
             <FontAwesomeIcon icon={faStar} size="2x" />
           </Nav.Link>
-          {isLoading ? <p></p> : <SideMenu isOpen={isMenuOpen} onClose={() => setMenuOpen(false)} bookmarkedProducts={bookmarkedProducts} />} {/* HANDLE LOADING MESSAGE ETC */}
+          {isBookmarkLoading ? <p></p> : <SideMenu isOpen={isBookmarkMenuOpen} onClose={() => setBookmarkMenuOpen(false)} bookmarkedProducts={bookmarkedProducts} />}
 
+          <Nav.Link className="order-2 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block" onClick={loadCart}>
+            <FontAwesomeIcon icon={faShoppingCart} size="2x" />
+            
+          </Nav.Link>
+
+          {isCartLoading ? <p></p> : <SideMenu2 isOpen={isCartMenuOpen} onClose={() => setCartMenuOpen(false)} cartProducts={cartProducts} />}
 
           <Dropdown className="order-2" align="end" style={{ marginLeft: '20px' }}>
             <Dropdown.Toggle variant="success" id="dropdown-basic" as="img" src={maguire} alt="menu icon" width="75" height="75" style={{ borderRadius: "50%", border: "2px solid #4eadfe" }}>
