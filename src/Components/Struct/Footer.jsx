@@ -1,10 +1,10 @@
 import React from "react";
+import { Col, Container, Row } from 'react-bootstrap';
 import "../Struct/Footer.css";
-import { Container, Row, Col } from 'react-bootstrap';
 
 const Footer = () => {
     return (
-        <footer className="mt-auto py-5 bg-light">
+        <footer className="footer mt-5 py-4 bg-light">
             <Container>
                 <Row>
                     <Col className="text-center">

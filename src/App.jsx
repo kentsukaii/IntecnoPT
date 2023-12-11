@@ -25,6 +25,7 @@ import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import './App.css';
 import Footer from '../src/Components/Struct/Footer';
+import Footer2 from '../src/Components/Struct/Footer2';
 import Header from './Components/Struct/Header';
 import Header2 from './Components/Struct/Header2';
 
@@ -55,6 +56,8 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
         </Routes>
+        {location.pathname !== '/register' && location.pathname !== '/login' && <Footer2 />}
+        <Footer />
       </Router>
     </div>
   );
