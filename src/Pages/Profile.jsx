@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
-import { getAuth, onAuthStateChanged, updateProfile, updateEmail, reauthenticateWithCredential, EmailAuthProvider, updatePassword,  GoogleAuthProvider, FacebookAuthProvider} from 'firebase/auth';
+import { getAuth, onAuthStateChanged, updateProfile, updateEmail, reauthenticateWithCredential, EmailAuthProvider, updatePassword, sendEmailVerification } from 'firebase/auth';
 import { collection, getDocs, query, where, updateDoc } from 'firebase/firestore';
 import Footer2 from "../Components/Struct/Footer2";
 import { auth, firestore } from '../firebase';
@@ -19,7 +19,7 @@ const Profile = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(null);
-  
+  const [email, setEmail] = useState(user ? user.email : '');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -34,6 +34,7 @@ const Profile = () => {
           },
         });
         setDateOfBirth('');
+        setEmail('');
         return;
       }
 
@@ -60,6 +61,7 @@ const Profile = () => {
         }));
 
         setDateOfBirth(additionalData?.dateOfBirth || '');
+        setEmail(email);
 
         if (additionalData?.displayName) {
           setFirstName(firstName);
@@ -74,6 +76,7 @@ const Profile = () => {
           email: user.email,
         }));
         setDateOfBirth('');
+        setEmail('');
       }
     });
 
@@ -83,14 +86,11 @@ const Profile = () => {
 
 
   const handleSave = async () => {
-
     console.log('Saving user data...');
 
     try {
-
       const user = getAuth().currentUser;
-      const newEmail = user.email; 
-      const email = user.email;
+      const currentEmail = user.email;
       const birthDate = new Date(dateOfBirth);
       const today = new Date();
       let age = today.getFullYear() - birthDate.getFullYear();
@@ -103,21 +103,59 @@ const Profile = () => {
         setError("You must be at least be alive");
         return;
       }
-      if (newEmail !== user.email) {
+      if (email !== user.email) {
+        // Re-authenticate the user
+        let password = prompt("Please enter your password");
+        const credential = EmailAuthProvider.credential(
+          auth.currentUser.email,
+          password
+        );
+
+        // Check if the entered password matches the user's password
+        await reauthenticateWithCredential(user, credential);
+
+        // Send a verification email to the new email address
+        const actionCodeSettings = {
+          url: 'http://localhost:5173/profile',  // URL to redirect to after email is verified
+          handleCodeInApp: true,
+        };
+        await sendEmailVerification(user, actionCodeSettings);
+
+        console.log('Verification email sent to new email address');
+
+        // Prompt the user to verify their new email address
+        // After sending the verification email...
+        alert('A verification email has been sent to your new email address. Please verify it and close this prompt.');
+
+        // Add an event listener to your "Continue" button
+        await user.reload();
+        if (user.emailVerified) {
+          // Update the user's email in Firebase Authentication
+          await updateEmail(user, email);
+  
+          console.log('Firebase Auth email updated successfully');
+        } else {
+          console.error('Email not verified');
+          setError("Email not verified");
+          return;
+        }
+      
         // Update the user's email in Firebase Authentication
-        await updateEmail(user, newEmail);
+        await updateEmail(user, email);
+
+        console.log('Firebase Auth email updated successfully');
       }
       // Update the user's profile in Firebase Auth
-      
+
       await updateProfile(auth.currentUser, {
         displayName: `${firstName} ${lastName}`,
-        email: email,
+        email,
       });
 
       console.log('Firebase Auth profile updated successfully');
 
       // Query for the user document where the email field matches the user's uid
-      const q = query(collection(firestore, "Users"), where("email", "==", email));
+      const q = query(collection(firestore, "Users"), where("email", "==", currentEmail));
 
       // Execute the query
       const querySnapshot = await getDocs(q);
@@ -129,7 +167,7 @@ const Profile = () => {
         // If the document exists, update it
         await updateDoc(userDocSnap.ref, {
           displayName: `${firstName} ${lastName}`,
-          email: email,
+          email,
           dateOfBirth: dateOfBirth,
         });
 
@@ -147,24 +185,26 @@ const Profile = () => {
     }
   };
 
+
+
   const handlePasswordChange = async () => {
     try {
       const currentPassword = document.getElementById('form5').value;
       const newPassword = document.getElementById('form6').value;
       const confirmNewPassword = document.getElementById('form7').value;
-  
+
       const user = auth.currentUser;
-  
+
       // Check if the current password matches the user's password
       const credential = EmailAuthProvider.credential(user.email, currentPassword);
       await reauthenticateWithCredential(user, credential);
-  
+
       // Check if the new password and confirm new password fields match
       if (newPassword !== confirmNewPassword) {
         console.error('New password and confirm new password fields do not match');
         return;
       }
-  
+
       // Update the user's password
       await updatePassword(user, newPassword);
       console.log('Password updated successfully');
@@ -172,8 +212,7 @@ const Profile = () => {
       console.error('Error updating password:', error.message);
     }
   };
-  
-  
+
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -235,8 +274,8 @@ const Profile = () => {
                     label='Email'
                     id='form3'
                     type='email'
-                    value={user ? user.email : ''}
-                    onChange={(e) => setUser({ ...user, email: e.target.value })}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="col-md-6">
@@ -250,7 +289,6 @@ const Profile = () => {
                       setDateOfBirth(newDateOfBirth);
                     }}
                   />
-
                 </div>
               </div>
               <div>
@@ -258,20 +296,21 @@ const Profile = () => {
               </div>
               {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
+
             <div className="bg-light p-5">
               <div className="container">
                 <div className="row mb-4">
                   <p>Change Password</p>
                   <div className="col-md-6">
-                  <MDBInput label='Current Password' id='form5' type={showPassword ? 'text' : 'password'} />
+                    <MDBInput label='Current Password' id='form5' type={showPassword ? 'text' : 'password'} />
                   </div>
                   <div className="col-md-6">
-                  <MDBInput label='New Password' id='form6' type={showPassword ? 'text' : 'password'} />
+                    <MDBInput label='New Password' id='form6' type={showPassword ? 'text' : 'password'} />
                   </div>
                 </div>
                 <div className="row mb-4">
                   <div className="col-md-6">
-                  <MDBInput label='Confirm New Password' id='form7' type={showPassword ? 'text' : 'password'} />
+                    <MDBInput label='Confirm New Password' id='form7' type={showPassword ? 'text' : 'password'} />
                   </div>
                 </div>
                 <MDBBtn className='mt-3' onClick={handlePasswordChange}>Save</MDBBtn>
