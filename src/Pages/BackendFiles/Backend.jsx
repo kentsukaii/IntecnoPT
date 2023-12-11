@@ -30,6 +30,7 @@ import { useQuery } from 'react-query';
 export const useFirebaseAuth = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -40,15 +41,15 @@ export const useFirebaseAuth = () => {
     return () => unsubscribe();
   }, [auth]);
 
- const handleLogout = async () => {
+  const handleLogout = async () => {
     try {
       await signOut(auth);
-      setLoggedInUser(null);
-      navigate('/login');
+      setUser(null);  // Set user to null
+  
     } catch (error) {
       console.error("Error during logout:", error);
     }
-  };
+  };  
 
   return { user, handleLogout };
 };
@@ -416,49 +417,48 @@ export const useFirebaseLogin = () => {
 
 
 
-  const handleLoginFacebook = async () => {
-    setAuthing(true);
-  
-    try { 
-      const provider = new FacebookAuthProvider();
-      provider.setCustomParameters({
-        prompt: 'select_account'
-      });
-      const result = await signInWithPopup(auth, provider);
-      const authUser = result.user;
-  
-      // Check email existence asynchronously
-      const emailExists = await checkEmailExists(authUser.email);
-  
-      if (!emailExists) {
-        setError('Email does not exist');
-        setAuthing(false);
-  
-        // Delete the user from Firebase Authentication
-        await deleteUser(authUser);
-  
-        return;
-      }
-  
-      await handleAuthUser(authUser);
-  
-      // Redirect after a successful login
-      navigate('/');
-    } catch (error) {
-      console.log(error);
-  
-      // Handle specific error messages
-      if (error.code === 'auth/account-exists-with-different-credential') {
-        setError('This email is already in use with a different login method. Try logging in with the other provider.');
-      } else {
-        setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-      }
-  
+const handleLoginFacebook = async () => {
+  setAuthing(true);
+
+  try { 
+    const provider = new FacebookAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
+    const result = await signInWithPopup(auth, provider);
+    const authUser = result.user;
+
+    // Check email existence asynchronously
+    const emailExists = await checkEmailExists(authUser.email);
+
+    if (!emailExists) {
+      setError('Email does not exist');
       setAuthing(false);
+
+      // Delete the user from Firebase Authentication
+      await deleteUser(authUser);
+
+      return;
     }
-  };
-  
-  
+
+    await handleAuthUser(authUser);
+
+    // Redirect after a successful login
+    navigate('/');
+  } catch (error) {
+    console.log(error);
+
+    // Handle specific error messages
+    if (error.code === 'auth/account-exists-with-different-credential') {
+      setError('This email is already in use with a different login method. Try logging in with the other provider.');
+    } else {
+      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+    }
+
+    setAuthing(false);
+  }
+};
+
 
 
 

@@ -54,8 +54,8 @@ const Login = () => {
                   </Button>
                 </Col>
                 <Col xs={12} md={6}>
-                  <Button variant="danger" className="w-100 btn-lg py-3">
-                    <MDBIcon fab icon="google" className="me-2" onClick={handleLogingoogle} disabled={authing} />
+                  <Button variant="danger" className="w-100 btn-lg py-3" onClick={handleLogingoogle} disabled={authing}>
+                    <MDBIcon fab icon="google" className="me-2"  />
                     Google
                   </Button>
                 </Col>
