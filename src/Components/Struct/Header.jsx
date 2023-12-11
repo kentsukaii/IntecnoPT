@@ -182,7 +182,7 @@ const Header = () => {
                 className="text-center"
                 onClick={handleLogout}
               >
-                <FontAwesomeIcon icon={faSignOutAlt} color="red" /> Logout
+                 Logout <FontAwesomeIcon icon={faSignOutAlt} color="red" />
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
