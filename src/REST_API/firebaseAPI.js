@@ -235,6 +235,22 @@ export async function loadCartProducts() {
   return [];
 }
 
+// Add product to user cart
+export async function addProductToCart(productId) {
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  console.log('userId:', userId); // Debugging line
+  console.log('productId:', productId); // Debugging line
+
+  const userCartRef = doc(collection(firestore, 'Cart'), userId);
+
+  // Add the product ID to the array of products in the cart
+  await setDoc(userCartRef, {
+    productsList: arrayUnion(productId)
+  }, { merge: true });
+
+  console.log('Product added to cart');
+}
 
 
 export { addProduct, addOrder, getTopSellingProducts, addRandomOrders,  };
