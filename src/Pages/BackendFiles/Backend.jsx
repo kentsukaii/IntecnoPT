@@ -30,7 +30,7 @@ import { useQuery } from 'react-query';
 export const useFirebaseAuth = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -430,6 +430,7 @@ const handleLoginFacebook = async () => {
 
     // Check email existence asynchronously
     const emailExists = await checkEmailExists(authUser.email);
+    console.log('Email exists: ', emailExists);
 
     if (!emailExists) {
       setError('Email does not exist');
@@ -446,15 +447,7 @@ const handleLoginFacebook = async () => {
     // Redirect after a successful login
     navigate('/');
   } catch (error) {
-    console.log(error);
-
-    // Handle specific error messages
-    if (error.code === 'auth/account-exists-with-different-credential') {
-      setError('This email is already in use with a different login method. Try logging in with the other provider.');
-    } else {
-      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-    }
-
+    console.log(error);    
     setAuthing(false);
   }
 };

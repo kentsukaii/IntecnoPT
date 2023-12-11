@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Modal } from 'react-bootstrap';
 import { MDBIcon } from "mdb-react-ui-kit";
 import { useFirebaseLogin, useFirebaseAuth } from './BackendFiles/Backend';
-import { useNavigate, Link  } from 'react-router-dom';
-import PasswordReset from './PasswordReset';
+import { useNavigate, Link } from 'react-router-dom';
+
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,8 +23,8 @@ const Login = () => {
     handleLoginFacebook,
     handlePasswordResetComplete,
     showPasswordReset,
-    handlePasswordReset,
     handleCheckboxChange,
+    handleResetPassword,
     saveSession,
 
   } = useFirebaseLogin();
@@ -35,7 +36,10 @@ const Login = () => {
       navigate('/'); // Change the path to the desired page
     }
   }, [user, navigate]);
+  const [show, setShow] = useState(false);
 
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   return (
     <Container fluid className="p-0 mt-4 h-100 d-flex justify-content-center align-items-center">
@@ -55,7 +59,7 @@ const Login = () => {
                 </Col>
                 <Col xs={12} md={6}>
                   <Button variant="danger" className="w-100 btn-lg py-3" onClick={handleLogingoogle} disabled={authing}>
-                    <MDBIcon fab icon="google" className="me-2"  />
+                    <MDBIcon fab icon="google" className="me-2" />
                     Google
                   </Button>
                 </Col>
@@ -72,7 +76,31 @@ const Login = () => {
                   </div>
                 )}
                 <div className="d-flex justify-content-center align-items-center w-100 mb-2">
-                  <a href="#" className="text-decoration-none" onClick={handlePasswordReset}>Forgot your password?</a>
+                  <>
+                    <a href="#" className="text-decoration-none" onClick={handleShow}>Forgot your password?</a>
+
+                    <Modal show={show} onHide={handleClose} centered>
+                      <Modal.Header closeButton>
+                        <Modal.Title className="w-100 text-center">Password Reset</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Email:</Form.Label>
+                          <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        </Form.Group>
+                        {error && <Alert variant="danger">{error}</Alert>}
+                      </Modal.Body>
+                      <Modal.Footer className="justify-content-center">
+                        <Button variant="secondary" onClick={handleClose}>
+                          Close
+                        </Button>
+                        <Button variant="primary" onClick={handleResetPassword}>
+                          Reset Password
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </>
+
                   <div className="ms-5">
                     <Form.Check type="checkbox" label="Save Session" checked={saveSession} onChange={handleCheckboxChange} />
                   </div>
