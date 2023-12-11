@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MDBInput, MDBBtn, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter } from 'mdb-react-ui-kit';
-import { getAuth, onAuthStateChanged, updateProfile, updateEmail, reauthenticateWithCredential, EmailAuthProvider, updatePassword, sendEmailVerification } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, updateProfile, reauthenticateWithCredential, EmailAuthProvider, updatePassword} from 'firebase/auth';
 import { collection, getDocs, query, where, updateDoc } from 'firebase/firestore';
 import Footer2 from "../Components/Struct/Footer2";
 import { auth, firestore } from '../firebase';
@@ -84,10 +84,9 @@ const Profile = () => {
   }, [auth]);
 
 
-
   const handleSave = async () => {
     console.log('Saving user data...');
-
+  
     try {
       const user = getAuth().currentUser;
       const currentEmail = user.email;
@@ -99,70 +98,29 @@ const Profile = () => {
         age--;
       }
       if (age > 101 || age < 6) {
-        console.error('You must be at least be alive');
-        setError("You must be at least be alive");
+        console.error('You must be at least alive');
+        setError('You must be at least alive');
         return;
       }
-      if (email !== user.email) {
-        // Re-authenticate the user
-        let password = prompt("Please enter your password");
-        const credential = EmailAuthProvider.credential(
-          auth.currentUser.email,
-          password
-        );
-
-        // Check if the entered password matches the user's password
-        await reauthenticateWithCredential(user, credential);
-
-        // Send a verification email to the new email address
-        const actionCodeSettings = {
-          url: 'http://localhost:5173/profile',  // URL to redirect to after email is verified
-          handleCodeInApp: true,
-        };
-        await sendEmailVerification(user, actionCodeSettings);
-
-        console.log('Verification email sent to new email address');
-
-        // Prompt the user to verify their new email address
-        // After sending the verification email...
-        alert('A verification email has been sent to your new email address. Please verify it and close this prompt.');
-
-        // Add an event listener to your "Continue" button
-        await user.reload();
-        if (user.emailVerified) {
-          // Update the user's email in Firebase Authentication
-          await updateEmail(user, email);
   
-          console.log('Firebase Auth email updated successfully');
-        } else {
-          console.error('Email not verified');
-          setError("Email not verified");
-          return;
-        }
-      
-        // Update the user's email in Firebase Authentication
-        await updateEmail(user, email);
-
-        console.log('Firebase Auth email updated successfully');
-      }
+  
       // Update the user's profile in Firebase Auth
-
       await updateProfile(auth.currentUser, {
         displayName: `${firstName} ${lastName}`,
         email,
       });
-
+  
       console.log('Firebase Auth profile updated successfully');
-
+  
       // Query for the user document where the email field matches the user's uid
-      const q = query(collection(firestore, "Users"), where("email", "==", currentEmail));
-
+      const q = query(collection(firestore, 'Users'), where('email', '==', currentEmail));
+  
       // Execute the query
       const querySnapshot = await getDocs(q);
-
+  
       // Get the first document from the query result (assuming uid is unique)
       const userDocSnap = querySnapshot.docs[0];
-
+  
       if (userDocSnap) {
         // If the document exists, update it
         await updateDoc(userDocSnap.ref, {
@@ -170,20 +128,24 @@ const Profile = () => {
           email,
           dateOfBirth: dateOfBirth,
         });
-
+  
         console.log('Firestore document updated successfully');
       } else {
         console.log('Firestore document does not exist, no changes made');
-        setErrorMessage(error.message);
+        setErrorMessage('Firestore document does not exist, no changes made');
       }
-
+  
       console.log('User profile updated successfully');
-      setError("User profile updated successfully");
+      setError('User profile updated successfully');
     } catch (error) {
       console.error('Error updating user profile:', error);
-      setError("Error updating user profile");
+      setError('Error updating user profile');
     }
   };
+  
+  
+  
+  
 
 
 

@@ -6,7 +6,7 @@ import { storage } from "../../firebase"; // Import the already initialized Stor
 import { bookmarkProduct } from '../../REST_API/firebaseAPI';
 import { Card, Button, Row, Col, Modal } from 'react-bootstrap';
 import teemoImage from '../../assets/teemo.png';
-
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product, isBestSeller }) => {
   const navigate = useNavigate(); // Will be used to access the page for each product

@@ -30,6 +30,66 @@
           "OnSale": true,
           "SalePercentage": 0.2
         }
+      ],
+      "Desktop Best Mode XY": [
+        {
+          "Description": "Top-of-the-line desktop for ultimate performance",
+          "ImageReference": "desktop_best_mode_image_1.jpg",
+          "Name": "Desktop Ultimate X",
+          "Price": 2499.99,
+          "StockAvailable": 5,
+          "StockStored": 20,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.3
+        }
+      ],
+      "Desktop Best Mode X": [
+        {
+          "Description": "Advanced desktop with cutting-edge features",
+          "ImageReference": "desktop_best_mode_image_2.jpg",
+          "Name": "Desktop Advanced Pro",
+          "Price": 1899.99,
+          "StockAvailable": 8,
+          "StockStored": 15,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0.4
+        }
+      ],
+      "Desktop Best Mode Z": [
+        {
+          "Description": "High-end desktop with sleek design",
+          "ImageReference": "desktop_best_mode_image_3.jpg",
+          "Name": "Desktop Elite Edition",
+          "Price": 2999.99,
+          "StockAvailable": 3,
+          "StockStored": 10,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.25
+        }
+      ],
+      "Desktop for Work": [
+        {
+          "Description": "Top-of-the-line desktop for ultimate performance",
+          "ImageReference": "desktop_best_mode_image_1.jpg",
+          "Name": "Desktop Ultimate X",
+          "Price": 399.99,
+          "StockAvailable": 5,
+          "StockStored": 20,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.9
+        }
       ]
     },
     "Components": {
