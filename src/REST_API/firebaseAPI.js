@@ -10,7 +10,8 @@ import {
   getDocs,
   orderBy,
   limit,
-  updateDoc
+  updateDoc,
+  arrayRemove
  
 } from "firebase/firestore";
 import { firestore, storage } from "../firebase"; // Import the already initialized Firestore and Storage
@@ -127,7 +128,7 @@ export async function getOnSaleProducts() {
   return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
-
+// add random orders to Orders
 async function addRandomOrders() {
   // Fetch all products
   const productsSnapshot = await getDocs(collection(firestore, "Products"));
@@ -148,7 +149,8 @@ async function addRandomOrders() {
   }
 }
 
-export async function bookmarkProduct(productId) {
+// Create bookmarks into database
+export async function bookmarkProduct(productId, setShowModal) {
   const auth = getAuth();
   const userId = auth.currentUser.uid;
   console.log('userId:', userId); // Debugging line
@@ -160,10 +162,79 @@ export async function bookmarkProduct(productId) {
   await setDoc(userBookmarksRef, {
     bookmarkedProducts: arrayUnion(productId)
   }, { merge: true });
+
+  // Show the modal
+  setShowModal(true);
+}
+
+
+// Load products in user bookmark list
+export async function loadBookmarkedProducts() {
+  const auth = getAuth();
+  if (auth.currentUser) {
+    const userId = auth.currentUser.uid;
+    console.log('Loading bookmarked products for user:', userId);
+    const userBookmarksRef = doc(collection(firestore, 'Bookmarks'), userId);
+    const docSnapshot = await getDoc(userBookmarksRef);
+    if (docSnapshot.exists()) {
+      console.log('Bookmarked products loaded:', docSnapshot.data().bookmarkedProducts);
+      const bookmarkedProductIds = docSnapshot.data().bookmarkedProducts;
+      const productCollectionRef = collection(firestore, 'Products');
+      const productDocs = await Promise.all(bookmarkedProductIds.map((productId) => getDoc(doc(productCollectionRef, productId))));
+      const bookmarkedProducts = productDocs.map((productDoc) => ({ id: productDoc.id, ...productDoc.data() }));
+      console.log('Bookmarked product details loaded:', bookmarkedProducts);
+      return bookmarkedProducts;
+    } else {
+      console.error('No such document!');
+    }
+  } else {
+    console.log('No user is currently signed in.');
+  }
+  return [];
+}
+
+// Remove the desired product from your bookmarks and update it to the client
+export async function removeBookmarkedProduct(productId) {
+  const auth = getAuth();
+  if (auth.currentUser) {
+    const userId = auth.currentUser.uid;
+    console.log('Removing bookmarked product for user:', userId);
+    const userBookmarksRef = doc(collection(firestore, 'Bookmarks'), userId);
+    await updateDoc(userBookmarksRef, {
+      bookmarkedProducts: arrayRemove(productId)
+    });
+    console.log('Product removed from bookmarks:', productId);
+  } else {
+    console.log('No user is currently signed in.');
+  }
+}
+
+
+// Load products in user cart
+export async function loadCartProducts() {
+  const auth = getAuth();
+  if (auth.currentUser) {
+    const userId = auth.currentUser.uid;
+    console.log('Loading cart products for user:', userId);
+    const userCartRef = doc(collection(firestore, 'Cart'), userId);
+    const docSnapshot = await getDoc(userCartRef);
+    if (docSnapshot.exists()) {
+      console.log('Cart products loaded:', docSnapshot.data().productsList);
+      const cartProductIds = docSnapshot.data().productsList;
+      const productCollectionRef = collection(firestore, 'Products');
+      const productDocs = await Promise.all(cartProductIds.map((productId) => getDoc(doc(productCollectionRef, productId))));
+      const cartProducts = productDocs.map((productDoc) => ({ id: productDoc.id, ...productDoc.data() }));
+      console.log('Cart product details loaded:', cartProducts);
+      return cartProducts;
+    } else {
+      console.error('No such document!');
+    }
+  } else {
+    console.log('No user is currently signed in.');
+  }
+  return [];
 }
 
 
 
-
-
-export { addProduct, addOrder, getTopSellingProducts, addRandomOrders };
+export { addProduct, addOrder, getTopSellingProducts, addRandomOrders,  };

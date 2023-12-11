@@ -15,6 +15,7 @@ import { getTopSellingProducts } from '../REST_API/firebaseAPI';
 import { getOnSaleProducts } from '../REST_API/firebaseAPI';
 
 
+
 const HomePage = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
@@ -25,6 +26,7 @@ const HomePage = () => {
   const [topSellingProducts, setTopSellingProducts] = useState([]);
 
   useEffect(() => {
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
     const fetchTopSellingProducts = async () => {
       const products = await getTopSellingProducts();
       setTopSellingProducts(products);
