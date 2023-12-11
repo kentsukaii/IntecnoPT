@@ -6,9 +6,13 @@ import { getDownloadURL, ref } from "firebase/storage"; // Import the necessary 
 import { storage } from "../../firebase"; // Import your Firebase storage instance
 import './CSS/BookmarkCard.css'; // Import the CSS file
 import { removeBookmarkedProduct } from '../../REST_API/firebaseAPI';
+import { useNavigate } from 'react-router-dom';
+import { addProductToCart } from '../../REST_API/firebaseAPI';
+
 
 
 const BookmarkCard = ({ product, onRemove }) => {
+    const navigate = useNavigate();
     const [imageUrl, setImageUrl] = useState(null);
     const [showModal, setShowModal] = useState(false); // State to 
 
@@ -51,20 +55,25 @@ const BookmarkCard = ({ product, onRemove }) => {
         setShowModal(false); // Hide the modal
     }
 
+    const handlePageLink = () => {
+        navigate(`/products/${product.id}`);
+    };
 
 
     const availability = getAvailability(product.StockAvailable);
+
+    const originalPrice = product.OnSale ? product.Price / (1 - product.SalePercentage) : product.Price;
 
     return (
         <Card style={{ width: '100%' }}>
             <Row className="no-gutters">
                 <Col md={4} className="d-flex align-items-center justify-content-center">
-                    {imageUrl && <Card.Img className="card-image" variant="top" src={imageUrl} />}
+                    {imageUrl && <Card.Img className="card-image" variant="top" src={imageUrl} onClick={handlePageLink} />}
                 </Col>
                 <Col md={8}>
                     <Card.Body className="text-left">
                         <div className="d-flex justify-content-between">
-                            <Card.Title className="card-title">{product.Name}</Card.Title>
+                            <Card.Title className="card-title" onClick={handlePageLink}>{product.Name}</Card.Title>
                             <Button variant="danger" onClick={handleRemove} style={{ fontSize: '0.5rem', padding: '0.25rem 0.5rem', position: 'absolute', top: '10px', right: '10px' }}>
                                 <FontAwesomeIcon icon={faTimes} />
                             </Button>
@@ -72,12 +81,23 @@ const BookmarkCard = ({ product, onRemove }) => {
                         <Card.Text>
                             <FontAwesomeIcon icon={availability.icon} style={{ color: availability.color }} /> <span style={{ color: availability.color }}>{availability.text}</span><br />
                             <span style={{ color: availability.color }}>Expected delivery date:</span><br /><span style={{ color: availability.color }}>{product.ExpectedDeliveryDate}</span><br />
-                            Price: {product.Price}€<br />
-                            {product.discountPrice && <>Discount price: <s>{product.Price}€</s> {product.discountPrice}€</>}
+                            {product.OnSale ? (
+                                <>
+                                    <span>Original Price: {originalPrice.toFixed(2)}€</span><br />
+                                    <span>Discounted Price: {product.Price}€</span>
+                                </>
+                            ) : (
+                                <span>Price: {product.Price}€</span>
+                            )}
                         </Card.Text>
-                        <Button variant="primary" onClick={() => {/* Add the product to the cart */ }} style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}>
+                        <Button
+                            variant="primary"
+                            onClick={() => addProductToCart(product.id)} // Call the function here
+                            style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}
+                        >
                             <FontAwesomeIcon icon={faShoppingCart} /> Add to Cart
                         </Button>
+
                     </Card.Body>
                 </Col>
             </Row>
@@ -98,6 +118,8 @@ const BookmarkCard = ({ product, onRemove }) => {
                 </Modal.Footer>
             </Modal>
         </Card>
+
+
     );
 
 }

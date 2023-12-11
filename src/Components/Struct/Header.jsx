@@ -11,6 +11,7 @@ import { Dropdown, Form, FormControl, Nav, Navbar } from "react-bootstrap";
 import maguire from "../../assets/godmaguire.png";
 import "../../fonts/fonts.css";
 import "./Header.css";
+<<<<<<< HEAD
 import SideMenu from "../../Components/Cards/SideMenu";
 import SideMenu2 from "../../Components/Cards/SideMenu2";
 import {
@@ -25,13 +26,31 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Header = () => {
+=======
+import SideMenu from '../../Components/Cards/SideMenu';
+import SideMenu2 from '../../Components/Cards/SideMenu2';
+import { useFirebaseAuth, useFirebaseLogin } from '../../Pages/BackendFiles/Backend';
+import { loadBookmarkedProducts } from '../../REST_API/firebaseAPI';
+import { loadCartProducts } from '../../REST_API/firebaseAPI';
+import { getProductCount } from '../../REST_API/firebaseAPI';
+import { getAuth } from "firebase/auth";
+import { firestore } from '../../firebase';
+import { doc, getDoc, collection } from "firebase/firestore";
+
+const Header = ({ productCount }) => {
+>>>>>>> 0e1fbf392481abcfd6ea3326c833c7adb4e4ddc5
   const { handleLogout } = useFirebaseAuth();
   const { user } = useFirebaseLogin();
   const [darkMode, setDarkMode] = useState(false);
-  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isBookmarkMenuOpen, setBookmarkMenuOpen] = useState(false);
   const [bookmarkedProducts, setBookmarkedProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isBookmarkLoading, setBookmarkLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [cartProducts, setCartProducts] = useState([]);
+  const [isCartMenuOpen, setCartMenuOpen] = useState(false);
+  const [isCartLoading, setCartLoading] = useState(false);
+
+
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -49,13 +68,26 @@ const Header = () => {
 
   // ------------------------------------------
 
+  // Load bookmarks both client and server sided 
   const loadBookmarks = async () => {
-    setIsLoading(true);
+    setBookmarkLoading(true);
     const products = await loadBookmarkedProducts();
     setBookmarkedProducts(products);
-    setIsLoading(false);
-    setMenuOpen(true);
+    setBookmarkLoading(false);
+    setBookmarkMenuOpen(true);
   };
+
+  // Do the same but with item carts
+  const loadCart = async () => {
+    setCartLoading(true);
+    const products = await loadCartProducts();
+    setCartProducts(products);
+    setCartLoading(false);
+    setCartMenuOpen(true);
+  };
+
+
+
 
   return (
     <Navbar
@@ -108,6 +140,7 @@ const Header = () => {
           >
             <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="2x" />
           </Nav.Link>
+<<<<<<< HEAD
           <Nav.Link
             href="/cart"
             className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-lg-none"
@@ -175,6 +208,29 @@ const Header = () => {
                 <FontAwesomeIcon icon={faReceipt} color="white" /> Orders /
                 Invoices
               </Dropdown.Item>
+=======
+
+
+          <Nav.Link className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block" onClick={loadBookmarks}>
+            <FontAwesomeIcon icon={faStar} size="2x" />
+          </Nav.Link>
+          {isBookmarkLoading ? <p></p> : <SideMenu isOpen={isBookmarkMenuOpen} onClose={() => setBookmarkMenuOpen(false)} bookmarkedProducts={bookmarkedProducts} />}
+
+          <Nav.Link className="order-2 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block" onClick={loadCart}>
+            <FontAwesomeIcon icon={faShoppingCart} size="2x" />
+            
+          </Nav.Link>
+
+          {isCartLoading ? <p></p> : <SideMenu2 isOpen={isCartMenuOpen} onClose={() => setCartMenuOpen(false)} cartProducts={cartProducts} />}
+
+          <Dropdown className="order-2" align="end" style={{ marginLeft: '20px' }}>
+            <Dropdown.Toggle variant="success" id="dropdown-basic" as="img" src={maguire} alt="menu icon" width="75" height="75" style={{ borderRadius: "50%", border: "2px solid #4eadfe" }}>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu alignRight style={{ width: "80%" }}>
+              <Dropdown.Item href="/profile" className="text-center">Profile</Dropdown.Item>
+              <Dropdown.Item href="/myordersinvoices" className="text-center">My Orders / Invoices</Dropdown.Item>
+>>>>>>> 0e1fbf392481abcfd6ea3326c833c7adb4e4ddc5
               <Dropdown.Divider />
               <Dropdown.Item
                 href="/"
