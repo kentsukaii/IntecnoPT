@@ -114,21 +114,20 @@ const Header = () => {
             style={{ position: "absolute", top: "20px", left: "5%" }}
           >
             <FontAwesomeIcon icon={faShoppingCart} size="2x" />
-            <span className="badge badge-warning">5</span>
           </Nav.Link>
           <Nav.Link
             className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block"
             onClick={handleOpen}
+            
           >
             <FontAwesomeIcon icon={faShoppingCart} size="2x" />
-            <span className="badge badge-warning">5</span>
           </Nav.Link>
           <SideMenu2 isOpen={isOpen} onClose={handleClose} />
           <Nav.Link
             onClick={loadBookmarks}
             className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block"
             style={{
-              width: "44px",
+              width: "50px",
               height: "38px",
               display: "flex",
               alignItems: "center",
