@@ -24,6 +24,7 @@ import 'mdbreact/dist/css/mdb.css';
 import './App.css';
 import Footer from '../src/Components/Struct/Footer';
 import Header from './Components/Struct/Header';
+import Header2 from './Components/Struct/Header2';
 
 // Inicializando o aplicativo Firebase
 initializeApp(firebaseConfig);
@@ -36,10 +37,10 @@ function App() {
 
       {/* Configurando as rotas com o BrowserRouter */}
       <Router>
-        {/* Renderizando o componente Header no topo */}
-        <Header />
+        {/* Conditionally render Header or Header2 based on the current route */}
+        {location.pathname === '/register' || location.pathname === '/login' ? <Header2 /> : <Header />}
+        
         <Routes>
-          {/* Definindo as rotas para os diferentes componentes */}
           <Route path="/" element={<HomePage className="home-page" />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/register" element={<Register />} />
