@@ -4,6 +4,7 @@ import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { auth, firestore } from "../firebase";
 import { getUserData } from "./BackendFiles/Backend";
+import Image from "react-bootstrap/Image";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -164,21 +165,6 @@ return (
                     </Form.Group>
                   </Col>
                 </Row>
-                <Row className="g-3 justify-content-center">
-                  <Col md={6}>
-                    <Form.Group controlId="formCurrentPassword" className="mt-5 mb-1">
-                      <Form.Label>Current Password</Form.Label>
-                      <Form.Control
-                        type="password"
-                        placeholder="••••••••••"
-                        style={{
-                          backgroundColor: "#e0e0e0",
-                          width: "100%",
-                        }}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
                 <Button variant="primary" type="submit" className="mt-4">
                   Save
                 </Button>
@@ -200,7 +186,7 @@ return (
                   <Row className="g-3">
                     <Col>
                       <Form.Group
-                        controlId="formCurrentPassword2"
+                        controlId="formCurrentPassword"
                         className="mt-4"
                       >
                         <Form.Label>Current Password</Form.Label>
