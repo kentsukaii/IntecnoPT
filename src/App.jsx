@@ -1,31 +1,33 @@
 // Importando os módulos necessários do React e react-router-dom
-import { useEffect } from 'react'; // Import useEffect from react
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import AboutPage from './Pages/AboutPage';
-import HomePage from './Pages/HomePage';
-import Login from './Pages/Login';
-import ProductsPage from './Pages/ProductPage.jsx';
-import Profile from './Pages/Profile.jsx';
-import Register from './Pages/Register';
-import TemplatePage from './Pages/TemplatePage.jsx';
-import ProductPage from './Pages/ProductPage.jsx';
-import Dashboard from './Pages/Dashboard.jsx';
-import Card from './Components/Cards/ProductCard.jsx';
+import { useEffect } from "react"; // Import useEffect from react
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import AboutPage from "./Pages/AboutPage";
+import HomePage from "./Pages/HomePage";
+import Login from "./Pages/Login";
+import ProductsPage from "./Pages/ProductPage.jsx";
+import Profile from "./Pages/Profile.jsx";
+import Register from "./Pages/Register";
+import TemplatePage from "./Pages/TemplatePage.jsx";
+import ProductPage from "./Pages/ProductPage.jsx";
+import Dashboard from "./Pages/Dashboard.jsx";
+import Card from "./Components/Cards/ProductCard.jsx";
 
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebase";
 
-
 // Importando o componente Header
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import 'bootstrap-css-only/css/bootstrap.min.css';
-import 'mdbreact/dist/css/mdb.css';
-import './App.css';
-import Footer from '../src/Components/Struct/Footer';
-import Header from './Components/Struct/Header';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "mdb-react-ui-kit/dist/css/mdb.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "bootstrap-css-only/css/bootstrap.min.css";
+import "mdbreact/dist/css/mdb.css";
+import "./App.css";
+import Footer from "../src/Components/Struct/Footer";
+import Footer2 from "../src/Components/Struct/Footer2";
+import Footer3 from "../src/Components/Struct/Footer3";
+import Header from "./Components/Struct/Header";
+import Header2 from "./Components/Struct/Header2";
 
 // Inicializando o aplicativo Firebase
 initializeApp(firebaseConfig);
@@ -35,13 +37,17 @@ function App() {
   return (
     // JSX que representa a estrutura do aplicativo
     <div className="App">
-
       {/* Configurando as rotas com o BrowserRouter */}
       <Router>
-        {/* Renderizando o componente Header no topo */}
-        <Header />
+        {/* Conditionally render Header or Header2 based on the current route */}
+        {location.pathname === "/register" || location.pathname === "/login" ? (
+          <Header2 />
+        ) : (
+          <Header />
+        )}
+
         <Routes>
-        <Route path="/products/:id" element={<ProductPage />} />
+          <Route path="/products/:id" element={<ProductPage />} />
           {/* Definindo as rotas para os diferentes componentes */}
           <Route path="/" element={<HomePage className="home-page" />} />
           <Route path="/about" element={<AboutPage />} />
@@ -53,6 +59,14 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
         </Routes>
+        {location.pathname === "/register" || location.pathname === "/login" ? (
+          <Footer3 />
+        ) : (
+          <>
+            <Footer2 />
+            <Footer />
+          </>
+        )}
       </Router>
     </div>
   );
