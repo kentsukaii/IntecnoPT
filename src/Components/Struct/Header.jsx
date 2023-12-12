@@ -1,4 +1,5 @@
 // Importing React, react-router-dom, and MDB modules
+import React, { useState, useEffect} from "react";
 import {
   faShoppingCart,
   faMoon,
@@ -10,7 +11,6 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
 import { Dropdown, Form, FormControl, Nav, Navbar } from "react-bootstrap";
 import maguire from "../../assets/godmaguire.png";
 import "../../fonts/fonts.css";
@@ -18,16 +18,19 @@ import SideMenu from "../../Components/Cards/SideMenu";
 import SideMenu2 from "../../Components/Cards/SideMenu2";
 import {
   useFirebaseAuth,
-  useFirebaseLogin,
+  ChangePicture,
 } from "../../Pages/BackendFiles/Backend";
 import {
   loadBookmarkedProducts,
   loadCartProducts,
 } from "../../REST_API/firebaseAPI";
 
+
+
 const Header = ({ productCount }) => {
+
   const { handleLogout } = useFirebaseAuth();
-  const { user } = useFirebaseLogin();
+  const { user } = useFirebaseAuth();
   const [darkMode, setDarkMode] = useState(false);
   const [isBookmarkMenuOpen, setBookmarkMenuOpen] = useState(false);
   const [bookmarkedProducts, setBookmarkedProducts] = useState([]);
@@ -36,6 +39,17 @@ const Header = ({ productCount }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [isCartMenuOpen, setCartMenuOpen] = useState(false);
   const [isCartLoading, setCartLoading] = useState(false);
+  const {
+    fileInputRef,
+    handleProfilePicChange,
+    
+     } = ChangePicture();
+  const [profilePicUrl, setProfilePicUrl] = useState(localStorage.getItem('profilePicUrl') || maguire);
+
+  useEffect(() => {
+    // Update the profile picture URL when the user state changes
+    setProfilePicUrl(localStorage.getItem('profilePicUrl') || maguire);
+  }, [user]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -174,41 +188,42 @@ const Header = ({ productCount }) => {
           <Dropdown
             className="order-2"
             align="end"
-            style={{ marginLeft: "20px" }}
-          >
+            style={{ marginLeft: "20px" }}>
+            <input type="file" ref={fileInputRef} onChange={handleProfilePicChange} style={{ display: 'none' }} />
             <Dropdown.Toggle
               variant="success"
               id="dropdown-basic"
               as="img"
-              src={maguire}
+              src={user ? profilePicUrl : maguire}  // Use the profile picture URL state
               alt="menu icon"
               width="75"
               height="75"
               style={{ borderRadius: "50%", border: "2px solid #4eadfe" }}
+              
             ></Dropdown.Toggle>
-            <Dropdown.Menu
-              className="bg-light"
-              alignRight
-              style={{ width: "80%" }}
-            >
-              <Dropdown.Item href="/login" className="text-center">
-                <FontAwesomeIcon icon={faKey} color="#f2b624" /> Login / Register
-              </Dropdown.Item>
-              <Dropdown.Item href="/profile" className="text-center">
-                <FontAwesomeIcon icon={faUser} color="#4eadfe" /> Profile
-              </Dropdown.Item>
-              <Dropdown.Item href="/invoices" className="text-center">
-                <FontAwesomeIcon icon={faReceipt} color="white" /> Invoices
-              </Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item
-                href="/"
-                className="text-center"
-                onClick={handleLogout}
-              >
-                Logout <FontAwesomeIcon icon={faSignOutAlt} color="red" />
-              </Dropdown.Item>
+            <Dropdown.Menu className="bg-light" alignRight style={{ width: "80%" }}>
+              {user ? (
+                // If the user is logged in, show these options
+                <>
+                  <Dropdown.Item href="/profile" className="text-center">
+                    <FontAwesomeIcon icon={faUser} color="#4eadfe" /> Profile
+                  </Dropdown.Item>
+                  <Dropdown.Item href="/invoices" className="text-center">
+                    <FontAwesomeIcon icon={faReceipt} color="white" /> Invoices
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item href="/" className="text-center" onClick={handleLogout}>
+                    Logout <FontAwesomeIcon icon={faSignOutAlt} color="red" />
+                  </Dropdown.Item>
+                </>
+              ) : (
+                // If the user is not logged in, show this option
+                <Dropdown.Item href="/login" className="text-center " >
+                  <FontAwesomeIcon icon={faKey} color="#f2b624" /> Login / Register
+                </Dropdown.Item>
+              )}
             </Dropdown.Menu>
+
           </Dropdown>
         </Nav>
       </Navbar.Collapse>

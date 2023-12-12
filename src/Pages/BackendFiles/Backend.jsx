@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useRef  } from "react";
 import {
   signInWithEmailAndPassword,
   getAuth,
@@ -14,13 +14,14 @@ import {
   fetchSignInMethodsForEmail,
  
 } from "firebase/auth";
-import { collection, addDoc, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, doc, getDoc,deleteDoc, setDoc} from "firebase/firestore";
 import { auth, firestore } from "../../firebase"; // import firestore from your firebase file
 import { useNavigate } from "react-router-dom";
-import { setDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useQuery } from 'react-query';
-//import axios from './axiosConfig';
+import maguire from "../../assets/godmaguire.png";
 
+//import axios from './axiosConfig';
 
 //
 //
@@ -42,22 +43,23 @@ export const useFirebaseAuth = () => {
   }, [auth]);
 
   const handleLogout = async () => {
+    
     try {
       await signOut(auth);
       
       setUser(null);  // Set user to null
       navigate('/login');
+      setProfilePicUrl(maguire);
+      localStorage.setItem('profilePicUrl', maguire);
     
-
     } catch (error) {
       console.error("Error during logout:", error);
     }
-  };  
+  };
+  
 
   return { user, handleLogout };
 };
-
-
 
 
 
@@ -385,6 +387,8 @@ export const useFirebaseLogin = () => {
       setLoggedInUser(null);
       setAuthing(false);
       window.location.reload()
+      
+      
     }
   };
   
@@ -427,7 +431,7 @@ export const useFirebaseLogin = () => {
       navigate('/');
 
       window.location.reload()
-
+      
     } catch (error) {
       console.log(error);
       setAuthing(false);
@@ -466,15 +470,53 @@ export const useFirebaseLogin = () => {
       navigate('/');
 
       window.location.reload()
-
+      localStorage.removeItem('profilePicUrl');
+      
     } catch (error) {
       console.log(error);
       setAuthing(false);
+
       window.location.reload()
     }
   };
   
-
+  const handleDeleteAccount = async () => {
+    const user = auth.currentUser;
+    
+    if (user) {
+      // User is signed in, get the user's email
+      const email = user.email;
+  
+      // Delete the user account
+      deleteUser(user).then(async () => {
+        console.log('User account has been successfully deleted.');
+  
+        // Now you can delete the user's data from your database
+        // Query the Users collection to find the document with the matching email
+        const usersCollection = collection(firestore, 'Users');
+        const userQuery = query(usersCollection, where('email', '==', email));
+        const userQuerySnapshot = await getDocs(userQuery);
+  
+        // If a document with the matching email is found, delete it
+        if (!userQuerySnapshot.empty) {
+          const userDoc = doc(firestore, 'Users', userQuerySnapshot.docs[0].id);
+          deleteDoc(userDoc).then(() => {
+            console.log('User data has been successfully deleted from the database.');
+          }).catch((error) => {
+            console.error('Error deleting user data from the database: ', error);
+          });
+        }
+      navigate('/login')
+      localStorage.removeItem('profilePicUrl');
+      setProfilePicUrl(maguire);
+      }).catch((error) => {
+        console.error('Error deleting user account: ', error);
+      });
+    } else {
+      // No user is signed in, cannot delete account
+      console.log('User needs to be signed in to delete account.');
+    }
+  };
 
 
   const handleAuthUser = async (authUser) => {
@@ -522,11 +564,6 @@ export const useFirebaseLogin = () => {
     setShowPasswordReset(false);
   };
 
-  
-
- 
-
-
 
   return {
     email,
@@ -555,6 +592,7 @@ export const useFirebaseLogin = () => {
     handleCheckboxChange,
     onAuthStateChanged,
     checkEmailExists,
+    handleDeleteAccount,
   };
 };
 
@@ -592,6 +630,55 @@ export const getUserData = async () => {
   
   
 };
+
+
+export const ChangePicture = () => {
+  const [profilePicUrl, setProfilePicUrl] = useState(localStorage.getItem('profilePicUrl') || maguire);
+  const fileInputRef = useRef();
+  const auth = getAuth();
+  const storage = getStorage();
+
+  const handleProfilePicClick = () => {
+   
+      fileInputRef.current.click();
+    
+  };
+
+  const handleProfilePicChange = async (event) => {
+    const user = auth.currentUser;
+    
+    if (user) {
+      const uid = user.uid;
+      const file = event.target.files[0];
+    
+      // Create a storage reference
+      const storageRef = ref(storage, 'ProfilePictures/' + uid);
+    
+      // Upload the file to the reference
+      await uploadBytes(storageRef, file);
+    
+      // Get the download URL and update the user's profile picture
+      const url = await getDownloadURL(storageRef);
+      setProfilePicUrl(url);  // Update the profile picture URL
+  
+      // Store the URL in local storage
+      localStorage.setItem('profilePicUrl', url);
+    
+      console.log('Profile picture has been successfully updated.');
+    } else {
+      console.log('User needs to be signed in to change profile picture.');
+    }
+  };
+  
+
+  return {
+    profilePicUrl,
+    fileInputRef,
+    handleProfilePicChange,
+    handleProfilePicClick,
+  };
+};
+
 
 /*
 export const API_Fetch = {

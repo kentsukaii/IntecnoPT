@@ -75,12 +75,8 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/search" element={<SearchPage />} />
-<<<<<<< HEAD
-          <Route path="/adresscard" element={<AdressCard />} />
-=======
           <Route path="/notfound" element={<NotFoundPage />} />
           <Route path="*" element={<NotFoundPage />} />
->>>>>>> 2628130023f5543951623b51aa3c1a0817d36e03
         </Routes>
         {location.pathname === "/register" || location.pathname === "/login" ? (
           <Footer3 />

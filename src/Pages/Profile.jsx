@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   getAuth,
   onAuthStateChanged,
@@ -13,14 +13,18 @@ import {
   query,
   where,
   updateDoc,
+  
+
 } from "firebase/firestore";
-import { Form, Button, Col, Row } from "react-bootstrap";
+import { Form, Button, Col, Dropdown, Row } from "react-bootstrap";
 import { auth, firestore } from "../firebase";
-import { getUserData } from "./BackendFiles/Backend";
+import { getUserData, useFirebaseLogin, ChangePicture} from "./BackendFiles/Backend";
 import { InputGroup } from "react-bootstrap";
 import { FaUser, FaEnvelope, FaCalendarAlt, FaLock, FaKey } from "react-icons/fa";
 import Image from "react-bootstrap/Image";
 import AddressCard from '../Components/Cards/AdressCard';
+
+
 
 const Profile = () => {
   const authInstance = getAuth();
@@ -32,6 +36,12 @@ const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState(user ? user.email : "");
+  const {handleDeleteAccount } = useFirebaseLogin();
+  const {profilePicUrl,
+    fileInputRef,
+    handleProfilePicChange,
+    handleProfilePicClick, } = ChangePicture();
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -154,10 +164,8 @@ const Profile = () => {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    // Implement account deletion logic here
-    console.log("Deleting account...");
-  };
+
+
 
   const handlePasswordChange = async () => {
     try {
@@ -229,6 +237,8 @@ const Profile = () => {
     }
   };
 
+
+
   return (
     <>
       {/* First Container (My Account Information) */}
@@ -239,6 +249,22 @@ const Profile = () => {
               <h2>
                 <strong>My Account Information</strong>
               </h2>
+              <input type="file" ref={fileInputRef} onChange={handleProfilePicChange} style={{ display: 'none' }} />
+
+
+              <Dropdown.Toggle
+                variant="success"
+                id="dropdown-basic"
+                as="img"
+                src={profilePicUrl}  // Use the profile picture URL state
+                alt="menu icon"
+                width="175"
+                height="175"
+                style={{ borderRadius: "50%", border: "2px solid #4eadfe" }}
+                onClick={handleProfilePicClick}
+              ></Dropdown.Toggle>
+
+
               <div className="row mb-2">
                 <Form className="w-100">
                   <Row className="g-3">
@@ -361,6 +387,7 @@ const Profile = () => {
                   </Button>
                   {error && <p style={{ color: "red" }}>{error}</p>}
                 </Form>
+
               </div>
             </div>
             {/* Add Delete Account button here */}
@@ -418,7 +445,7 @@ const Profile = () => {
                   </Row>
                   <Row className="g-3">
                     <Col>
-                      <Form.Group controlId="formNewPassword"  className="mt-4 position-relative">
+                      <Form.Group controlId="formNewPassword" className="mt-4 position-relative">
                         <Form.Label>New Password</Form.Label>
                         <FaKey
                           className="position-absolute"
@@ -498,7 +525,7 @@ const Profile = () => {
               <div className="row mb-2">
                 <Form className="w-100">
                   <Row className="g-3">
-                  <Col><AddressCard /></Col>
+                    <Col><AddressCard /></Col>
                     <Col></Col>
                   </Row>
                 </Form>
