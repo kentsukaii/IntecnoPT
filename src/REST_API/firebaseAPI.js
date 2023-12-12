@@ -68,6 +68,7 @@ async function addProduct(product) {
     Bookmark: product.Bookmark, // new field
     OnSale: product.OnSale, // new field
     SalePercentage: product.SalePercentage, // new field
+    salesCount: product.salesCount
   }).catch((error) => {
     console.error("Error writing to database: ", error);
   });

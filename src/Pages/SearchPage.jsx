@@ -3,13 +3,15 @@ import { Container, Row, Col, Form, FormControl } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faList } from '@fortawesome/free-solid-svg-icons';
 import { getProductsByStock, searchProducts, getAllProducts } from '../REST_API/firebaseSearch';
-import ProductCard from '../Components/Cards/ProductCard'; // Import the ProductCard component
+import SearchCard from '../Components/Cards/SearchCard'; // Import the ProductCard component
+import { Pagination } from 'react-bootstrap';
 
 const SearchPage = () => {
   const [product, setProduct] = useState('product_here');
   const [results, setResults] = useState('xxx');
   const [products, setProducts] = useState([]); // State variable to store the products
   const [searchTerm, setSearchTerm] = useState(''); // State variable to store the search term
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     // Fetch all products when the component mounts
@@ -28,11 +30,9 @@ const SearchPage = () => {
   };
 
   return (
+
     <Container style={{ borderRadius: '15px', padding: '20px' }}>
-      <div
-        className="d-flex justify-content-center w-100"
-        style={{ maxWidth: "100%" }}
-      >
+      <div className="d-flex justify-content-center w-100" style={{ maxWidth: "100%" }}>
         <Form inline className="mx-auto" style={{ width: "55%" }} onSubmit={handleSearch}>
           <FormControl
             type="text"
@@ -51,7 +51,7 @@ const SearchPage = () => {
         </Col>
       </Row>
       <Row className="align-items-center my-3" style={{ backgroundColor: '#e9ecef', borderRadius: '15px', padding: '20px', marginBottom: '10px' }}>
-        <Col md={3} className="text-left">
+        <Col md={12} className="text-left">
           <h5 style={{ fontWeight: 'bold' }}>FILTERS</h5>
           <Form.Label style={{ fontSize: '1.2em' }}>Stock</Form.Label>
           <hr />
@@ -68,7 +68,9 @@ const SearchPage = () => {
             onChange={(e) => getProductsByStock(!e.target.checked).then(setProducts)}
           />
         </Col>
-        <Col md={8}>
+      </Row>
+      <Row className="align-items-center my-3" style={{ backgroundColor: '#e9ecef', borderRadius: '15px', padding: '20px', marginBottom: '10px' }}>
+        <Col md={12}>
           <Row className="justify-content-end">
             <Col md={3} className="d-flex align-items-center">
               <FontAwesomeIcon icon={faSort} className="mr-2" />
@@ -87,21 +89,36 @@ const SearchPage = () => {
               </Form.Control>
             </Col>
           </Row>
-          <Row className="align-items-center my-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '15px', padding: '20px' }}>
+          <Row className="justify-content-center my-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '15px', padding: '20px' }}>
             <Col>
-              {/* Map over the products and render a ProductCard for each one */}
-              <Row>
-                {products.map((product) => (
-                  <Col md={3}>
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      isBestSeller={product.isBestSeller}
-                    />
-                  </Col>
+              <div className="card-deck d-flex justify-content-center" style={{ width: '100%' }}>
+                {products.slice((currentPage - 1) * 9, currentPage * 9).map((product) => ( // Change this line
+                  <SearchCard
+                    key={product.id}
+                    product={product}
+                    isBestSeller={product.isBestSeller}
+                  />
                 ))}
-              </Row>
+              </div>
             </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <Pagination>
+              {Array(Math.ceil(products.length / 9)).fill().map((_, index) => (
+                <Pagination.Item
+                  key={index}
+                  active={index + 1 === currentPage}
+                  onClick={() => {
+                    setCurrentPage(index + 1);
+                    window.scrollTo({ top: 525, behavior: 'smooth' });
+
+                  }}
+                >
+                  {index + 1}
+                </Pagination.Item>
+              ))}
+            </Pagination>
+
           </Row>
         </Col>
       </Row>
