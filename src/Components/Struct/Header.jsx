@@ -5,6 +5,7 @@ import {
   faSun,
   faStar,
   faUser,
+  faKey,
   faReceipt,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -191,6 +192,9 @@ const Header = ({ productCount }) => {
               alignRight
               style={{ width: "80%" }}
             >
+              <Dropdown.Item href="/login&register" className="text-center">
+                <FontAwesomeIcon icon={faKey} color="#f2b624" /> Login / Register
+              </Dropdown.Item>
               <Dropdown.Item href="/profile" className="text-center">
                 <FontAwesomeIcon icon={faUser} color="#4eadfe" /> Profile
               </Dropdown.Item>
