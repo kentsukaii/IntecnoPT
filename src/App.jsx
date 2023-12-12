@@ -12,11 +12,8 @@ import Dashboard from './Pages/Dashboard.jsx';
 import NotFoundPage from './Pages/NotFoundPage';
 import SearchPage from './Pages/SearchPage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
-<<<<<<< HEAD
 import InVoicesPage from './Pages/InVoicesPage.jsx';
-=======
 import AdressCard from './Components/Cards/AdressCard.jsx';
->>>>>>> 12e1192e714c4a2b15e5b99c8ed8b936ee1e2bbc
 import { getProductCount } from './REST_API/firebaseAPI.js';
 
 
