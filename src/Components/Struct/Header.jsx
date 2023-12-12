@@ -11,6 +11,7 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { Dropdown, Form, FormControl, Nav, Navbar } from "react-bootstrap";
 import maguire from "../../assets/godmaguire.png";
 import "../../fonts/fonts.css";

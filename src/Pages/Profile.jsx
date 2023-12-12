@@ -13,12 +13,12 @@ import {
   query,
   where,
   updateDoc,
-  
+
 
 } from "firebase/firestore";
 import { Form, Button, Col, Dropdown, Row } from "react-bootstrap";
 import { auth, firestore } from "../firebase";
-import { getUserData, useFirebaseLogin, ChangePicture} from "./BackendFiles/Backend";
+import { getUserData, useFirebaseLogin, ChangePicture } from "./BackendFiles/Backend";
 import { InputGroup } from "react-bootstrap";
 import { FaUser, FaEnvelope, FaCalendarAlt, FaLock, FaKey } from "react-icons/fa";
 import Image from "react-bootstrap/Image";
@@ -36,8 +36,8 @@ const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState(user ? user.email : "");
-  const {handleDeleteAccount } = useFirebaseLogin();
-  const {profilePicUrl,
+  const { handleDeleteAccount } = useFirebaseLogin();
+  const { profilePicUrl,
     fileInputRef,
     handleProfilePicChange,
     handleProfilePicClick, } = ChangePicture();
@@ -350,7 +350,7 @@ const Profile = () => {
                             minWidth: "18vw",
                           }}
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          readOnly
                         />
                       </Form.Group>
                     </Col>

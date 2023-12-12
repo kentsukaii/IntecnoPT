@@ -85,10 +85,6 @@ export const useFirebaseRegister = () => { // MAIN
 
  
   
-  const isValidEmailFormat = (email) => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-  };
 
 
 
@@ -118,23 +114,24 @@ export const useFirebaseRegister = () => { // MAIN
       setNumber(false);
     }
   };
-
+  const isValidEmailFormat = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+  
 
   const handleRegister = async () => {
-    
-  
-    
-    if (!email || !password || !confirmPassword) {
-      setError("All fields are required");
-      return;
-    }
+    let errors = [];
 
     try {
       setLoading(true);
 
+      if (!email || !password || !confirmPassword) {
+        errors.push("All fields are required");
+      }
+      
       if (!termsAccepted) {
-        setError("You must agree to the Terms and Conditions");
-        return;
+        errors.push("You must agree to the Terms and Conditions");
       }
 
       const passwordRequirements = [
@@ -162,27 +159,31 @@ export const useFirebaseRegister = () => { // MAIN
 
       for (let requirement of passwordRequirements) {
         if (!requirement.test(password)) {
-          setError(requirement.message);
-          return;
+          errors.push(requirement.message);
+          continue;
         }
       }
 
       if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
+        errors.push("Passwords do not match");
       }
 
       if (!isValidEmailFormat(email)) {
-        setError("Invalid email format");
-        return;
+        errors.push("Invalid email format");
       }
 
       const emailExistsInDatabase = await checkDuplicateEmail(email);
+
       if (emailExistsInDatabase) {
-        setError("Email already exists");
-        return;
+        errors.push("Email already exists");
       }
 
+      if (errors.length > 0) {
+        setError(errors.join("\n"));
+        return;
+      }
+      
+      
       const authUser = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -207,8 +208,7 @@ export const useFirebaseRegister = () => { // MAIN
       setConfirmPassword("");
       setError(null);
       navigate('/');
-
-      window.location.reload()
+      window.location.reload();
 
     } catch (error) {
       console.error('Error registering user:', error.message);
@@ -217,9 +217,10 @@ export const useFirebaseRegister = () => { // MAIN
       );
     } finally {
       setLoading(false);
-      window.location.reload()
+      
     }
   }; 
+
 
   const handleGoogleRegister = async () => { // HANDLE GOOGLE REGISTER
     setAuthing(true);

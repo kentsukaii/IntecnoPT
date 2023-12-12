@@ -184,7 +184,8 @@ const Register = () => {
                     onChange={(e) => setTermsAccepted(e.target.checked)}
                   />
                 </div>
-                {error && <p style={{ color: "red" }}>{error}</p>}
+                {error && error.split("\n").map((err, index) => <p key={index} style={{ color: "red" }}>{err}</p>)}
+
                 <Button
                   variant="light"
                   type="submit"
