@@ -91,10 +91,50 @@ async function fetchAllProducts() {
   return products;
 }
 
+
+
+async function canCheckout() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  // Check if the user is logged in
+  if (!user) {
+    return false;
+  }
+
+  // Get the user's cart
+  const cartRef = doc(firestore, 'Cart', user.uid);
+  const cartSnap = await getDoc(cartRef);
+
+  // Check if the cart exists
+  if (!cartSnap.exists()) {
+    return false;
+  }
+
+  // Get the products in the cart
+  const productsList = cartSnap.data().productsList;
+
+  // Check if each product is available
+  for (const productId of productsList) {
+    const productRef = doc(firestore, 'Products', productId);
+    const productSnap = await getDoc(productRef);
+
+    // Check if the product exists and is available
+    if (!productSnap.exists() || productSnap.data().StockAvailable <= 0) {
+      return false;
+    }
+  }
+
+  // If all checks pass, return true
+  return true;
+}
+
+
 export {
   getProductsByStock,
   fetchProducts,
   fetchProductsByCategory,
   filterProducts,
-  fetchAllProducts
+  fetchAllProducts,
+  canCheckout
 };
