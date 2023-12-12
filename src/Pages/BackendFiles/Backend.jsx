@@ -665,6 +665,7 @@ export const ChangePicture = () => {
       localStorage.setItem('profilePicUrl', url);
     
       console.log('Profile picture has been successfully updated.');
+      window.location.reload()
     } else {
       console.log('User needs to be signed in to change profile picture.');
     }
