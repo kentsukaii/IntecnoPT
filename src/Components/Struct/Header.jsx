@@ -16,8 +16,14 @@ import "../../fonts/fonts.css";
 import "./Header.css";
 import SideMenu from "../../Components/Cards/SideMenu";
 import SideMenu2 from "../../Components/Cards/SideMenu2";
-import { useFirebaseAuth, useFirebaseLogin } from "../../Pages/BackendFiles/Backend";
-import { loadBookmarkedProducts, loadCartProducts } from "../../REST_API/firebaseAPI";
+import {
+  useFirebaseAuth,
+  useFirebaseLogin,
+} from "../../Pages/BackendFiles/Backend";
+import {
+  loadBookmarkedProducts,
+  loadCartProducts,
+} from "../../REST_API/firebaseAPI";
 
 const Header = ({ productCount }) => {
   const { handleLogout } = useFirebaseAuth();
@@ -47,7 +53,7 @@ const Header = ({ productCount }) => {
 
   // ------------------------------------------
 
-  // Load bookmarks both client and server-sided
+  // Load bookmarks both client and server sided
   const loadBookmarks = async () => {
     setBookmarkLoading(true);
     const products = await loadBookmarkedProducts();
@@ -86,9 +92,17 @@ const Header = ({ productCount }) => {
         <span style={{ color: "#4eadfe" }}>PT</span>
       </Navbar.Brand>
 
-      <div className="d-flex justify-content-center w-100" style={{ maxWidth: "100%" }}>
-        <Form inline className="mx-auto" style={{ width: '55%' }}>
-          <FormControl type="text" placeholder="Search" className="w-100" style={{ height: '50px' }} />
+      <div
+        className="d-flex justify-content-center w-100"
+        style={{ maxWidth: "100%" }}
+      >
+        <Form inline className="mx-auto" style={{ width: "55%" }}>
+          <FormControl
+            type="text"
+            placeholder="Search"
+            className="w-100"
+            style={{ height: "50px" }}
+          />
         </Form>
       </div>
 
@@ -117,18 +131,21 @@ const Header = ({ productCount }) => {
             <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="2x" />
           </Nav.Link>
           <Nav.Link
-            href="/cart"
-            className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-lg-none"
-            style={{ position: "absolute", top: "20px", left: "5%" }}
+            className="order-2 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block"
+            onClick={loadCart}
           >
             <FontAwesomeIcon icon={faShoppingCart} size="2x" />
           </Nav.Link>
-          <Nav.Link
-            className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block"
-            onClick={handleOpen}
-          >
-            <FontAwesomeIcon icon={faShoppingCart} size="2x" />
-          </Nav.Link>
+          {isCartLoading ? (
+            <p></p>
+          ) : (
+            <SideMenu2
+              isOpen={isCartMenuOpen}
+              onClose={() => setCartMenuOpen(false)}
+              cartProducts={cartProducts}
+            />
+          )}
+
           <SideMenu2 isOpen={isOpen} onClose={handleClose} />
           <Nav.Link
             onClick={loadBookmarks}
@@ -148,7 +165,11 @@ const Header = ({ productCount }) => {
           {isBookmarkLoading ? (
             <p></p>
           ) : (
-            <SideMenu isOpen={isBookmarkMenuOpen} onClose={() => setBookmarkMenuOpen(false)} bookmarkedProducts={bookmarkedProducts} />
+            <SideMenu
+              isOpen={isBookmarkMenuOpen}
+              onClose={() => setBookmarkMenuOpen(false)}
+              bookmarkedProducts={bookmarkedProducts}
+            />
           )}
           <Dropdown
             className="order-2"
@@ -194,4 +215,3 @@ const Header = ({ productCount }) => {
 };
 
 export default Header;
-
