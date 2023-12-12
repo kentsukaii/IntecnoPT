@@ -74,7 +74,7 @@ const ProductPage = () => {
 
         <Container fluid>
             <Row>
-                <Col md={6} style={{ border: '1px solid black' }} >
+                <Col md={6}  >
                     <div style={{ margin: '10px' }}>
                         <img src={imageUrl} alt="..." style={{ width: '100%' }} />
                         <div style={{ marginTop: '10px', textAlign: 'right' }}>
@@ -87,7 +87,7 @@ const ProductPage = () => {
                         </div>
                     </div>
                 </Col>
-                <Col md={6} style={{ border: '1px solid black', textAlign: 'left', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <Col md={6} style={{  textAlign: 'left', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                     <div style={{ margin: '10px' }}>
                         <h1 style={{ fontSize: '2rem' }}><b>{product.Name}</b></h1>
                         <p className='mb-4'>{product.Description}</p>

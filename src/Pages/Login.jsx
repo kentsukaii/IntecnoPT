@@ -26,16 +26,27 @@ const Login = () => {
     handleCheckboxChange,
     handleResetPassword,
     saveSession,
+    checkEmailExists,
 
   } = useFirebaseLogin();
 
   useEffect(() => {
-    // Check if a user is already logged in
-    if (user) {
-      // If a user is logged in, navigate away to another page (e.g., home page)
-      navigate('/'); // Change the path to the desired page
-    }
+    const checkUserAndNavigate = async () => {
+      // Check if a user is already logged in
+      if (user) {
+        // Check email existence asynchronously
+        const emailExists = await checkEmailExists(user.email);
+  
+        if (emailExists) {
+          // If a user is logged in and their email exists, navigate away to another page (e.g., home page)
+          navigate('/'); // Change the path to the desired page
+        }
+      }
+    };
+  
+    checkUserAndNavigate();
   }, [user, navigate]);
+  
   const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
