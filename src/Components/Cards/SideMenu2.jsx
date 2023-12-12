@@ -6,6 +6,8 @@ import CartCard from './CartCard'; // Import the CartCard component
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faArrowRight } from '@fortawesome/free-solid-svg-icons'; // Import the faArrowRight icon
 import { loadCartProducts, removeCartItem } from '../../REST_API/firebaseAPI'; // Import the loadCartProducts function
+
+import { canCheckout } from '../../REST_API/firebaseSearch';
 import { Button } from 'react-bootstrap'; // Import the Button component from Bootstrap
 
 const SideMenu2 = ({ isOpen, onClose }) => {
@@ -23,14 +25,14 @@ const SideMenu2 = ({ isOpen, onClose }) => {
       setCartCount(products.length); // Set the cart count
     });
   }
-  
+
 
   const handleRemove = async (productId) => {
     await removeCartItem(productId);
     loadCart();
     setCartCount(cartCount - 1); // Decrement the cart count
   }
-  
+
 
   // Calculate the total price of cart products
   const totalPrice = cartProducts.reduce((total, product) => total + parseFloat(product.Price), 0);
@@ -51,11 +53,29 @@ const SideMenu2 = ({ isOpen, onClose }) => {
             <p>Your cart is empty.</p>
           )}
         </div> {/* End of the added div */}
+
         <div className="mt-auto"> {/* Add this div and mt-auto class */}
-          <Button variant="primary" size="lg" block style={{ marginBottom: '10px' }}> {/* Use a Bootstrap Button */}
+          <Button
+            variant="primary"
+            size="lg"
+            block
+            style={{ marginBottom: '10px' }}
+            onClick={async () => {
+              const canProceed = await canCheckout();
+              if (canProceed) {
+                // Redirect to the checkout page
+                window.location.href = "/checkout"; // replace "/checkout" with your checkout page URL
+              } else {
+                // Handle the case when the user cannot proceed to checkout
+                alert("You cannot proceed to checkout.");
+              }
+            }}
+          > {/* Use a Bootstrap Button */}
             CHECK OUT <FontAwesomeIcon icon={faArrowRight} />
           </Button>
         </div> {/* End of the added div */}
+
+
         <button className="close-button" onClick={onClose} style={{ color: 'black', marginBottom: '10px' }}> {/* Make the close button black and add marginBottom */}
           <FontAwesomeIcon icon={faTimes} />
         </button>
