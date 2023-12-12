@@ -95,9 +95,7 @@ const Header = ({ productCount }) => {
 
           <Nav.Link className="order-2 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block" onClick={loadCart}>
             <FontAwesomeIcon icon={faShoppingCart} size="2x" />
-            
           </Nav.Link>
-
           {isCartLoading ? <p></p> : <SideMenu2 isOpen={isCartMenuOpen} onClose={() => setCartMenuOpen(false)} cartProducts={cartProducts} />}
 
           <Dropdown className="order-2" align="end" style={{ marginLeft: '20px' }}>
