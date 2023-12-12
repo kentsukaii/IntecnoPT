@@ -10,6 +10,7 @@ import Register from './Pages/Register';
 import ProductPage from './Pages/ProductPage.jsx';
 import Dashboard from './Pages/Dashboard.jsx';
 import NotFoundPage from './Pages/NotFoundPage';
+import MultiStepForm from './Pages/MultiStepForm.jsx';
 import SearchPage from './Pages/SearchPage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
 import InVoicesPage from './Pages/InVoicesPage.jsx';
@@ -73,6 +74,7 @@ function App() {
           <Route path="/card" element={<Card />} />
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/checkout" element={<MultiStepForm />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/invoices" element={<InVoicesPage />} />
           <Route path="/notfound" element={<NotFoundPage />} />
