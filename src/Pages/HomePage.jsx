@@ -11,7 +11,6 @@ import { useMediaQuery } from "react-responsive";
 import { FaCheckCircle, FaStar } from "react-icons/fa"; // Importing icons
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import ProductCard from "../Components/Cards/ProductCard";
-import Footer2 from "../Components/Struct/Footer2";
 import { getTopSellingProducts } from "../REST_API/firebaseAPI";
 import { getOnSaleProducts } from "../REST_API/firebaseAPI";
 
@@ -268,13 +267,13 @@ const HomePage = () => {
       className="col text-white text-left py-5 mx-2 d-flex align-items-center justify-content-start"
       style={{ backgroundColor: "grey", boxSizing: "border-box" }}
     >
-      <i className="fas fa-box fa-2x mb-7 mr-4 ml-4"></i>
+      <i className="fas fa-box fa-2x mb-5 mr-4 ml-4"></i>
       <div>
         <h2>
-          <strong>PORTES GRÁTIS</strong>
+          <strong>FREE SHIPPING</strong>
         </h2>
         <p>
-          Em compras superiores a 36€, apenas para Portugal Continental
+        Take advantage of free shipping on our entire website
         </p>
       </div>
     </div>
