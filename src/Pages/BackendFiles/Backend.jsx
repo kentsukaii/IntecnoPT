@@ -356,7 +356,10 @@ export const useFirebaseLogin = () => {
     return emailExistsInFirebaseAuth;
   };
 
-
+  const isValidEmailFormat = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
 
   const handleLogin = async () => {
     console.log("Starting login process...");
@@ -371,7 +374,10 @@ export const useFirebaseLogin = () => {
         setError('Email does not exist');
         return;
       }
-  
+      
+      if (!isValidEmailFormat(email)) {
+        setErrorh("Invalid email format");
+      }
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log("User signed in successfully");
       console.log(`User ID: ${userCredential.user.uid}`); // Print the user's ID
@@ -387,7 +393,7 @@ export const useFirebaseLogin = () => {
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
       setLoggedInUser(null);
       setAuthing(false);
-      window.location.reload()
+      
       
       
     }

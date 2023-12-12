@@ -37,17 +37,17 @@ const Login = () => {
       if (user) {
         // Check email existence asynchronously
         const emailExists = await checkEmailExists(user.email);
-  
+
         if (emailExists) {
           // If a user is logged in and their email exists, navigate away to another page (e.g., home page)
           navigate('/'); // Change the path to the desired page
         }
       }
     };
-  
+
     checkUserAndNavigate();
   }, [user, navigate]);
-  
+
   const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
@@ -79,29 +79,29 @@ const Login = () => {
               <Form className="w-100">
                 {!loggedInUser && (
                   <div className="d-flex flex-column align-items-center w-100">
-<Form.Group className="mb-4 position-relative">
-  <FaEnvelope className="position-absolute" style={{ color: "#059f83", left: '7px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px' }} />
-  <Form.Control
-    type="email"
-    placeholder="E-Mail"
-    className="form-control-md"
-    style={{ paddingLeft: '35px', backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }}
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-  />
-</Form.Group>
+                    <Form.Group className="mb-4 position-relative">
+                      <FaEnvelope className="position-absolute" style={{ color: "#059f83", left: '7px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px' }} />
+                      <Form.Control
+                        type="email"
+                        placeholder="E-Mail"
+                        className="form-control-md"
+                        style={{ paddingLeft: '35px', backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </Form.Group>
 
-<Form.Group className="mb-4 position-relative">
-  <FaLock className="position-absolute" style={{ color: "#dba521", left: '6px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px' }} />
-  <Form.Control
-    type="password"
-    placeholder="Password"
-    className="form-control-md"
-    style={{ paddingLeft: '35px', backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }}
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-  />
-</Form.Group>
+                    <Form.Group className="mb-4 position-relative">
+                      <FaLock className="position-absolute" style={{ color: "#dba521", left: '6px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px' }} />
+                      <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        className="form-control-md"
+                        style={{ paddingLeft: '35px', backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </Form.Group>
 
                   </div>
                 )}
@@ -136,7 +136,7 @@ const Login = () => {
                   </div>
                 </div>
                 <div className="text-center">
-                  <Button variant="primary" type="submit" className="mb-4 btn-lg py-3" onClick={(e) => { e.preventDefault();handleLogin();}} disabled={authing} >
+                  <Button variant="primary" type="submit" className="mb-4 btn-lg py-3" onClick={(e) => { e.preventDefault(); handleLogin(); }}  >
                     Login
                   </Button>
                   {error && <p style={{ color: 'red' }}>{error}</p>}
