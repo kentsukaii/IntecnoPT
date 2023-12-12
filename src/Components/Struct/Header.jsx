@@ -11,7 +11,6 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState, useEffect } from "react";
 import { Dropdown, Form, FormControl, Nav, Navbar } from "react-bootstrap";
 import maguire from "../../assets/godmaguire.png";
 import "../../fonts/fonts.css";
@@ -229,28 +228,28 @@ const Header = () => {
               style={{ borderRadius: "50%", border: "2px solid #4eadfe" }}
               
             ></Dropdown.Toggle>
-            <Dropdown.Menu className="bg-light" alignRight style={{ width: "80%" }}>
-              {user ? (
-                // If the user is logged in, show these options
-                <>
-                  <Dropdown.Item href="/profile" className="text-center">
-                    <FontAwesomeIcon icon={faUser} color="#4eadfe" /> Profile
-                  </Dropdown.Item>
-                  <Dropdown.Item href="/invoices" className="text-center">
-                    <FontAwesomeIcon icon={faReceipt} color="white" /> Invoices
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item href="/" className="text-center" onClick={handleLogout}>
-                    Logout <FontAwesomeIcon icon={faSignOutAlt} color="red" />
-                  </Dropdown.Item>
-                </>
-              ) : (
-                // If the user is not logged in, show this option
-                <Dropdown.Item href="/login" className="text-center " >
-                  <FontAwesomeIcon icon={faKey} color="#f2b624" /> Login / Register
-                </Dropdown.Item>
-              )}
-            </Dropdown.Menu>
+<Dropdown.Menu className="bg-light" alignRight style={{ width: "80%" }}>
+  {user ? (
+    // If the user is logged in, show these options
+    <>
+      <Dropdown.Item href="/profile" className="text-center">
+        <FontAwesomeIcon icon={faUser} color="#4eadfe" /> Profile
+      </Dropdown.Item>
+      <Dropdown.Item href="/invoices" className="text-center" disabled>
+        <FontAwesomeIcon icon={faReceipt} color="white" /> Invoices
+      </Dropdown.Item>
+      <Dropdown.Divider />
+      <Dropdown.Item href="/" className="text-center" onClick={handleLogout}>
+        Logout <FontAwesomeIcon icon={faSignOutAlt} color="red" />
+      </Dropdown.Item>
+    </>
+  ) : (
+    // If the user is not logged in, show this option
+    <Dropdown.Item href="/login" className="text-center " >
+      <FontAwesomeIcon icon={faKey} color="#f2b624" /> Login / Register
+    </Dropdown.Item>
+  )}
+</Dropdown.Menu>
 
           </Dropdown>
         </Nav>
