@@ -215,6 +215,7 @@ export const useFirebaseRegister = () => { // MAIN
       );
     } finally {
       setLoading(false);
+      window.location.reload()
     }
   }; 
 
@@ -234,6 +235,7 @@ export const useFirebaseRegister = () => { // MAIN
     } catch (error) {
       console.log(error);
       setAuthing(false);
+      window.location.reload()
     }
   };
 
@@ -253,6 +255,7 @@ export const useFirebaseRegister = () => { // MAIN
     } catch (error) {
       console.log(error);
       setAuthing(false);
+      window.location.reload()
     }
   };
   const handleAuthUser = async (authUser) => {
@@ -381,6 +384,7 @@ export const useFirebaseLogin = () => {
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
       setLoggedInUser(null);
       setAuthing(false);
+      window.location.reload()
     }
   };
   
@@ -427,6 +431,7 @@ export const useFirebaseLogin = () => {
     } catch (error) {
       console.log(error);
       setAuthing(false);
+      window.location.reload()
     }
   };
   
@@ -465,6 +470,7 @@ export const useFirebaseLogin = () => {
     } catch (error) {
       console.log(error);
       setAuthing(false);
+      window.location.reload()
     }
   };
   
