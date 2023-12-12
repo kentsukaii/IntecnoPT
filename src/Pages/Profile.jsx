@@ -515,25 +515,6 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className="container p-0 mt-4 mb-4 h-100 d-flex justify-content-center align-items-center">
-        <div className="row w-100 ">
-          <div className="col-xs-12 col-md-12 col-lg-12 p-4 bg-light text-dark">
-            <div className="d-flex flex-column align-items-center justify-content-center w-100">
-              <h2>
-                <strong>Delivery and Billing Addresses</strong>
-              </h2>
-              <div className="row mb-2">
-                <Form className="w-100">
-                  <Row className="g-3">
-                    <Col><AddressCard /></Col>
-                    <Col></Col>
-                  </Row>
-                </Form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 };
