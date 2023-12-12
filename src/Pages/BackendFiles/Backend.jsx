@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect, useRef  } from "react";
+import { createContext, useState, useContext, useEffect, useRef } from "react";
 import {
   signInWithEmailAndPassword,
   getAuth,
@@ -12,9 +12,9 @@ import {
   updateProfile,
   sendPasswordResetEmail,
   fetchSignInMethodsForEmail,
- 
+
 } from "firebase/auth";
-import { collection, addDoc, getDocs, query, where, doc, getDoc,deleteDoc, setDoc} from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../../firebase"; // import firestore from your firebase file
 import { useNavigate } from "react-router-dom";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -31,7 +31,7 @@ import maguire from "../../assets/godmaguire.png";
 export const useFirebaseAuth = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
-  
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -43,20 +43,20 @@ export const useFirebaseAuth = () => {
   }, [auth]);
 
   const handleLogout = async () => {
-    
+
     try {
       await signOut(auth);
-      
+
       setUser(null);  // Set user to null
       navigate('/login');
       setProfilePicUrl(maguire);
       localStorage.setItem('profilePicUrl', maguire);
-    
+
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
-  
+
 
   return { user, handleLogout };
 };
@@ -83,8 +83,8 @@ export const useFirebaseRegister = () => { // MAIN
   const [receiveNews, setReceiveNews] = useState(false);
 
 
- 
-  
+
+
 
 
 
@@ -118,7 +118,7 @@ export const useFirebaseRegister = () => { // MAIN
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
-  
+
 
   const handleRegister = async () => {
     let errors = [];
@@ -129,7 +129,7 @@ export const useFirebaseRegister = () => { // MAIN
       if (!email || !password || !confirmPassword) {
         errors.push("All fields are required");
       }
-      
+
       if (!termsAccepted) {
         errors.push("You must agree to the Terms and Conditions");
       }
@@ -182,8 +182,8 @@ export const useFirebaseRegister = () => { // MAIN
         setError(errors.join("\n"));
         return;
       }
-      
-      
+
+
       const authUser = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -217,9 +217,9 @@ export const useFirebaseRegister = () => { // MAIN
       );
     } finally {
       setLoading(false);
-      
+
     }
-  }; 
+  };
 
 
   const handleGoogleRegister = async () => { // HANDLE GOOGLE REGISTER
@@ -364,24 +364,24 @@ export const useFirebaseLogin = () => {
   const handleLogin = async () => {
     console.log("Starting login process...");
     setAuthing(true);
-  
+
     try {
       // Check if the email exists in the Users collection before signing in
       const emailExists = await checkEmailExists(email);
       console.log(`Email exists: ${emailExists}`);
-  
+
       if (!emailExists) {
         setError('Email does not exist');
         return;
       }
-      
+
       if (!isValidEmailFormat(email)) {
         setErrorh("Invalid email format");
       }
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log("User signed in successfully");
       console.log(`User ID: ${userCredential.user.uid}`); // Print the user's ID
-  
+
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
       navigate('/');
@@ -390,15 +390,17 @@ export const useFirebaseLogin = () => {
 
     } catch (error) {
       console.error("Login error:", error);
-      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+      let errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      errorMessage = errorMessage.replace('Firebase: ', ''); // Remove 'Firebase: ' prefix
+      setError(errorMessage);
       setLoggedInUser(null);
       setAuthing(false);
-      
-      
-      
+
+
+
     }
   };
-  
+
   const deleteUser = async (user) => {
     try {
       await user.delete();
@@ -409,46 +411,46 @@ export const useFirebaseLogin = () => {
 
   const handleLogingoogle = async () => {
     setAuthing(true);
-  
+
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
         prompt: 'select_account',
       });
-  
+
       const result = await signInWithPopup(auth, provider);
       const authUser = result.user;
-  
+
       // Check email existence asynchronously
       const emailExists = await checkEmailExists(authUser.email);
-  
+
       if (!emailExists) {
         setError('Email does not exist');
         setAuthing(false);
-  
+
         // Delete the user from Firebase Authentication
         await deleteUser(authUser);
-  
+
         return; // Add this line
       }
-  
+
       await handleAuthUser(authUser);
-  
+
       // Redirect after a successful login
       navigate('/');
 
       window.location.reload()
-      
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
       window.location.reload()
     }
   };
-  
+
   const handleLoginFacebook = async () => {
     setAuthing(true);
-  
+
     try {
       const provider = new FacebookAuthProvider();
       provider.setCustomParameters({
@@ -456,29 +458,29 @@ export const useFirebaseLogin = () => {
       });
       const result = await signInWithPopup(auth, provider);
       const authUser = result.user;
-  
+
       // Check email existence asynchronously
       const emailExists = await checkEmailExists(authUser.email);
       console.log('Email exists: ', emailExists);
-  
+
       if (!emailExists) {
         setError('Email does not exist');
         setAuthing(false);
-  
+
         // Delete the user from Firebase Authentication
         await deleteUser(authUser);
-  
+
         return; // Add this line
       }
-  
+
       await handleAuthUser(authUser);
-  
+
       // Redirect after a successful login
       navigate('/');
 
       window.location.reload()
       localStorage.removeItem('profilePicUrl');
-      
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
@@ -486,24 +488,24 @@ export const useFirebaseLogin = () => {
       window.location.reload()
     }
   };
-  
+
   const handleDeleteAccount = async () => {
     const user = auth.currentUser;
-    
+
     if (user) {
       // User is signed in, get the user's email
       const email = user.email;
-  
+
       // Delete the user account
       deleteUser(user).then(async () => {
         console.log('User account has been successfully deleted.');
-  
+
         // Now you can delete the user's data from your database
         // Query the Users collection to find the document with the matching email
         const usersCollection = collection(firestore, 'Users');
         const userQuery = query(usersCollection, where('email', '==', email));
         const userQuerySnapshot = await getDocs(userQuery);
-  
+
         // If a document with the matching email is found, delete it
         if (!userQuerySnapshot.empty) {
           const userDoc = doc(firestore, 'Users', userQuerySnapshot.docs[0].id);
@@ -513,9 +515,9 @@ export const useFirebaseLogin = () => {
             console.error('Error deleting user data from the database: ', error);
           });
         }
-      navigate('/login')
-      localStorage.removeItem('profilePicUrl');
-      setProfilePicUrl(maguire);
+        navigate('/login')
+        localStorage.removeItem('profilePicUrl');
+        setProfilePicUrl(maguire);
       }).catch((error) => {
         console.error('Error deleting user account: ', error);
       });
@@ -531,7 +533,7 @@ export const useFirebaseLogin = () => {
     const usersCollection = collection(firestore, 'Users');
     const userQuery = query(usersCollection, where('email', '==', authUser.email));
     const userQuerySnapshot = await getDocs(userQuery);
-  
+
     if (userQuerySnapshot.empty) {
       // If the user doesn't exist, redirect to the register page
       navigate('/register');
@@ -547,7 +549,7 @@ export const useFirebaseLogin = () => {
       window.location.reload()
     }
   };
-  
+
 
 
 
@@ -634,8 +636,8 @@ export const getUserData = async () => {
     throw new Error('No user signed in');
   };
 
-  
-  
+
+
 };
 
 
@@ -646,38 +648,38 @@ export const ChangePicture = () => {
   const storage = getStorage();
 
   const handleProfilePicClick = () => {
-   
-      fileInputRef.current.click();
-    
+
+    fileInputRef.current.click();
+
   };
 
   const handleProfilePicChange = async (event) => {
     const user = auth.currentUser;
-    
+
     if (user) {
       const uid = user.uid;
       const file = event.target.files[0];
-    
+
       // Create a storage reference
       const storageRef = ref(storage, 'ProfilePictures/' + uid);
-    
+
       // Upload the file to the reference
       await uploadBytes(storageRef, file);
-    
+
       // Get the download URL and update the user's profile picture
       const url = await getDownloadURL(storageRef);
       setProfilePicUrl(url);  // Update the profile picture URL
-  
+
       // Store the URL in local storage
       localStorage.setItem('profilePicUrl', url);
-    
+
       console.log('Profile picture has been successfully updated.');
       window.location.reload()
     } else {
       console.log('User needs to be signed in to change profile picture.');
     }
   };
-  
+
 
   return {
     profilePicUrl,
