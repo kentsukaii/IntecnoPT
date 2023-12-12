@@ -10,7 +10,7 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dropdown, Form, FormControl, Nav, Navbar } from "react-bootstrap";
 import maguire from "../../assets/godmaguire.png";
 import "../../fonts/fonts.css";
@@ -25,7 +25,14 @@ import {
   loadCartProducts,
 } from "../../REST_API/firebaseAPI";
 
-const Header = ({ productCount }) => {
+
+import { useNavigate } from 'react-router-dom';
+
+
+
+
+
+const Header = () => {
   const { handleLogout } = useFirebaseAuth();
   const { user } = useFirebaseLogin();
   const [darkMode, setDarkMode] = useState(false);
@@ -36,6 +43,18 @@ const Header = ({ productCount }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [isCartMenuOpen, setCartMenuOpen] = useState(false);
   const [isCartLoading, setCartLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
+
+  
+
+
+  const handleSearch = (event) => {
+    if (event.key === 'Enter') {
+      navigate(`/search?query=${event.target.value}`);
+    }
+  };
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -96,14 +115,25 @@ const Header = ({ productCount }) => {
         className="d-flex justify-content-center w-100"
         style={{ maxWidth: "100%" }}
       >
-        <Form inline className="mx-auto" style={{ width: "55%" }}>
-          <FormControl
-            type="text"
-            placeholder="Search"
-            className="w-100"
-            style={{ height: "50px" }}
-          />
-        </Form>
+
+
+
+
+    <FormControl
+      type="text"
+      placeholder="Search"
+      className="w-75"
+      style={{ height: "50px" }}
+      onKeyDown={handleSearch}
+    />
+
+
+
+
+
+
+
+
       </div>
 
       <Navbar.Toggle
@@ -217,3 +247,4 @@ const Header = ({ productCount }) => {
 };
 
 export default Header;
+

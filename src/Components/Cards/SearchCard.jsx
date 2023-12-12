@@ -8,6 +8,7 @@ import { storage } from '../../firebase'; // Import the already initialized Fire
 import { bookmarkProduct } from '../../REST_API/firebaseAPI';
 
 const SearchCard = ({ product, isBestSeller }) => {
+    console.log("THIS IS THE PRODUCT INSIDE TH CARD:", product); // Log the product prop
     const navigate = useNavigate(); // Will be used to access the page for each product
     const [imageUrl, setImageUrl] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -49,7 +50,7 @@ const SearchCard = ({ product, isBestSeller }) => {
     };
 
   return (
-<div className="card search-card p-3 border rounded text-left" style={{ flex: '0 0 18rem', marginTop: "1rem", backgroundColor: "#f8f9fa", display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+    <div className="card search-card p-3 border rounded text-left" style={{ flex: '0 0 18rem', marginTop: "1rem", marginBottom: "1rem", marginLeft: "1rem", marginRight: "1rem", backgroundColor: "#f8f9fa", display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
   <div style={{ position: 'relative' }}>
     {imageUrl && <img className="card-img-top" src={imageUrl} alt="Card cap" style={{ width: "100%", height: "150px", objectFit: "cover", transition: 'transform .2s', cursor: 'pointer' }} onClick={handlePageLink} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseOut={e => e.currentTarget.style.transform = ''} />}
     <div style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', flexDirection: 'column' }}>

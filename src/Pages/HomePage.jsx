@@ -13,6 +13,8 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import ProductCard from "../Components/Cards/ProductCard";
 import { getTopSellingProducts } from "../REST_API/firebaseAPI";
 import { getOnSaleProducts } from "../REST_API/firebaseAPI";
+import { useNavigate } from 'react-router-dom';
+import { fetchProductsByCategory } from '../REST_API/firebaseSearch';
 
 const HomePage = () => {
   const auth = getAuth();
@@ -22,6 +24,9 @@ const HomePage = () => {
   const isPortrait = useMediaQuery({ orientation: "portrait" });
   const [onSaleProducts, setOnSaleProducts] = useState([]);
   const [topSellingProducts, setTopSellingProducts] = useState([]);
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+
 
   useEffect(() => {
     (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -40,6 +45,15 @@ const HomePage = () => {
       console.error("Erro durante o logout:", error);
     }
   };*/
+
+  const handleCategoryClick = async (category) => {
+    const products = await fetchProductsByCategory(category);
+    setProducts(products);
+    navigate(`/search?category=${encodeURIComponent(category)}`);
+  };
+  
+  
+  
 
   const carousel_images = [
     "src/Components/Images/Carousel/pcdiga_camera.jpg",
@@ -107,7 +121,7 @@ const HomePage = () => {
             >
               {circle_images.map((image, i) => (
                 <div
-                  onClick={() => (window.location.href = routes[i])}
+                  onClick={() => handleCategoryClick(names[i])}
                   style={{ width: "25%", padding: "1%", cursor: "pointer" }}
                 >
                   <div
@@ -159,6 +173,7 @@ const HomePage = () => {
               ))}
             </div>
           </div>
+
 
           <div style={{ backgroundColor: "#f1f1f1" }}>
             <div className="col-12 p-0 overflow-auto">
@@ -233,52 +248,52 @@ const HomePage = () => {
             </div>
           </div>
           <div className="container-fluid mt-4">
-  <div className="row no-gutters justify-content-center">
-    <div
-      className="col text-white text-left py-5 mx-2 d-flex align-items-center justify-content-start"
-      style={{ backgroundColor: "grey", boxSizing: "border-box" }}
-    >
-      <i className="fas fa-shipping-fast fa-2x mb-5 mr-3 ml-4"></i>
-      <div>
-        <h2>
-          <strong>DELIVERY IN 24 HOURS</strong>
-        </h2>
-        <p>Average delivery time, only for MainLand Portugal</p>
-      </div>
-    </div>
-    <div
-      className="col text-white text-left py-5 mx-2 d-flex align-items-center justify-content-start"
-      style={{ backgroundColor: "#4eadfe", boxSizing: "border-box" }}
-    >
-      <i className="fas fa-shopping-cart fa-2x mb-7 mr-4 ml-4"></i>
-      <div>
-        <h2>
-          <strong>100% ONLINE STORE</strong>
-        </h2>
-        <div style={{ maxWidth: "90%" }}>
-          <p>
-            Make your purchases in the comfort of your home with the
-            Intecno quality guarantee
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      className="col text-white text-left py-5 mx-2 d-flex align-items-center justify-content-start"
-      style={{ backgroundColor: "grey", boxSizing: "border-box" }}
-    >
-      <i className="fas fa-box fa-2x mb-5 mr-4 ml-4"></i>
-      <div>
-        <h2>
-          <strong>FREE SHIPPING</strong>
-        </h2>
-        <p>
-        Take advantage of free shipping on our entire website
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
+            <div className="row no-gutters justify-content-center">
+              <div
+                className="col text-white text-left py-5 mx-2 d-flex align-items-center justify-content-start"
+                style={{ backgroundColor: "grey", boxSizing: "border-box" }}
+              >
+                <i className="fas fa-shipping-fast fa-2x mb-5 mr-3 ml-4"></i>
+                <div>
+                  <h2>
+                    <strong>DELIVERY IN 24 HOURS</strong>
+                  </h2>
+                  <p>Average delivery time, only for MainLand Portugal</p>
+                </div>
+              </div>
+              <div
+                className="col text-white text-left py-5 mx-2 d-flex align-items-center justify-content-start"
+                style={{ backgroundColor: "#4eadfe", boxSizing: "border-box" }}
+              >
+                <i className="fas fa-shopping-cart fa-2x mb-7 mr-4 ml-4"></i>
+                <div>
+                  <h2>
+                    <strong>100% ONLINE STORE</strong>
+                  </h2>
+                  <div style={{ maxWidth: "90%" }}>
+                    <p>
+                      Make your purchases in the comfort of your home with the
+                      Intecno quality guarantee
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="col text-white text-left py-5 mx-2 d-flex align-items-center justify-content-start"
+                style={{ backgroundColor: "grey", boxSizing: "border-box" }}
+              >
+                <i className="fas fa-box fa-2x mb-5 mr-4 ml-4"></i>
+                <div>
+                  <h2>
+                    <strong>FREE SHIPPING</strong>
+                  </h2>
+                  <p>
+                    Take advantage of free shipping on our entire website
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             className="d-flex mt-2 mb-4 justify-content-center align-items-center"
             style={{ height: "2rem" }}

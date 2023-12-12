@@ -6,6 +6,7 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyDLAeB-82QzQbCPpc076TOCXIqPkVFeln0",
   authDomain: "intecnopt.firebaseapp.com",
