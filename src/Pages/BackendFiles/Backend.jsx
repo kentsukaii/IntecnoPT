@@ -381,31 +381,31 @@ export const useFirebaseLogin = () => {
 
   const handleLogingoogle = async () => {
     setAuthing(true);
-
+  
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
-        prompt: 'select_account'
+        prompt: 'select_account',
       });
-
+  
       const result = await signInWithPopup(auth, provider);
       const authUser = result.user;
-
+  
       // Check email existence asynchronously
       const emailExists = await checkEmailExists(authUser.email);
-
+  
       if (!emailExists) {
         setError('Email does not exist');
         setAuthing(false);
-
+  
         // Delete the user from Firebase Authentication
         await deleteUser(authUser);
-
-        return;
+  
+        return; // Add this line
       }
-
+  
       await handleAuthUser(authUser);
-
+  
       // Redirect after a successful login
       navigate('/');
     } catch (error) {
@@ -413,45 +413,42 @@ export const useFirebaseLogin = () => {
       setAuthing(false);
     }
   };
-
-
-
-
-const handleLoginFacebook = async () => {
-  setAuthing(true);
-
-  try { 
-    const provider = new FacebookAuthProvider();
-    provider.setCustomParameters({
-      prompt: 'select_account'
-    });
-    const result = await signInWithPopup(auth, provider);
-    const authUser = result.user;
-
-    // Check email existence asynchronously
-    const emailExists = await checkEmailExists(authUser.email);
-    console.log('Email exists: ', emailExists);
-
-    if (!emailExists) {
-      setError('Email does not exist');
+  
+  const handleLoginFacebook = async () => {
+    setAuthing(true);
+  
+    try {
+      const provider = new FacebookAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account',
+      });
+      const result = await signInWithPopup(auth, provider);
+      const authUser = result.user;
+  
+      // Check email existence asynchronously
+      const emailExists = await checkEmailExists(authUser.email);
+      console.log('Email exists: ', emailExists);
+  
+      if (!emailExists) {
+        setError('Email does not exist');
+        setAuthing(false);
+  
+        // Delete the user from Firebase Authentication
+        await deleteUser(authUser);
+  
+        return; // Add this line
+      }
+  
+      await handleAuthUser(authUser);
+  
+      // Redirect after a successful login
+      navigate('/');
+    } catch (error) {
+      console.log(error);
       setAuthing(false);
-
-      // Delete the user from Firebase Authentication
-      await deleteUser(authUser);
-
-      return;
     }
-
-    await handleAuthUser(authUser);
-
-    // Redirect after a successful login
-    navigate('/');
-  } catch (error) {
-    console.log(error);    
-    setAuthing(false);
-  }
-};
-
+  };
+  
 
 
 
@@ -460,7 +457,7 @@ const handleLoginFacebook = async () => {
     const usersCollection = collection(firestore, 'Users');
     const userQuery = query(usersCollection, where('email', '==', authUser.email));
     const userQuerySnapshot = await getDocs(userQuery);
-
+  
     if (userQuerySnapshot.empty) {
       // If the user doesn't exist, redirect to the register page
       navigate('/register');
@@ -469,9 +466,11 @@ const handleLoginFacebook = async () => {
       authUser.emailVerified = false;
       setLoggedInUser(authUser);
       // Add this line for debugging
+      console.log('User exists, navigating to home page');
       navigate('/');
     }
   };
+  
 
 
 
