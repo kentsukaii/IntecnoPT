@@ -6,7 +6,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faArrowRight, faCheck, faStar, faQuestionCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-bootstrap/Modal';
-import teemoImage from '../assets/teemo.png';
+import teemoImage from '../assets/teemo.gif';
 import { bookmarkProduct } from '../REST_API/firebaseAPI';
 import { addProductToCart } from '../REST_API/firebaseAPI';
 
