@@ -408,6 +408,9 @@ export const useFirebaseLogin = () => {
   
       // Redirect after a successful login
       navigate('/');
+
+      window.location.reload()
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
