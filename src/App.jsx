@@ -1,19 +1,20 @@
 // Importando os módulos necessários do React e react-router-dom
-import { useEffect } from "react"; // Import useEffect from react
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import AboutPage from "./Pages/AboutPage";
-import HomePage from "./Pages/HomePage";
-import Login from "./Pages/Login";
-import ProductsPage from "./Pages/ProductPage.jsx";
-import Profile from "./Pages/Profile.jsx";
-import Register from "./Pages/Register";
-import TemplatePage from "./Pages/TemplatePage.jsx";
-import ProductPage from "./Pages/ProductPage.jsx";
-import Dashboard from "./Pages/Dashboard.jsx";
-import Card from "./Components/Cards/ProductCard.jsx";
+import { useEffect } from 'react'; // Import useEffect from react
+import React, { useState } from "react";
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import AboutPage from './Pages/AboutPage';
+import HomePage from './Pages/HomePage';
+import Login from './Pages/Login';
+import ProductsPage from './Pages/ProductPage.jsx';
+import Profile from './Pages/Profile.jsx';
+import Register from './Pages/Register';
+import TemplatePage from './Pages/TemplatePage.jsx';
+import ProductPage from './Pages/ProductPage.jsx';
+import Dashboard from './Pages/Dashboard.jsx';
+import SearchPage from './Pages/SearchPage.jsx';
+import Card from './Components/Cards/ProductCard.jsx';
+import { getProductCount } from './REST_API/firebaseAPI.js';
 
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./firebase";
 
 // Importando o componente Header
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -30,10 +31,27 @@ import Header from "./Components/Struct/Header";
 import Header2 from "./Components/Struct/Header2";
 
 // Inicializando o aplicativo Firebase
-initializeApp(firebaseConfig);
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
+import './App.css';
+
 
 // Definindo o componente funcional App
 function App() {
+  const [productCount, setProductCount] = useState(0);
+
+  useEffect(() => {
+    const fetchProductCount = async () => {
+      const count = await getProductCount();
+      setProductCount(count);
+    }
+  
+    fetchProductCount();
+  }, []); // Add dependencies if any
   return (
     // JSX que representa a estrutura do aplicativo
     <div className="App">
@@ -58,6 +76,7 @@ function App() {
           <Route path="/card" element={<Card />} />
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/search" element={<SearchPage />} />
         </Routes>
         {location.pathname === "/register" || location.pathname === "/login" ? (
           <Footer3 />

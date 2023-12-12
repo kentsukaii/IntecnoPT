@@ -6,7 +6,8 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../firebase"; // Import the already initialized Storage
 import { bookmarkProduct } from '../../REST_API/firebaseAPI';
 import { Card, Button, Row, Col, Modal } from 'react-bootstrap';
-import teemoImage from '../../assets/teemo.png';
+import teemoImage from '../../assets/teemo.gif';
+
 
 
 const ProductCard = ({ product, isBestSeller }) => {

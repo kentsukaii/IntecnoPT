@@ -375,7 +375,7 @@ export const useFirebaseLogin = () => {
       navigate('/');
 
       window.location.reload()
-      
+
     } catch (error) {
       console.error("Login error:", error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
@@ -421,7 +421,9 @@ export const useFirebaseLogin = () => {
   
       // Redirect after a successful login
       navigate('/');
+
       window.location.reload()
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
