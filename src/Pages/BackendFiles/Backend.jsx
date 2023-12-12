@@ -334,6 +334,7 @@ export const useFirebaseLogin = () => {
   const [saveSession, setSaveSession] = useState(false);
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState(null);
+  const [profilePicUrl, setProfilePicUrl] = useState("");
 
 
   const handleCheckboxChange = () => {
@@ -491,21 +492,28 @@ export const useFirebaseLogin = () => {
 
   const handleDeleteAccount = async () => {
     const user = auth.currentUser;
-
+  
     if (user) {
       // User is signed in, get the user's email
       const email = user.email;
-
-      // Delete the user account
+  
+      // Confirm with the user before deleting the account
+      const confirmDelete = window.confirm("Are you sure you want to delete your account?");
+      if (!confirmDelete) {
+        // User clicked 'Cancel', do not delete account
+        return;
+      }
+  
+      // User clicked 'OK', proceed with account deletion
       deleteUser(user).then(async () => {
         console.log('User account has been successfully deleted.');
-
+  
         // Now you can delete the user's data from your database
         // Query the Users collection to find the document with the matching email
         const usersCollection = collection(firestore, 'Users');
         const userQuery = query(usersCollection, where('email', '==', email));
         const userQuerySnapshot = await getDocs(userQuery);
-
+  
         // If a document with the matching email is found, delete it
         if (!userQuerySnapshot.empty) {
           const userDoc = doc(firestore, 'Users', userQuerySnapshot.docs[0].id);
@@ -518,6 +526,7 @@ export const useFirebaseLogin = () => {
         navigate('/login')
         localStorage.removeItem('profilePicUrl');
         setProfilePicUrl(maguire);
+        window.location.reload()
       }).catch((error) => {
         console.error('Error deleting user account: ', error);
       });
@@ -526,6 +535,7 @@ export const useFirebaseLogin = () => {
       console.log('User needs to be signed in to delete account.');
     }
   };
+  
 
 
   const handleAuthUser = async (authUser) => {
