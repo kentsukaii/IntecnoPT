@@ -7,7 +7,6 @@ import Login from './Pages/Login';
 import ProductsPage from './Pages/ProductPage.jsx';
 import Profile from './Pages/Profile.jsx';
 import Register from './Pages/Register';
-import TemplatePage from './Pages/TemplatePage.jsx';
 import ProductPage from './Pages/ProductPage.jsx';
 import Dashboard from './Pages/Dashboard.jsx';
 import NotFoundPage from './Pages/NotFoundPage';
@@ -70,7 +69,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/templatepage" element={<TemplatePage />} />
           <Route path="/card" element={<Card />} />
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />

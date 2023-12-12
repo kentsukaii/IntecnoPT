@@ -1,16 +1,14 @@
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import { Form, Button, FormControl, FormCheck } from "react-bootstrap";
-import {
-  MDBIcon,
-} from "mdb-react-ui-kit";
+import { MDBIcon } from "mdb-react-ui-kit";
 import "../Pages/CSS/Register.css";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useFirebaseRegister, useFirebaseAuth } from "./BackendFiles/Backend";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
-
   const navigate = useNavigate();
-  const { user } = useFirebaseAuth(); 
+  const { user } = useFirebaseAuth();
 
   const {
     error,
@@ -34,14 +32,12 @@ const Register = () => {
     setReceiveNews,
   } = useFirebaseRegister();
 
-
   useEffect(() => {
     // Check if a user is already logged in
     if (user) {
       // If a user is logged in, navigate away to another page (e.g., home page)
-      navigate('/'); // Change the path to the desired page
+      navigate("/"); // Change the path to the desired page
     }
-    
   }, [user, navigate]);
 
   return (
@@ -56,79 +52,115 @@ const Register = () => {
             </div>
             <Form className="w-100 mt-3">
               <div className="d-flex flex-column align-items-center w-100">
-                <Form.Group className="mb-4" controlId="formBasicEmail">
-                  <FormControl
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                <div className="d-flex align-items-center mb-4">
+                  <FaEnvelope
                     style={{
-                      backgroundColor: "#e0e0e0",
-                      width: "100%",
-                      minWidth: "18vw",
+                      fontSize: "20px",
+                      marginRight: "10px",
+                      marginLeft: "-30px",
                     }}
                   />
-                </Form.Group>
+                  <Form.Group
+                    controlId="formBasicEmail"
+                    className="flex-grow-1 mb-0"
+                  >
+                    <FormControl
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      style={{
+                        backgroundColor: "#e0e0e0",
+                        width: "100%",
+                        minWidth: "18vw",
+                      }}
+                    />
+                  </Form.Group>
+                </div>
 
-                <Form.Group className="mb-4" controlId="formBasicPassword">
-                  <FormControl
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => { setPassword(e.target.value); handlePasswordChange(e); }}
+                <div className="d-flex align-items-center mb-4">
+                  <FaLock
                     style={{
-                      backgroundColor: "#e0e0e0",
-                      width: "100%",
-                      minWidth: "18vw",
+                      fontSize: "20px",
+                      marginRight: "10px",
+                      marginLeft: "-30px",
                     }}
                   />
-                </Form.Group>
+                  <Form.Group
+                    controlId="formBasicPassword"
+                    className="flex-grow-1 mb-0"
+                  >
+                    <FormControl
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        handlePasswordChange(e);
+                      }}
+                      style={{
+                        backgroundColor: "#e0e0e0",
+                        width: "100%",
+                        minWidth: "18vw",
+                      }}
+                    />
+                  </Form.Group>
+                </div>
 
-                <Form.Group
-                  className="mb-4"
-                  controlId="formBasicPasswordConfirm"
-                >
-                  <FormControl
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                <div className="d-flex align-items-center mb-4">
+                  <FaLock
                     style={{
-                      backgroundColor: "#e0e0e0",
-                      width: "100%",
-                      minWidth: "18vw",
+                      fontSize: "20px",
+                      marginRight: "10px",
+                      marginLeft: "-30px",
                     }}
                   />
-                </Form.Group>
+                  <Form.Group
+                    controlId="formBasicPasswordConfirm"
+                    className="flex-grow-1 mb-0"
+                  >
+                    <FormControl
+                      type="password"
+                      placeholder="Confirm Password"
+                      value={confirmPassword} // Use confirmPassword state variable here
+                      onChange={(e) => setConfirmPassword(e.target.value)} // Update confirmPassword state variable here
+                      style={{
+                        backgroundColor: "#e0e0e0",
+                        width: "100%",
+                        minWidth: "18vw",
+                      }}
+                    />
+                  </Form.Group>
+                </div>
 
                 <div className="mb-3">
                   <strong>
                     The password must meet 3 of the following requirements:
                   </strong>
                 </div>
-                <div
-                  className="mb-3"
-                  style={{ color: lowercase ? "lightgreen" : "white" }}
-                >
-                 Lowercase character
+                <div className="d-flex justify-content-between mb-3">
+                  <div style={{ color: lowercase ? "lightgreen" : "white" }}>
+                    Lowercase character
+                  </div>
+                  <div className="ms-2" style={{ color: lowercase ? "lightgreen" : "white" }}><strong>abc</strong></div>
                 </div>
-                <div
-                  className="mb-3"
-                  style={{ color: uppercase ? "lightgreen" : "white" }}
-                >
+                <div className="d-flex justify-content-between mb-3">
+                  <div style={{ color: uppercase ? "lightgreen" : "white" }}>
                   Capital character
                 </div>
-                <div
-                  className="mb-3"
-                  style={{ color: specialChar ? "lightgreen" : "white" }}
-                >
+                <div className="ms-2" style={{ color: uppercase ? "lightgreen" : "white" }}><strong>ABC</strong></div>
+                </div>
+                <div className="d-flex justify-content-between mb-3">
+                  <div style={{ color: specialChar ? "lightgreen" : "white" }}>
                   Special character
                 </div>
-                <div
-                  className="mb-3"
-                  style={{ color: number ? "lightgreen" : "white" }}
-                >
+                <div className="ms-2" style={{ color: specialChar ? "lightgreen" : "white" }}><strong>.@!#</strong></div>
+                </div>
+                <div className="d-flex justify-content-between mb-3">
+                  <div style={{ color: number ? "lightgreen" : "white" }}>
                   Number
+                </div>
+                <div className="ms-2" style={{ color: number ? "lightgreen" : "white" }}><strong>123</strong></div>
                 </div>
                 <div className="text-left mb-4">
                   <FormCheck
@@ -152,12 +184,15 @@ const Register = () => {
                     onChange={(e) => setTermsAccepted(e.target.checked)}
                   />
                 </div>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p style={{ color: "red" }}>{error}</p>}
                 <Button
                   variant="light"
                   type="submit"
                   className="mt-3"
-                  onClick={(e) => { e.preventDefault(); handleRegister(); }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleRegister();
+                  }}
                 >
                   Register
                 </Button>
@@ -202,9 +237,9 @@ const Register = () => {
             </div>
             <div className="row mt-3">Click below to Login!</div>
             <Link to="/login">
-            <Button className="row mt-3" variant="primary" onClick={""}>
-              Login
-            </Button>
+              <Button className="row mt-3" variant="primary" onClick={""}>
+                Login
+              </Button>
             </Link>
           </div>
         </div>

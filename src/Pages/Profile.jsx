@@ -329,11 +329,11 @@ const Profile = () => {
                   <Row className="g-3">
                     <Col>
                       <Form.Group controlId="formEmail" className="mt-4 position-relative">
-                        <Form.Label>Email</Form.Label>
+                        <Form.Label>E-Mail</Form.Label>
                         <FaEnvelope
                           className="position-absolute"
                           style={{
-                            color: "#dba521",
+                            color: "#059f83",
                             left: "5px",
                             top: "72%",
                             transform: "translateY(-50%)",
