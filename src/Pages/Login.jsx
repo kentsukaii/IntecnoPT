@@ -88,7 +88,7 @@ const Login = () => {
                           <Form.Label>Email:</Form.Label>
                           <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                         </Form.Group>
-                        {error && <Alert variant="danger">{error}</Alert>}
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
                       </Modal.Body>
                       <Modal.Footer className="justify-content-center">
                         <Button variant="secondary" onClick={handleClose}>
@@ -106,7 +106,7 @@ const Login = () => {
                   </div>
                 </div>
                 <div className="text-center">
-                  <Button variant="primary" type="submit" className="mb-4 btn-lg py-3" onClick={handleLogin} disabled={authing}>
+                  <Button variant="primary" type="submit" className="mb-4 btn-lg py-3" onClick={(e) => { e.preventDefault();handleLogin();}} disabled={authing} >
                     Login
                   </Button>
                   {error && <p style={{ color: 'red' }}>{error}</p>}
