@@ -5,6 +5,7 @@ import { Form, Button, Col, Row } from "react-bootstrap";
 import { auth, firestore } from "../firebase";
 import { getUserData } from "./BackendFiles/Backend";
 import Image from "react-bootstrap/Image";
+import AddressCard from '../Components/Cards/AdressCard';
 
 const Profile = () => {
 
@@ -390,7 +391,7 @@ return (
               <div className="row mb-2">
                 <Form className="w-100">
                   <Row className="g-3">
-                    <Col>{/*Ponham o AdressCard aqui*/}</Col>
+                  <Col><AddressCard /></Col>
                     <Col></Col>
                   </Row>
                 </Form>

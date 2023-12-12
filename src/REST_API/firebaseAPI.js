@@ -318,9 +318,85 @@ async function getProductCount() {
   return 0;
 }
 
+// Function to add user address to Firestore
+async function addUserAddress(userAddress) {
+  const q = query(
+    collection(firestore, "Addresses"),
+    where("firstName", "==", userAddress.firstName)
+  );
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    console.log("User address for " + userAddress.firstName + " already exists in the database.");
+    return;
+  }
+  const userAddressRef = doc(collection(firestore, "Addresses"));
+  await setDoc(userAddressRef, {
+    firstName: userAddress.firstName,
+    address: userAddress.address,
+    region: userAddress.region,
+    postalCode: userAddress.postalCode,
+    country: userAddress.country,
+    phoneNumber: userAddress.phoneNumber,
+    nif: userAddress.nif
+  }).catch((error) => {
+    console.error("Error writing to database: ", error);
+  });
+}
+
+// Load user addresses
+export async function loadUserAddresses() {
+  const auth = getAuth();
+  if (auth.currentUser) {
+    const userId = auth.currentUser.uid;
+    console.log('Loading addresses for user:', userId);
+    const userAddressesRef = doc(collection(firestore, 'Addresses'), userId);
+    const docSnapshot = await getDoc(userAddressesRef);
+    if (docSnapshot.exists()) {
+      console.log('User addresses loaded:', docSnapshot.data().userAddresses);
+      const userAddressIds = docSnapshot.data().userAddresses;
+      const addressCollectionRef = collection(firestore, 'Addresses');
+      const addressDocs = await Promise.all(userAddressIds.map((addressId) => getDoc(doc(addressCollectionRef, addressId))));
+      const userAddresses = addressDocs.map((addressDoc) => ({ id: addressDoc.id, ...addressDoc.data() }));
+      console.log('User address details loaded:', userAddresses);
+      return userAddresses;
+    } else {
+      console.error('No such document!');
+    }
+  } else {
+    console.log('No user is currently signed in.');
+  }
+  return [];
+}
 
 
+export async function editUserAddress(oldUserAddress, newUserAddress) {
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  console.log('userId:', userId); // Debugging line
 
+  const userAddressesRef = doc(collection(firestore, 'Addresses'), userId);
 
+  // Remove the old address and add the new address
+  await updateDoc(userAddressesRef, {
+    userAddresses: arrayRemove(oldUserAddress)
+  });
+  await updateDoc(userAddressesRef, {
+    userAddresses: arrayUnion(newUserAddress)
+  });
+}
 
-export { addProduct, addOrder, getTopSellingProducts, addRandomOrders, getProductCount };
+// Function to delete user address from Firestore
+export async function deleteUserAddress(userAddress) {
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  console.log('userId:', userId); // Debugging line
+
+  const userAddressesRef = doc(collection(firestore, 'Addresses'), userId);
+
+  // Remove the address from the array of user addresses
+  await updateDoc(userAddressesRef, {
+    userAddresses: arrayRemove(userAddress)
+  });
+}
+
+export { addProduct, addOrder, getTopSellingProducts, addRandomOrders, getProductCount, addUserAddress};

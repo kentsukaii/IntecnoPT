@@ -34,13 +34,6 @@ const HomePage = () => {
     fetchTopSellingProducts();
   }, []);
 
-  /*const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Erro durante o logout:", error);
-    }
-  };*/
 
   const carousel_images = [
     "src/Components/Images/Carousel/pcdiga_camera.jpg",

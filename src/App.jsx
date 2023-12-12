@@ -13,6 +13,7 @@ import ProductPage from './Pages/ProductPage.jsx';
 import Dashboard from './Pages/Dashboard.jsx';
 import SearchPage from './Pages/SearchPage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
+import AdressCard from './Components/Cards/AdressCard.jsx';
 import { getProductCount } from './REST_API/firebaseAPI.js';
 
 
@@ -77,6 +78,7 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/adresscard" element={<AdressCard />} />
         </Routes>
         {location.pathname === "/register" || location.pathname === "/login" ? (
           <Footer3 />
