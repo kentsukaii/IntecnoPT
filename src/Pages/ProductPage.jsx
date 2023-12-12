@@ -71,10 +71,10 @@ const ProductPage = () => {
     const originalPrice = product.OnSale ? product.Price / (1 - product.SalePercentage) : product.Price;
 
     return (
-
-        <Container fluid>
+        
+        <Container fluid  className= "mt-5 mb-5" >
             <Row>
-                <Col md={6}  >
+                <Col md={6}>
                     <div style={{ margin: '10px' }}>
                         <img src={imageUrl} alt="..." style={{ width: '100%' }} />
                         <div style={{ marginTop: '10px', textAlign: 'right' }}>

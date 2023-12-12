@@ -11,6 +11,7 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState, useEffect } from "react";
 import { Dropdown, Form, FormControl, Nav, Navbar } from "react-bootstrap";
 import maguire from "../../assets/godmaguire.png";
 import "../../fonts/fonts.css";
@@ -43,6 +44,17 @@ const Header = () => {
   const [cartProducts, setCartProducts] = useState([]);
   const [isCartMenuOpen, setCartMenuOpen] = useState(false);
   const [isCartLoading, setCartLoading] = useState(false);
+  const {
+    fileInputRef,
+    handleProfilePicChange,
+    
+     } = ChangePicture();
+  const [profilePicUrl, setProfilePicUrl] = useState(localStorage.getItem('profilePicUrl') || maguire);
+
+  useEffect(() => {
+    // Update the profile picture URL when the user state changes
+    setProfilePicUrl(localStorage.getItem('profilePicUrl') || maguire);
+  }, [user]);
   const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();

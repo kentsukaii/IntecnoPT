@@ -12,6 +12,7 @@ import Dashboard from './Pages/Dashboard.jsx';
 import NotFoundPage from './Pages/NotFoundPage';
 import SearchPage from './Pages/SearchPage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
+import InVoicesPage from './Pages/InVoicesPage.jsx';
 import AdressCard from './Components/Cards/AdressCard.jsx';
 import { getProductCount } from './REST_API/firebaseAPI.js';
 
@@ -73,6 +74,7 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/invoices" element={<InVoicesPage />} />
           <Route path="/notfound" element={<NotFoundPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
