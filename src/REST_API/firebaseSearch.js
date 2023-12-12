@@ -45,31 +45,56 @@ async function getProductsByStock(available) {
   return products;
 }
 
-async function searchProducts(term) {
-    const q = query(
-      collection(firestore, "Products"),
-      where("Name", "==", term)
-    );
-    const querySnapshot = await getDocs(q);
-    const products = querySnapshot.docs.map((doc) => {
-      const product = doc.data();
-      return { ...product, id: doc.id };
-    });
-    console.log(products); // Log the products to the console
-    return products;
-  }
+// Fetch products based on search term
+async function fetchProducts(searchTerm) {
+  const productsRef = collection(firestore, "Products");
+  const q = query(productsRef, where("Name", "==", searchTerm));
+  const querySnapshot = await getDocs(q);
+  const products = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  return products;
+}
 
+async function fetchProductsByCategory(category) {
+  const productsRef = collection(firestore, "Products");
+  const q = query(productsRef, where("Category", "==", category));
+  const querySnapshot = await getDocs(q);
+  const products = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  return products;
+}
 
-  export async function getAllProducts() {
-    const q = collection(firestore, "Products");
-    const querySnapshot = await getDocs(q);
-    const products = querySnapshot.docs.map((doc) => {
-      const product = doc.data();
-      return { ...product, id: doc.id };
-    });
-    console.log(products); // Log the products to the console
-    return products;
-  }
+function filterProducts(products, showAvailable, showOutOfStock) {
+  return products.filter((product) => {
+    if (showAvailable && product.StockAvailable > 0) {
+      return true;
+    }
+    if (showOutOfStock && product.StockAvailable === 0) {
+      return true;
+    }
+    return false;
+  });
+}
 
-export {getProductsByStock, searchProducts};
+// Function to fetch all products
+async function fetchAllProducts() {
+  const productsRef = collection(firestore, "Products");
+  const querySnapshot = await getDocs(productsRef);
+  const products = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  return products;
+}
 
+export {
+  getProductsByStock,
+  fetchProducts,
+  fetchProductsByCategory,
+  filterProducts,
+  fetchAllProducts
+};

@@ -2,54 +2,70 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, FormControl } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faList } from '@fortawesome/free-solid-svg-icons';
-import { getProductsByStock, searchProducts, getAllProducts } from '../REST_API/firebaseSearch';
+
 import SearchCard from '../Components/Cards/SearchCard'; // Import the ProductCard component
 import { Pagination } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import queryString from 'query-string';
+import { fetchProducts, fetchProductsByCategory } from '../REST_API/firebaseSearch';
+import { filterProducts } from '../REST_API/firebaseSearch';
+import { fetchAllProducts } from '../REST_API/firebaseSearch';
+
 
 const SearchPage = () => {
+  const [products, setProducts] = useState([]);
   const [product, setProduct] = useState('product_here');
   const [results, setResults] = useState('xxx');
-  const [products, setProducts] = useState([]); // State variable to store the products
-  const [searchTerm, setSearchTerm] = useState(''); // State variable to store the search term
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1); // State variable for the current page
+  const navigate = useNavigate();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search).get('query');
+  const category = new URLSearchParams(location.search).get('category');
+  const [showAvailable, setShowAvailable] = useState(true);
+  const [showOutOfStock, setShowOutOfStock] = useState(true);
+
+  const itemsPerPage = 9; // Set the number of items you want per page
+  const filteredProducts = filterProducts(products, showAvailable, showOutOfStock);
+  const itemsOnPage = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
-    // Fetch all products when the component mounts
-    getAllProducts().then(setProducts);
-  }, []);
+    const fetchData = async () => {
+      let products;
+      if (query) {
+        products = await fetchProducts(query);
+      } else if (category) {
+        products = await fetchProductsByCategory(category);
+      } else {
+        products = await fetchAllProducts();
+      }
+      setProducts(products || []);
+    };
 
-  const handleSearch = (event) => {
-    event.preventDefault(); // Prevent the form from refreshing the page
-    if (searchTerm) {
-      // If a search term is entered, search for products
-      searchProducts(searchTerm).then(setProducts);
-    } else {
-      // If no search term is entered, fetch all products
-      getAllProducts().then(setProducts);
-    }
-  };
+    fetchData();
+  }, [query, category]);
+
 
   return (
 
     <Container style={{ borderRadius: '15px', padding: '20px' }}>
-      <div className="d-flex justify-content-center w-100" style={{ maxWidth: "100%" }}>
-        <Form inline className="mx-auto" style={{ width: "55%" }} onSubmit={handleSearch}>
-          <FormControl
-            type="text"
-            placeholder="Search"
-            className="w-100"
-            style={{ height: "50px" }}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </Form>
-      </div>
       <Row className="align-items-center my-3" style={{ marginBottom: '10px' }}>
         <Col className="text-left">
-          <h3 style={{ borderLeft: '4px solid #4EADFE', paddingLeft: '10px' }}>Search results for: {product.Name}</h3>
-          <p>{results} results.</p>
+          <h3 style={{ borderLeft: '4px solid #4EADFE', paddingLeft: '10px' }}>Search results for: </h3>
+          <p>{products.length} results.</p>
+          <Button
+            size="sm" // Make the button smaller
+            className="float-right" // Float the button to the right
+            onClick={() => {
+              setProducts([]); // Reset the products array
+              navigate('/'); // Navigate back to the home page
+            }}
+          >
+            Clear Search
+          </Button>
         </Col>
       </Row>
+
       <Row className="align-items-center my-3" style={{ backgroundColor: '#e9ecef', borderRadius: '15px', padding: '20px', marginBottom: '10px' }}>
         <Col md={12} className="text-left">
           <h5 style={{ fontWeight: 'bold' }}>FILTERS</h5>
@@ -59,16 +75,17 @@ const SearchPage = () => {
             type="checkbox"
             label="Available Stock"
             style={{ fontSize: '0.8em' }}
-            onChange={(e) => getProductsByStock(e.target.checked).then(setProducts)}
+            checked={showAvailable} onChange={e => setShowAvailable(e.target.checked)}
           />
           <Form.Check
             type="checkbox"
             label="Out of Stock"
             style={{ fontSize: '0.8em' }}
-            onChange={(e) => getProductsByStock(!e.target.checked).then(setProducts)}
+            checked={showOutOfStock} onChange={e => setShowOutOfStock(e.target.checked)}
           />
         </Col>
       </Row>
+
       <Row className="align-items-center my-3" style={{ backgroundColor: '#e9ecef', borderRadius: '15px', padding: '20px', marginBottom: '10px' }}>
         <Col md={12}>
           <Row className="justify-content-end">
@@ -89,29 +106,33 @@ const SearchPage = () => {
               </Form.Control>
             </Col>
           </Row>
+
+
+
+
+
           <Row className="justify-content-center my-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '15px', padding: '20px' }}>
-            <Col>
-              <div className="card-deck d-flex justify-content-center" style={{ width: '100%' }}>
-                {products.slice((currentPage - 1) * 9, currentPage * 9).map((product) => ( // Change this line
-                  <SearchCard
-                    key={product.id}
-                    product={product}
-                    isBestSeller={product.isBestSeller}
-                  />
-                ))}
-              </div>
-            </Col>
+            {itemsOnPage.map(product => (
+              <SearchCard key={product.id} product={product} />
+            ))}
           </Row>
+
+
+
+
+
+
+
           <Row className="justify-content-center">
+
             <Pagination>
-              {Array(Math.ceil(products.length / 9)).fill().map((_, index) => (
+              {Array(Math.ceil(filteredProducts.length / itemsPerPage)).fill().map((_, index) => (
                 <Pagination.Item
                   key={index}
                   active={index + 1 === currentPage}
                   onClick={() => {
                     setCurrentPage(index + 1);
                     window.scrollTo({ top: 525, behavior: 'smooth' });
-
                   }}
                 >
                   {index + 1}
@@ -119,10 +140,16 @@ const SearchPage = () => {
               ))}
             </Pagination>
 
+
           </Row>
+
+
         </Col>
       </Row>
     </Container>
+
+
+
   );
 }
 
