@@ -2,7 +2,6 @@
 import { useEffect } from 'react'; // Import useEffect from react
 import React, { useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import AboutPage from './Pages/AboutPage';
 import HomePage from './Pages/HomePage';
 import Login from './Pages/Login';
 import ProductsPage from './Pages/ProductPage.jsx';
@@ -11,6 +10,7 @@ import Register from './Pages/Register';
 import TemplatePage from './Pages/TemplatePage.jsx';
 import ProductPage from './Pages/ProductPage.jsx';
 import Dashboard from './Pages/Dashboard.jsx';
+import NotFoundPage from './Pages/NotFoundPage';
 import SearchPage from './Pages/SearchPage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
 import { getProductCount } from './REST_API/firebaseAPI.js';
@@ -68,7 +68,6 @@ function App() {
           <Route path="/products/:id" element={<ProductPage />} />
           {/* Definindo as rotas para os diferentes componentes */}
           <Route path="/" element={<HomePage className="home-page" />} />
-          <Route path="/about" element={<AboutPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
@@ -77,6 +76,8 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/notfound" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         {location.pathname === "/register" || location.pathname === "/login" ? (
           <Footer3 />
