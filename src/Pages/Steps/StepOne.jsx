@@ -11,6 +11,13 @@ function StepOne({ nextStep, updateData }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    
+    // Check if all fields are filled out
+    if (!fullName || !address || !region || !postalCode || !country || !phoneNumber) {
+      alert('Please fill out all fields before proceeding.');
+      return;
+    }
+
     updateData({ fullName, address, region, postalCode, country, phoneNumber });
     nextStep();
   };
