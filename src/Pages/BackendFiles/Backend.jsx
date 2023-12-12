@@ -486,6 +486,8 @@ export const useFirebaseLogin = () => {
     if (userQuerySnapshot.empty) {
       // If the user doesn't exist, redirect to the register page
       navigate('/register');
+      window.location.reload()
+
     } else {
       // If the user exists, proceed as normal
       authUser.emailVerified = false;

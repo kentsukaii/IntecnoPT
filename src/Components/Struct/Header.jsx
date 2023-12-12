@@ -5,6 +5,7 @@ import {
   faSun,
   faStar,
   faUser,
+  faKey,
   faReceipt,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -13,7 +14,6 @@ import React, { useState } from "react";
 import { Dropdown, Form, FormControl, Nav, Navbar } from "react-bootstrap";
 import maguire from "../../assets/godmaguire.png";
 import "../../fonts/fonts.css";
-import "./Header.css";
 import SideMenu from "../../Components/Cards/SideMenu";
 import SideMenu2 from "../../Components/Cards/SideMenu2";
 import {
@@ -191,12 +191,14 @@ const Header = ({ productCount }) => {
               alignRight
               style={{ width: "80%" }}
             >
+              <Dropdown.Item href="/login" className="text-center">
+                <FontAwesomeIcon icon={faKey} color="#f2b624" /> Login / Register
+              </Dropdown.Item>
               <Dropdown.Item href="/profile" className="text-center">
                 <FontAwesomeIcon icon={faUser} color="#4eadfe" /> Profile
               </Dropdown.Item>
-              <Dropdown.Item href="/myordersinvoices" className="text-center">
-                <FontAwesomeIcon icon={faReceipt} color="white" /> Orders /
-                Invoices
+              <Dropdown.Item href="/invoices" className="text-center">
+                <FontAwesomeIcon icon={faReceipt} color="white" /> Invoices
               </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item

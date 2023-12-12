@@ -2,7 +2,6 @@
 import { useEffect } from 'react'; // Import useEffect from react
 import React, { useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import AboutPage from './Pages/AboutPage';
 import HomePage from './Pages/HomePage';
 import Login from './Pages/Login';
 import ProductsPage from './Pages/ProductPage.jsx';
@@ -11,6 +10,7 @@ import Register from './Pages/Register';
 import TemplatePage from './Pages/TemplatePage.jsx';
 import ProductPage from './Pages/ProductPage.jsx';
 import Dashboard from './Pages/Dashboard.jsx';
+import NotFoundPage from './Pages/NotFoundPage';
 import SearchPage from './Pages/SearchPage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
 import AdressCard from './Components/Cards/AdressCard.jsx';
@@ -25,9 +25,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "./App.css";
-import Footer from "../src/Components/Struct/Footer";
-import Footer2 from "../src/Components/Struct/Footer2";
-import Footer3 from "../src/Components/Struct/Footer3";
+import { Footer, Footer2, Footer3 }  from "../src/Components/Struct/Footer";
 import Header from "./Components/Struct/Header";
 import Header2 from "./Components/Struct/Header2";
 
@@ -69,7 +67,6 @@ function App() {
           <Route path="/products/:id" element={<ProductPage />} />
           {/* Definindo as rotas para os diferentes componentes */}
           <Route path="/" element={<HomePage className="home-page" />} />
-          <Route path="/about" element={<AboutPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
@@ -78,7 +75,12 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/search" element={<SearchPage />} />
+<<<<<<< HEAD
           <Route path="/adresscard" element={<AdressCard />} />
+=======
+          <Route path="/notfound" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+>>>>>>> 2628130023f5543951623b51aa3c1a0817d36e03
         </Routes>
         {location.pathname === "/register" || location.pathname === "/login" ? (
           <Footer3 />
