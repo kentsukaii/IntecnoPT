@@ -3,6 +3,7 @@ import { Form, Button, Container, Row, Col, Modal } from 'react-bootstrap';
 import { MDBIcon } from "mdb-react-ui-kit";
 import { useFirebaseLogin, useFirebaseAuth } from './BackendFiles/Backend';
 import { useNavigate, Link } from 'react-router-dom';
+import { FaEnvelope, FaLock } from "react-icons/fa";
 
 
 
@@ -78,12 +79,30 @@ const Login = () => {
               <Form className="w-100">
                 {!loggedInUser && (
                   <div className="d-flex flex-column align-items-center w-100">
-                    <Form.Group className="mb-4">
-                      <Form.Control type="email" placeholder="E-Mail" className="form-control-md" style={{ backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }} value={email} onChange={(e) => setEmail(e.target.value)} />
-                    </Form.Group>
-                    <Form.Group className="mb-4">
-                      <Form.Control type="password" placeholder="Password" className="form-control-md" style={{ backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }} value={password} onChange={(e) => setPassword(e.target.value)} />
-                    </Form.Group>
+<Form.Group className="mb-4 position-relative">
+  <FaEnvelope className="position-absolute" style={{ color: "#059f83", left: '7px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px' }} />
+  <Form.Control
+    type="email"
+    placeholder="E-Mail"
+    className="form-control-md"
+    style={{ paddingLeft: '35px', backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }}
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+  />
+</Form.Group>
+
+<Form.Group className="mb-4 position-relative">
+  <FaLock className="position-absolute" style={{ color: "#dba521", left: '6px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px' }} />
+  <Form.Control
+    type="password"
+    placeholder="Password"
+    className="form-control-md"
+    style={{ paddingLeft: '35px', backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+  />
+</Form.Group>
+
                   </div>
                 )}
                 <div className="d-flex justify-content-center align-items-center w-100 mb-2">
