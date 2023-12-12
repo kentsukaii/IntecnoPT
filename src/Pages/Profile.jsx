@@ -258,8 +258,8 @@ const Profile = () => {
                 as="img"
                 src={profilePicUrl}  // Use the profile picture URL state
                 alt="menu icon"
-                width="175"
-                height="175"
+                width="75"
+                height="75"
                 style={{ borderRadius: "50%", border: "2px solid #4eadfe" }}
                 onClick={handleProfilePicClick}
               ></Dropdown.Toggle>
