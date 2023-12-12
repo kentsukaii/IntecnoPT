@@ -24,9 +24,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "./App.css";
-import Footer from "../src/Components/Struct/Footer";
-import Footer2 from "../src/Components/Struct/Footer2";
-import Footer3 from "../src/Components/Struct/Footer3";
+import { Footer, Footer2, Footer3 }  from "../src/Components/Struct/Footer";
 import Header from "./Components/Struct/Header";
 import Header2 from "./Components/Struct/Header2";
 
