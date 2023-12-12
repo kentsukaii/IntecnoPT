@@ -11,6 +11,7 @@ import TemplatePage from './Pages/TemplatePage.jsx';
 import ProductPage from './Pages/ProductPage.jsx';
 import Dashboard from './Pages/Dashboard.jsx';
 import NotFoundPage from './Pages/NotFoundPage';
+import MultiStepForm from './Pages/MultiStepForm.jsx';
 import SearchPage from './Pages/SearchPage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
 import { getProductCount } from './REST_API/firebaseAPI.js';
@@ -73,6 +74,7 @@ function App() {
           <Route path="/card" element={<Card />} />
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/checkout" element={<MultiStepForm />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/notfound" element={<NotFoundPage />} />
           <Route path="*" element={<NotFoundPage />} />
