@@ -4,41 +4,22 @@ import {
   faMoon,
   faSun,
   faStar,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState, useEffect } from "react";
-import { Dropdown, Form, FormControl, Nav, Navbar } from "react-bootstrap";
-import maguire from "../../assets/godmaguire.png";
-import "../../fonts/fonts.css";
-import "./Header.css";
-<<<<<<< HEAD
-import SideMenu from "../../Components/Cards/SideMenu";
-import SideMenu2 from "../../Components/Cards/SideMenu2";
-import {
-  useFirebaseAuth,
-  useFirebaseLogin,
-} from "../../Pages/BackendFiles/Backend";
-import { loadBookmarkedProducts } from "../../REST_API/firebaseAPI";
-import {
   faUser,
   faReceipt,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
-
-const Header = () => {
-=======
-import SideMenu from '../../Components/Cards/SideMenu';
-import SideMenu2 from '../../Components/Cards/SideMenu2';
-import { useFirebaseAuth, useFirebaseLogin } from '../../Pages/BackendFiles/Backend';
-import { loadBookmarkedProducts } from '../../REST_API/firebaseAPI';
-import { loadCartProducts } from '../../REST_API/firebaseAPI';
-import { getProductCount } from '../../REST_API/firebaseAPI';
-import { getAuth } from "firebase/auth";
-import { firestore } from '../../firebase';
-import { doc, getDoc, collection } from "firebase/firestore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
+import { Dropdown, Form, FormControl, Nav, Navbar } from "react-bootstrap";
+import maguire from "../../assets/godmaguire.png";
+import "../../fonts/fonts.css";
+import "./Header.css";
+import SideMenu from "../../Components/Cards/SideMenu";
+import SideMenu2 from "../../Components/Cards/SideMenu2";
+import { useFirebaseAuth, useFirebaseLogin } from "../../Pages/BackendFiles/Backend";
+import { loadBookmarkedProducts, loadCartProducts } from "../../REST_API/firebaseAPI";
 
 const Header = ({ productCount }) => {
->>>>>>> 0e1fbf392481abcfd6ea3326c833c7adb4e4ddc5
   const { handleLogout } = useFirebaseAuth();
   const { user } = useFirebaseLogin();
   const [darkMode, setDarkMode] = useState(false);
@@ -49,8 +30,6 @@ const Header = ({ productCount }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [isCartMenuOpen, setCartMenuOpen] = useState(false);
   const [isCartLoading, setCartLoading] = useState(false);
-
-
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -68,7 +47,7 @@ const Header = ({ productCount }) => {
 
   // ------------------------------------------
 
-  // Load bookmarks both client and server sided 
+  // Load bookmarks both client and server-sided
   const loadBookmarks = async () => {
     setBookmarkLoading(true);
     const products = await loadBookmarkedProducts();
@@ -85,9 +64,6 @@ const Header = ({ productCount }) => {
     setCartLoading(false);
     setCartMenuOpen(true);
   };
-
-
-
 
   return (
     <Navbar
@@ -140,7 +116,6 @@ const Header = ({ productCount }) => {
           >
             <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="2x" />
           </Nav.Link>
-<<<<<<< HEAD
           <Nav.Link
             href="/cart"
             className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-lg-none"
@@ -151,7 +126,6 @@ const Header = ({ productCount }) => {
           <Nav.Link
             className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block"
             onClick={handleOpen}
-            
           >
             <FontAwesomeIcon icon={faShoppingCart} size="2x" />
           </Nav.Link>
@@ -171,16 +145,11 @@ const Header = ({ productCount }) => {
           >
             <FontAwesomeIcon icon={faStar} size="2x" />
           </Nav.Link>
-          {isLoading ? (
+          {isBookmarkLoading ? (
             <p></p>
           ) : (
-            <SideMenu
-              isOpen={isMenuOpen}
-              onClose={() => setMenuOpen(false)}
-              bookmarkedProducts={bookmarkedProducts}
-            />
-          )}{" "}
-          {/* HANDLE LOADING MESSAGE ETC */}
+            <SideMenu isOpen={isBookmarkMenuOpen} onClose={() => setBookmarkMenuOpen(false)} bookmarkedProducts={bookmarkedProducts} />
+          )}
           <Dropdown
             className="order-2"
             align="end"
@@ -208,36 +177,13 @@ const Header = ({ productCount }) => {
                 <FontAwesomeIcon icon={faReceipt} color="white" /> Orders /
                 Invoices
               </Dropdown.Item>
-=======
-
-
-          <Nav.Link className="order-1 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block" onClick={loadBookmarks}>
-            <FontAwesomeIcon icon={faStar} size="2x" />
-          </Nav.Link>
-          {isBookmarkLoading ? <p></p> : <SideMenu isOpen={isBookmarkMenuOpen} onClose={() => setBookmarkMenuOpen(false)} bookmarkedProducts={bookmarkedProducts} />}
-
-          <Nav.Link className="order-2 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block" onClick={loadCart}>
-            <FontAwesomeIcon icon={faShoppingCart} size="2x" />
-            
-          </Nav.Link>
-
-          {isCartLoading ? <p></p> : <SideMenu2 isOpen={isCartMenuOpen} onClose={() => setCartMenuOpen(false)} cartProducts={cartProducts} />}
-
-          <Dropdown className="order-2" align="end" style={{ marginLeft: '20px' }}>
-            <Dropdown.Toggle variant="success" id="dropdown-basic" as="img" src={maguire} alt="menu icon" width="75" height="75" style={{ borderRadius: "50%", border: "2px solid #4eadfe" }}>
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu alignRight style={{ width: "80%" }}>
-              <Dropdown.Item href="/profile" className="text-center">Profile</Dropdown.Item>
-              <Dropdown.Item href="/myordersinvoices" className="text-center">My Orders / Invoices</Dropdown.Item>
->>>>>>> 0e1fbf392481abcfd6ea3326c833c7adb4e4ddc5
               <Dropdown.Divider />
               <Dropdown.Item
                 href="/"
                 className="text-center"
                 onClick={handleLogout}
               >
-                 Logout <FontAwesomeIcon icon={faSignOutAlt} color="red" />
+                Logout <FontAwesomeIcon icon={faSignOutAlt} color="red" />
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -248,3 +194,4 @@ const Header = ({ productCount }) => {
 };
 
 export default Header;
+

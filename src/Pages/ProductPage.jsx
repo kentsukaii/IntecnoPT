@@ -1,13 +1,4 @@
-<<<<<<< HEAD
-import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
-import Accordion from 'react-bootstrap/Accordion';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faArrowRight, faCheck, faStar, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import maguire from "../../src/assets/godmaguire.png";
-=======
 import React, { useState, useEffect } from 'react';
->>>>>>> 0e1fbf392481abcfd6ea3326c833c7adb4e4ddc5
 import { useParams } from 'react-router-dom';
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";

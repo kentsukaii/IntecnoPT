@@ -1,19 +1,6 @@
 // Importando os módulos necessários do React e react-router-dom
-<<<<<<< HEAD
-import { useEffect } from "react"; // Import useEffect from react
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import AboutPage from "./Pages/AboutPage";
-import HomePage from "./Pages/HomePage";
-import Login from "./Pages/Login";
-import ProductsPage from "./Pages/ProductPage.jsx";
-import Profile from "./Pages/Profile.jsx";
-import Register from "./Pages/Register";
-import TemplatePage from "./Pages/TemplatePage.jsx";
-import ProductPage from "./Pages/ProductPage.jsx";
-import Dashboard from "./Pages/Dashboard.jsx";
-import Card from "./Components/Cards/ProductCard.jsx";
-=======
 import { useEffect } from 'react'; // Import useEffect from react
+import React, { useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AboutPage from './Pages/AboutPage';
 import HomePage from './Pages/HomePage';
@@ -27,11 +14,9 @@ import Dashboard from './Pages/Dashboard.jsx';
 import SearchPage from './Pages/SearchPage.jsx';
 import Card from './Components/Cards/ProductCard.jsx';
 import { getProductCount } from './REST_API/firebaseAPI.js';
->>>>>>> 0e1fbf392481abcfd6ea3326c833c7adb4e4ddc5
 
 
 // Importando o componente Header
-<<<<<<< HEAD
 import "bootstrap/dist/css/bootstrap.min.css";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -46,8 +31,6 @@ import Header from "./Components/Struct/Header";
 import Header2 from "./Components/Struct/Header2";
 
 // Inicializando o aplicativo Firebase
-initializeApp(firebaseConfig);
-=======
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
@@ -55,10 +38,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import './App.css';
-import Footer from '../src/Components/Struct/Footer';
-import Header from './Components/Struct/Header';
-import React, { useState } from "react";
->>>>>>> 0e1fbf392481abcfd6ea3326c833c7adb4e4ddc5
+
 
 // Definindo o componente funcional App
 function App() {
@@ -77,7 +57,6 @@ function App() {
     <div className="App">
       {/* Configurando as rotas com o BrowserRouter */}
       <Router>
-<<<<<<< HEAD
         {/* Conditionally render Header or Header2 based on the current route */}
         {location.pathname === "/register" || location.pathname === "/login" ? (
           <Header2 />
@@ -85,10 +64,6 @@ function App() {
           <Header />
         )}
 
-=======
-        {/* Renderizando o componente Header no topo */}
-        <Header productCount={productCount} />
->>>>>>> 0e1fbf392481abcfd6ea3326c833c7adb4e4ddc5
         <Routes>
           <Route path="/products/:id" element={<ProductPage />} />
           {/* Definindo as rotas para os diferentes componentes */}
