@@ -350,7 +350,7 @@ const Profile = () => {
                             minWidth: "18vw",
                           }}
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          readOnly
                         />
                       </Form.Group>
                     </Col>
