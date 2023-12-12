@@ -11,6 +11,35 @@ function StepOne({ nextStep, updateData }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Check if all fields are filled out
+    if (!fullName || !address || !region || !postalCode || !country || !phoneNumber) {
+      alert('Please fill out all fields before proceeding.');
+      return;
+    }
+
+    // Check if fullName, country and region only contain letters and spaces
+    const lettersAndSpaces = /^[A-Za-z\s]+$/;
+    if (!fullName.match(lettersAndSpaces)) {
+      alert('Full Name should only contain letters.');
+      return;
+    }
+    if (!country.match(lettersAndSpaces)) {
+      alert('Country should only contain letters.');
+      return;
+    }
+    if (!region.match(lettersAndSpaces)) {
+      alert('Region should only contain letters.');
+      return;
+    }
+
+    // Check if phoneNumber is limited to 9 numbers
+    const numbers = /^[0-9]{9}$/;
+    if (!phoneNumber.match(numbers)) {
+      alert('Phone Number should be limited to 9 numbers.');
+      return;
+    }
+
     updateData({ fullName, address, region, postalCode, country, phoneNumber });
     nextStep();
   };

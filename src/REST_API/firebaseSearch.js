@@ -114,6 +114,11 @@ async function canCheckout() {
   // Get the products in the cart
   const productsList = cartSnap.data().productsList;
 
+  // Check if the cart is empty
+  if (productsList.length === 0) {
+    return false;
+  }
+
   // Check if each product is available
   for (const productId of productsList) {
     const productRef = doc(firestore, 'Products', productId);
