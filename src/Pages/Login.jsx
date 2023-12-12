@@ -7,8 +7,8 @@ import { useNavigate, Link } from 'react-router-dom';
 
 
 const Login = () => {
-  const navigate = useNavigate();
-  const { user } = useFirebaseAuth();
+  
+  
 
   const {
     email,
@@ -29,13 +29,7 @@ const Login = () => {
 
   } = useFirebaseLogin();
 
-  useEffect(() => {
-    // Check if a user is already logged in
-    if (user) {
-      // If a user is logged in, navigate away to another page (e.g., home page)
-      navigate('/'); // Change the path to the desired page
-    }
-  }, [user, navigate]);
+ 
   const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
