@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { faCheckCircle, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getDownloadURL, ref } from "firebase/storage";
@@ -6,7 +7,6 @@ import { storage } from "../../firebase"; // Import the already initialized Stor
 import { bookmarkProduct } from '../../REST_API/firebaseAPI';
 import { Card, Button, Row, Col, Modal } from 'react-bootstrap';
 import teemoImage from '../../assets/teemo.png';
-import { useNavigate } from 'react-router-dom';
 
 
 

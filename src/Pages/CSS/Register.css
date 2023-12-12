@@ -1,0 +1,12 @@
+  .small-text {
+    font-size: 0.8rem;
+  }
+  
+
+  .extra-small-text {
+    font-size: 0.7rem;
+  }
+
+  .limited-width {
+    max-width: 65%;
+  }
