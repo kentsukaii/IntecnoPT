@@ -162,22 +162,6 @@ const Header = ({ productCount }) => {
           >
             <FontAwesomeIcon icon={faStar} size="2x" />
           </Nav.Link>
-<<<<<<< HEAD
-          {isBookmarkLoading ? <p></p> : <SideMenu isOpen={isBookmarkMenuOpen} onClose={() => setBookmarkMenuOpen(false)} bookmarkedProducts={bookmarkedProducts} />}
-
-          <Nav.Link className="order-2 ml-auto align-self-center flex-shrink-0 text-center mx-auto d-none d-lg-block" onClick={loadCart}>
-            <FontAwesomeIcon icon={faShoppingCart} size="2x" />
-          </Nav.Link>
-          {isCartLoading ? <p></p> : <SideMenu2 isOpen={isCartMenuOpen} onClose={() => setCartMenuOpen(false)} cartProducts={cartProducts} />}
-
-          <Dropdown className="order-2" align="end" style={{ marginLeft: '20px' }}>
-            <Dropdown.Toggle variant="success" id="dropdown-basic" as="img" src={maguire} alt="menu icon" width="75" height="75" style={{ borderRadius: "50%", border: "2px solid #4eadfe" }}>
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu alignRight style={{ width: "80%" }}>
-              <Dropdown.Item href="/profile" className="text-center">Profile</Dropdown.Item>
-              <Dropdown.Item href="/myordersinvoices" className="text-center">My Orders / Invoices</Dropdown.Item>
-=======
           {isBookmarkLoading ? (
             <p></p>
           ) : (
@@ -214,7 +198,6 @@ const Header = ({ productCount }) => {
                 <FontAwesomeIcon icon={faReceipt} color="white" /> Orders /
                 Invoices
               </Dropdown.Item>
->>>>>>> fcf4570e6a0ff8fbf6780981cba7d6cfcca6aef9
               <Dropdown.Divider />
               <Dropdown.Item
                 href="/"
