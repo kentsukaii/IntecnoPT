@@ -44,8 +44,11 @@ export const useFirebaseAuth = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      
       setUser(null);  // Set user to null
-  
+      navigate('/login');
+    
+
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -202,6 +205,9 @@ export const useFirebaseRegister = () => { // MAIN
       setConfirmPassword("");
       setError(null);
       navigate('/');
+
+      window.location.reload()
+
     } catch (error) {
       console.error('Error registering user:', error.message);
       setError(
@@ -223,6 +229,8 @@ export const useFirebaseRegister = () => { // MAIN
 
       // Redirect after a successful login
       navigate('/');
+      window.location.reload()
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
@@ -240,6 +248,8 @@ export const useFirebaseRegister = () => { // MAIN
 
       // Redirect after a successful login
       navigate('/');
+      window.location.reload()
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
@@ -363,6 +373,9 @@ export const useFirebaseLogin = () => {
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
       navigate('/');
+
+      window.location.reload()
+      
     } catch (error) {
       console.error("Login error:", error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
@@ -408,6 +421,7 @@ export const useFirebaseLogin = () => {
   
       // Redirect after a successful login
       navigate('/');
+      window.location.reload()
     } catch (error) {
       console.log(error);
       setAuthing(false);
@@ -443,6 +457,9 @@ export const useFirebaseLogin = () => {
   
       // Redirect after a successful login
       navigate('/');
+
+      window.location.reload()
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
@@ -468,6 +485,7 @@ export const useFirebaseLogin = () => {
       // Add this line for debugging
       console.log('User exists, navigating to home page');
       navigate('/');
+      window.location.reload()
     }
   };
   
@@ -526,7 +544,7 @@ export const useFirebaseLogin = () => {
     setSaveSession,
     handleCheckboxChange,
     onAuthStateChanged,
-    
+    checkEmailExists,
   };
 };
 
