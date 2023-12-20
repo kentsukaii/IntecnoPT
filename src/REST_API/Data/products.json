@@ -1,0 +1,480 @@
+{
+  "Products": {
+    "Desktop Computers": {
+      "Desktop Normal": [
+        {
+          "Description": "Powerful desktop computer for everyday use",
+          "ImageReference": "desktop_computer_image_1.jpg",
+          "Name": "Desktop PC Pro",
+          "Price": 799.99,
+          "StockAvailable": 10,
+          "StockStored": 50,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 8
+        },
+        {
+          "Description": "High-end desktop with sleek design",
+          "ImageReference": "desktop_best_mode_image_3.jpg",
+          "Name": "Desktop Elite Edition",
+          "Price": 2999.99,
+          "StockAvailable": 3,
+          "StockStored": 10,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.25,
+          "salesCount": 15
+        },
+        {
+          "Description": "Top-of-the-line desktop for ultimate performance",
+          "ImageReference": "desktop_best_mode_image_1.jpg",
+          "Name": "Desktop Ultimate X",
+          "Price": 399.99,
+          "StockAvailable": 5,
+          "StockStored": 20,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.9,
+          "salesCount": 12
+        }
+      ],
+      "Desktop Gaming": [
+        {
+          "Description": "High-performance gaming desktop with RGB lighting",
+          "ImageReference": "gaming_desktop_image_1.jpg",
+          "Name": "Gaming Beast X",
+          "Price": 1499.99,
+          "StockAvailable": 7,
+          "StockStored": 15,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.2,
+          "salesCount": 20
+        },
+        {
+          "Description": "Top-of-the-line desktop for ultimate performance",
+          "ImageReference": "desktop_best_mode_image_1.jpg",
+          "Name": "Desktop Ultimate X",
+          "Price": 2499.99,
+          "StockAvailable": 0,
+          "StockStored": 20,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.3,
+          "salesCount": 10
+        },
+        {
+          "Description": "Advanced desktop with cutting-edge features",
+          "ImageReference": "desktop_best_mode_image_2.jpg",
+          "Name": "Desktop Advanced Pro",
+          "Price": 1899.99,
+          "StockAvailable": 8,
+          "StockStored": 15,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0.4,
+          "salesCount": 18
+        }
+      ]
+    },
+    "Components": {
+      "CPU": [
+        {
+          "Description": "High-performance CPU for gaming",
+          "ImageReference": "cpu_image_1.jpg",
+          "Name": "CPU Pro",
+          "Price": 299.99,
+          "StockAvailable": 20,
+          "StockStored": 100,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 25
+        }
+      ],
+      "RAM": [
+        {
+          "Description": "16GB RAM for high-speed performance",
+          "ImageReference": "ram_image_1.jpg",
+          "Name": "RAM Pro",
+          "Price": 79.99,
+          "StockAvailable": 0,
+          "StockStored": 150,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.1,
+          "salesCount": 12
+        }
+      ],
+      "GPU": [
+        {
+          "Description": "High-end graphics card for gaming",
+          "ImageReference": "gpu_image_1.jpg",
+          "Name": "GPU Extreme",
+          "Price": 499.99,
+          "StockAvailable": 15,
+          "StockStored": 50,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.15,
+          "salesCount": 8
+        }
+      ],
+      "Motherboard": [
+        {
+          "Description": "Advanced motherboard for gaming rigs",
+          "ImageReference": "motherboard_image_1.jpg",
+          "Name": "Motherboard Pro",
+          "Price": 199.99,
+          "StockAvailable": 25,
+          "StockStored": 80,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 10
+        }
+      ],
+      "Storage": [
+        {
+          "Description": "1TB SSD for fast storage",
+          "ImageReference": "ssd_image_1.jpg",
+          "Name": "SSD Turbo",
+          "Price": 129.99,
+          "StockAvailable": 40,
+          "StockStored": 100,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.2,
+          "salesCount": 15
+        }
+      ],
+      "Power Supply": [
+        {
+          "Description": "800W Power Supply for gaming PCs",
+          "ImageReference": "power_supply_image_1.jpg",
+          "Name": "Power Beast",
+          "Price": 89.99,
+          "StockAvailable": 0,
+          "StockStored": 70,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 22
+        }
+      ],
+      "Cooling": [
+        {
+          "Description": "Liquid cooling system for high-performance PCs",
+          "ImageReference": "cooling_system_image_1.jpg",
+          "Name": "Liquid Cool Pro",
+          "Price": 149.99,
+          "StockAvailable": 20,
+          "StockStored": 60,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.1,
+          "salesCount": 18
+        }
+      ],
+      "Case": [
+        {
+          "Description": "Gaming PC case with RGB lighting",
+          "ImageReference": "pc_case_image_1.jpg",
+          "Name": "RGB Case Master",
+          "Price": 79.99,
+          "StockAvailable": 35,
+          "StockStored": 90,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 12
+        }
+      ],
+      "Networking": [
+        {
+          "Description": "Gigabit Ethernet card for high-speed connectivity",
+          "ImageReference": "networking_card_image_1.jpg",
+          "Name": "Gigabit Network Pro",
+          "Price": 49.99,
+          "StockAvailable": 0,
+          "StockStored": 80,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.15,
+          "salesCount": 30
+        }
+      ],
+      "Sound Card": [
+        {
+          "Description": "High-quality sound card for immersive audio",
+          "ImageReference": "sound_card_image_1.jpg",
+          "Name": "Audio Master",
+          "Price": 99.99,
+          "StockAvailable": 15,
+          "StockStored": 50,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 10
+        }
+      ]
+    },
+    "Peripherals": {
+      "Keyboard": [
+        {
+          "Description": "Mechanical keyboard for professional use",
+          "ImageReference": "keyboard_image_1.jpg",
+          "Name": "Keyboard Pro",
+          "Price": 49.99,
+          "StockAvailable": 25,
+          "StockStored": 125,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 25
+        }
+      ],
+      "Mouse": [
+        {
+          "Description": "Ergonomic mouse for comfortable use",
+          "ImageReference": "mouse_image_1.jpg",
+          "Name": "Mouse Pro",
+          "Price": 29.99,
+          "StockAvailable": 0,
+          "StockStored": 175,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.15,
+          "salesCount": 18
+        }
+      ],
+      "Monitor": [
+        {
+          "Description": "27-inch IPS monitor for vibrant visuals",
+          "ImageReference": "monitor_image_1.jpg",
+          "Name": "VisualMaster 27",
+          "Price": 299.99,
+          "StockAvailable": 10,
+          "StockStored": 50,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.2,
+          "salesCount": 15
+        }
+      ],
+      "Headphones": [
+        {
+          "Description": "Over-ear headphones for immersive audio experience",
+          "ImageReference": "headphones_image_1.jpg",
+          "Name": "AudioBliss Pro",
+          "Price": 129.99,
+          "StockAvailable": 15,
+          "StockStored": 75,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 10
+        }
+      ],
+      "Speakers": [
+        {
+          "Description": "5.1 Surround Sound Speakers for home entertainment",
+          "ImageReference": "speakers_image_1.jpg",
+          "Name": "SurroundMaster 5000",
+          "Price": 199.99,
+          "StockAvailable": 8,
+          "StockStored": 40,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.1,
+          "salesCount": 22
+        }
+      ],
+      "Webcam": [
+        {
+          "Description": "HD webcam for video conferencing",
+          "ImageReference": "webcam_image_1.jpg",
+          "Name": "WebVision HD",
+          "Price": 79.99,
+          "StockAvailable": 0,
+          "StockStored": 100,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 12
+        }
+      ],
+      "Printer": [
+        {
+          "Description": "Wireless printer with scanning and copying capabilities",
+          "ImageReference": "printer_image_1.jpg",
+          "Name": "PrintMaster X1",
+          "Price": 149.99,
+          "StockAvailable": 12,
+          "StockStored": 60,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.15,
+          "salesCount": 18
+        }
+      ],
+      "Microphone": [
+        {
+          "Description": "Professional-grade microphone for recording",
+          "ImageReference": "microphone_image_1.jpg",
+          "Name": "StudioMic Pro",
+          "Price": 89.99,
+          "StockAvailable": 18,
+          "StockStored": 90,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 25
+        }
+      ],
+      "Tablets": [
+        {
+          "Description": "10-inch Android tablet with high-resolution display",
+          "ImageReference": "tablet_image_1.jpg",
+          "Name": "TabMaster 10",
+          "Price": 199.99,
+          "StockAvailable": 0,
+          "StockStored": 50,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.2,
+          "salesCount": 15
+        }
+      ]
+    },
+
+    
+
+
+
+
+    "Laptops": {
+      "Laptop Normal": [
+        {
+          "Description": "Portable laptop for everyday use",
+          "ImageReference": "laptop_normal_image_1.jpg",
+          "Name": "Laptop Normal Pro",
+          "Price": 599.99,
+          "StockAvailable": 15,
+          "StockStored": 75,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 8
+        },
+        {
+          "Description": "Slim and lightweight laptop for professionals",
+          "ImageReference": "laptop_normal_image_2.jpg",
+          "Name": "SlimBook Pro",
+          "Price": 799.99,
+          "StockAvailable": 12,
+          "StockStored": 60,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.15,
+          "salesCount": 15
+        }
+      ],
+      "Laptop Gaming": [
+        {
+          "Description": "High-performance gaming laptop",
+          "ImageReference": "laptop_gaming_image_1.jpg",
+          "Name": "Gaming Laptop X",
+          "Price": 1299.99,
+          "StockAvailable": 10,
+          "StockStored": 50,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": true,
+          "SalePercentage": 0.25,
+          "salesCount": 20
+        },
+        {
+          "Description": "VR-ready gaming laptop with RGB lighting",
+          "ImageReference": "laptop_gaming_image_2.jpg",
+          "Name": "VR Beast",
+          "Price": 1799.99,
+          "StockAvailable": 8,
+          "StockStored": 40,
+          "Available": true,
+          "ExpectedDeliveryDate": "2023-12-15",
+          "Bookmark": false,
+          "OnSale": false,
+          "SalePercentage": 0,
+          "salesCount": 12
+        }
+      ]
+    }
+    
+    
+
+
+
+
+
+
+
+
+  }
+}

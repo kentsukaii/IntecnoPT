@@ -1,0 +1,22 @@
+.custom-class {
+  margin: 0 !important;
+
+}
+
+.circle-container:hover {
+  transform: scale(1.1); /* Increase the size on hover */
+}
+
+.circle-container:hover .circle-text {
+  color: grey !important; /* Change the text color on hover */
+}
+
+.carousel-control-next-icon {
+  height: 50px !important;
+  width: 50px !important;
+  background-color: rgb(42, 91, 165) !important;
+}
+
+.carousel-control-prev-icon {
+  display: none !important;
+}
