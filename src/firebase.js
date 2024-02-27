@@ -1,11 +1,9 @@
-// firebase.js
+// firebase.jsssss
 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "@firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
-
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyDLAeB-82QzQbCPpc076TOCXIqPkVFeln0",
@@ -13,7 +11,7 @@ const firebaseConfig = {
   projectId: "intecnopt",
   storageBucket: "intecnopt.appspot.com",
   messagingSenderId: "564679934361",
-  appId: "1:564679934361:web:7ea150e7784bff1dee5308"
+  appId: "1:564679934361:web:7ea150e7784bff1dee5308",
 };
 
 // Initialize Firebase

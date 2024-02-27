@@ -1,4 +1,4 @@
-// Importando os módulos necessários do React e react-router-dom
+// Importando os módulos necessários do React e react-router-domdd
 import { useEffect } from 'react'; // Import useEffect from react
 import React, { useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
@@ -26,7 +26,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "./App.css";
-import { Footer, Footer2, Footer3 }  from "../src/Components/Struct/Footer";
+import { Footer, Footer2, Footer3 } from "../src/Components/Struct/Footer";
 import Header from "./Components/Struct/Header";
 import Header2 from "./Components/Struct/Header2";
 
@@ -49,7 +49,7 @@ function App() {
       const count = await getProductCount();
       setProductCount(count);
     }
-  
+
     fetchProductCount();
   }, []); // Add dependencies if any
   return (
