@@ -1,23 +1,16 @@
-import React, { useState } from 'react';
-import { useFirebaseLogin } from './BackendFiles/Backend';
-import PasswordReset from './PasswordReset';
-import {
-  MDBInput,
-  MDBIcon,
-  MDBBtn,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalBody,
-  MDBModalFooter,
-  MDBCheckbox,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-} from "mdb-react-ui-kit";
+import React, { useState, useEffect } from "react";
+import { Form, Button, Container, Row, Col, Modal } from 'react-bootstrap';
+import { MDBIcon } from "mdb-react-ui-kit";
+import { useFirebaseLogin, useFirebaseAuth } from './BackendFiles/Backend';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaEnvelope, FaLock } from "react-icons/fa";
+
+
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { user } = useFirebaseAuth();
+
   const {
     email,
     setEmail,
@@ -31,93 +24,168 @@ const Login = () => {
     handleLoginFacebook,
     handlePasswordResetComplete,
     showPasswordReset,
-    handlePasswordReset,
     handleCheckboxChange,
+    handleResetPassword,
     saveSession,
+    checkEmailExists,
+
   } = useFirebaseLogin();
 
+  useEffect(() => {
+    const checkUserAndNavigate = async () => {
+      // Check if a user is already logged in
+      if (user) {
+        // Check email existence asynchronously
+        const emailExists = await checkEmailExists(user.email);
+
+        if (emailExists) {
+          // If a user is logged in and their email exists, navigate away to another page (e.g., home page)
+          navigate('/'); // Change the path to the desired page
+        }
+      }
+    };
+
+    checkUserAndNavigate();
+  }, [user, navigate]);
+
+  const [show, setShow] = useState(false);
+
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+
   return (
-    <MDBContainer>
+    <Container fluid className="p-0 mt-4 h-100 d-flex justify-content-center align-items-center">
       {!showPasswordReset && (
-        <MDBRow>
-          <MDBCol md="6" xs="12" className="mt-5 mb-6 mx-auto">
-            <div className="bg-light p-5">
-              <div className="container text-left">
-                <h4>Log in to your IntecnoPT account!</h4>
-                <div className="d-flex mt-4">
-                  <MDBCol md="6" sm="12" className="mb-3 mb-md-0">
-                    <MDBBtn
-                      color="indigo"
-                      className="text-white w-100"
-                      onClick={handleLoginFacebook}
-                      disabled={authing}
-                    >
-                      <MDBIcon fab icon="facebook" /> Facebook
-                    </MDBBtn>
-                  </MDBCol>
-                  <MDBCol md="6" sm="12">
-                    <MDBBtn
-                      color="danger"
-                      className="text-white w-100"
-                      onClick={handleLogingoogle}
-                      disabled={authing}
-                    >
-                      <MDBIcon fab icon="google" /> Google
-                    </MDBBtn>
-                  </MDBCol>
-                </div>
-                <div className="col-md-12 mt-4"></div>
+        <Row noGutters className="w-100">
+          <Col xs={12} md={8} lg={6} className="p-4 bg-light">
+            <div className="d-flex flex-column align-items-center justify-content-center w-100">
+              <Row className="mb-2 mt-4">
+                <h2><strong>Login to your IntecnoPT account!</strong></h2>
+              </Row>
+              <Row className="mb-4">
+                <Col xs={12} md={6} className="mb-2 mb-md-0">
+                  <Button variant="primary" className="w-100 btn-lg py-3" onClick={handleLoginFacebook} disabled={authing}>
+                    <MDBIcon fab icon="facebook" className="me-2" />
+                    Facebook
+                  </Button>
+                </Col>
+                <Col xs={12} md={6}>
+                  <Button variant="danger" className="w-100 btn-lg py-3" onClick={handleLogingoogle} disabled={authing}>
+                    <MDBIcon fab icon="google" className="me-2" />
+                    Google
+                  </Button>
+                </Col>
+              </Row>
+              <Form className="w-100">
                 {!loggedInUser && (
-                  <div>
-                    <div className="col-md-12 mb-4 w-75">
-                      <MDBInput label="E-Mail" id="typeEmail" type="email" size='lg' className="p-3 w-100" value={email} onChange={(e) => setEmail(e.target.value)} />
-                      <br />
-                      <MDBInput label="Password" id="typePassword" type="password" size='lg' className="p-3 w-100" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    </div>
-                    <div className="col-md-12 d-flex justify-content-between align-items-center">
-  <a href="#" onClick={handlePasswordReset}>Forgot your Password?</a>
-  <MDBCheckbox label="Save Session" checked={saveSession} onChange={handleCheckboxChange} />
-</div>
+                  <div className="d-flex flex-column align-items-center w-100">
+                    <Form.Group className="mb-4 position-relative">
+                      <FaEnvelope className="position-absolute" style={{ color: "#059f83", left: '7px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px' }} />
+                      <Form.Control
+                        type="email"
+                        placeholder="E-Mail"
+                        className="form-control-md"
+                        style={{ paddingLeft: '35px', backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </Form.Group>
 
-                    <div className="col-md-12">
-                      {/*<ReCAPTCHA sitekey="6Ldu3igpAAAAAIubuBWKw9YLJ-_mIaBd2EnYm8m1" onChange={handleCaptchaChange} />*/}
-                    </div>
-                    <div className="col-md-12 mt-2">
-                      <MDBBtn onClick={handleLogin} disabled={authing}>LOGIN</MDBBtn></div>
-                  </div>)}
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <div className="col-md-12 mt-2 d-flex align-items-center">
-  <span><MDBIcon fas icon="check-circle" className="mr-2" />By logging in, I declare that I have read and accept the Terms and Conditions, and the use of my personal data as explained in the Privacy Policy.</span>
-</div>
-              </div>
-            </div>
-          </MDBCol>
+                    <Form.Group className="mb-4 position-relative">
+                      <FaLock className="position-absolute" style={{ color: "#dba521", left: '6px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px' }} />
+                      <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        className="form-control-md"
+                        style={{ paddingLeft: '35px', backgroundColor: '#e0e0e0', width: '100%', minWidth: "19.5vw" }}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </Form.Group>
 
-          <MDBCol md="6" className="mt-5 mx-auto">
-            <div className="bg-light p-5">
-              <div className="container text-left">
-                <h2>Don't have an account yet? Register now!</h2>
-                <div className="col-md-12">
-                  <h4>Fast and quick!</h4>
+                  </div>
+                )}
+                <div className="d-flex justify-content-center align-items-center w-100 mb-2">
+                  <>
+                    <a href="#" className="text-decoration-none" onClick={handleShow}>Forgot your password?</a>
+
+                    <Modal show={show} onHide={handleClose} centered>
+                      <Modal.Header closeButton>
+                        <Modal.Title className="w-100 text-center">Password Reset</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Email:</Form.Label>
+                          <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        </Form.Group>
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
+                      </Modal.Body>
+                      <Modal.Footer className="justify-content-center">
+                        <Button variant="secondary" onClick={handleClose}>
+                          Close
+                        </Button>
+                        <Button variant="primary" onClick={handleResetPassword}>
+                          Reset Password
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </>
+
+                  <div className="ms-5">
+                    <Form.Check type="checkbox" label="Save Session" checked={saveSession} onChange={handleCheckboxChange} />
+                  </div>
                 </div>
-                <div className="col-md-12 mt-5">
-                  <h4>Track your orders</h4>
-                  <h4>Save your payment and shipping details and save time</h4>
-                  <h4>Make returns online</h4>
+                <div className="text-center">
+                  <Button variant="primary" type="submit" className="mb-4 btn-lg py-3" onClick={(e) => { e.preventDefault(); handleLogin(); }}  >
+                    Login
+                  </Button>
+                  {error && <p style={{ color: 'red' }}>{error}</p>}
+                  <Row>
+                    <Col className="text-left small-text" xs={12} md={8} lg={8}>
+                      <p>
+                        <MDBIcon icon="check-circle" className="me-2" />
+                        By logging in, I declare that I have read and accept the Terms and Conditions, and the use of my personal data as explained in the Privacy Policy.
+                      </p>
+                    </Col>
+                  </Row>
                 </div>
-                <div className="col-md-12 mt-5"></div>
-                <div className="col-md-12">
-                  <MDBBtn>REGISTER</MDBBtn>
-                </div>
-              </div>
+              </Form>
             </div>
-          </MDBCol>
-        </MDBRow>
+          </Col>
+          <Col xs={12} md={8} lg={6} className="p-4 bg-primary text-white">
+            <div className="d-flex flex-column align-items-center justify-content-center w-100 h-100">
+              <Row className="mb-2 mt-4 text-center w-100">
+                <h3><strong>Don't have an account? Register now!</strong></h3>
+              </Row>
+              <div className="row mt-4">
+                <h4>
+                  <strong>Fast and easy!</strong>
+                </h4>
+              </div>
+              <Row className="mt-4 mb-4">
+                <Col xs={12} md={12} lg={12}>
+                  <ul className="list-unstyled text-left">
+                    <li className="mb-2"><MDBIcon icon="check-circle" className="me-2" />A feature to track orders</li>
+                    <li className="mb-2"><MDBIcon icon="check-circle" className="me-2" />A feature to save payment and shipping details for convenience</li>
+                    <li className="mb-2"><MDBIcon icon="check-circle" className="me-2" />A feature to make online returns</li>
+                  </ul>
+                </Col>
+              </Row>
+              <Row className="mb-4">
+                <Link to="/register">
+                  <Button variant="white" className="w-100 btn-lg py-3">
+                    Create Account
+                  </Button>
+                </Link>
+              </Row>
+            </div>
+          </Col>
+        </Row>
       )}
       {showPasswordReset && (
         <PasswordReset onComplete={handlePasswordResetComplete} />
       )}
-    </MDBContainer>
+    </Container>
   );
 };
 

@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useRef } from "react";
 import {
   signInWithEmailAndPassword,
   getAuth,
@@ -13,14 +12,16 @@ import {
   updateProfile,
   sendPasswordResetEmail,
   fetchSignInMethodsForEmail,
+
 } from "firebase/auth";
-import { collection, addDoc, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../../firebase"; // import firestore from your firebase file
 import { useNavigate } from "react-router-dom";
-import { setDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useQuery } from 'react-query';
-//import axios from './axiosConfig';
+import maguire from "../../assets/godmaguire.png";
 
+//import axios from './axiosConfig';
 
 //
 //
@@ -30,6 +31,7 @@ import { useQuery } from 'react-query';
 export const useFirebaseAuth = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -41,17 +43,23 @@ export const useFirebaseAuth = () => {
   }, [auth]);
 
   const handleLogout = async () => {
+
     try {
       await signOut(auth);
+
+      setUser(null);  // Set user to null
+      navigate('/login');
+      setProfilePicUrl(maguire);
+      localStorage.setItem('profilePicUrl', maguire);
+
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
 
+
   return { user, handleLogout };
 };
-
-
 
 
 
@@ -74,10 +82,9 @@ export const useFirebaseRegister = () => { // MAIN
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [receiveNews, setReceiveNews] = useState(false);
 
-  const isValidEmailFormat = (email) => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-  };
+
+
+
 
 
 
@@ -107,19 +114,25 @@ export const useFirebaseRegister = () => { // MAIN
       setNumber(false);
     }
   };
+  const isValidEmailFormat = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
 
 
   const handleRegister = async () => {
-
-    if (!termsAccepted) {
-      setError("You must agree to the Terms and Conditions");
-      return;
-    }
+    let errors = [];
 
     try {
       setLoading(true);
 
+      if (!email || !password || !confirmPassword) {
+        errors.push("All fields are required");
+      }
 
+      if (!termsAccepted) {
+        errors.push("You must agree to the Terms and Conditions");
+      }
 
       const passwordRequirements = [
         {
@@ -146,26 +159,30 @@ export const useFirebaseRegister = () => { // MAIN
 
       for (let requirement of passwordRequirements) {
         if (!requirement.test(password)) {
-          setError(requirement.message);
-          return;
+          errors.push(requirement.message);
+          continue;
         }
       }
 
       if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
+        errors.push("Passwords do not match");
       }
 
       if (!isValidEmailFormat(email)) {
-        setError("Invalid email format");
-        return;
+        errors.push("Invalid email format");
       }
 
       const emailExistsInDatabase = await checkDuplicateEmail(email);
+
       if (emailExistsInDatabase) {
-        setError("Email already exists");
+        errors.push("Email already exists");
+      }
+
+      if (errors.length > 0) {
+        setError(errors.join("\n"));
         return;
       }
+
 
       const authUser = await createUserWithEmailAndPassword(
         auth,
@@ -181,9 +198,8 @@ export const useFirebaseRegister = () => { // MAIN
         displayName: displayName,
         email: authUser.user.email,
         Address: "",
-        Name: "",
         Phone_number: "",
-        dateofbirth: "",
+        dateOfBirth: "",
       };
       await addDoc(usersCollection, userData);
 
@@ -191,6 +207,9 @@ export const useFirebaseRegister = () => { // MAIN
       setPassword("");
       setConfirmPassword("");
       setError(null);
+      navigate('/');
+      window.location.reload();
+
     } catch (error) {
       console.error('Error registering user:', error.message);
       setError(
@@ -198,8 +217,10 @@ export const useFirebaseRegister = () => { // MAIN
       );
     } finally {
       setLoading(false);
+
     }
-  }; //dwdwdwd
+  };
+
 
   const handleGoogleRegister = async () => { // HANDLE GOOGLE REGISTER
     setAuthing(true);
@@ -212,9 +233,12 @@ export const useFirebaseRegister = () => { // MAIN
 
       // Redirect after a successful login
       navigate('/');
+      window.location.reload()
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
+      window.location.reload()
     }
   };
 
@@ -229,9 +253,12 @@ export const useFirebaseRegister = () => { // MAIN
 
       // Redirect after a successful login
       navigate('/');
+      window.location.reload()
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
+      window.location.reload()
     }
   };
   const handleAuthUser = async (authUser) => {
@@ -250,13 +277,14 @@ export const useFirebaseRegister = () => { // MAIN
         displayName: authUser.displayName,
         email: authUser.email,
         Address: "",
-        Name: "",
         Phone_number: "",
-        dateofbirth: "",
+        dateOfBirth: "",
       };
       await addDoc(usersCollection, userData);
     }
   };
+
+
 
   return {
     email,
@@ -282,6 +310,7 @@ export const useFirebaseRegister = () => { // MAIN
     receiveNews,
     setReceiveNews,
     authing,
+    onAuthStateChanged,
   };
 };
 
@@ -305,9 +334,7 @@ export const useFirebaseLogin = () => {
   const [saveSession, setSaveSession] = useState(false);
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState(null);
-
-
-
+  const [profilePicUrl, setProfilePicUrl] = useState("");
 
 
   const handleCheckboxChange = () => {
@@ -330,26 +357,56 @@ export const useFirebaseLogin = () => {
     return emailExistsInFirebaseAuth;
   };
 
-
+  const isValidEmailFormat = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
 
   const handleLogin = async () => {
+    console.log("Starting login process...");
+    setAuthing(true);
+
     try {
       // Check if the email exists in the Users collection before signing in
       const emailExists = await checkEmailExists(email);
+      console.log(`Email exists: ${emailExists}`);
 
       if (!emailExists) {
         setError('Email does not exist');
         return;
       }
 
+      if (!isValidEmailFormat(email)) {
+        setErrorh("Invalid email format");
+      }
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log("User signed in successfully");
+      console.log(`User ID: ${userCredential.user.uid}`); // Print the user's ID
+
       setLoggedInUser(userCredential);
       setError(null); // Clear any previous errors
       navigate('/');
+
+      window.location.reload()
+
     } catch (error) {
       console.error("Login error:", error);
-      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+      let errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      errorMessage = errorMessage.replace('Firebase: ', ''); // Remove 'Firebase: ' prefix
+      setError(errorMessage);
       setLoggedInUser(null);
+      setAuthing(false);
+
+
+
+    }
+  };
+
+  const deleteUser = async (user) => {
+    try {
+      await user.delete();
+    } catch (error) {
+      console.log(`Error deleting user: ${error}`);
     }
   };
 
@@ -357,7 +414,12 @@ export const useFirebaseLogin = () => {
     setAuthing(true);
 
     try {
-      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account',
+      });
+
+      const result = await signInWithPopup(auth, provider);
       const authUser = result.user;
 
       // Check email existence asynchronously
@@ -366,55 +428,114 @@ export const useFirebaseLogin = () => {
       if (!emailExists) {
         setError('Email does not exist');
         setAuthing(false);
-        return;
+
+        // Delete the user from Firebase Authentication
+        await deleteUser(authUser);
+
+        return; // Add this line
       }
 
       await handleAuthUser(authUser);
 
       // Redirect after a successful login
       navigate('/');
+
+      window.location.reload()
+
     } catch (error) {
       console.log(error);
       setAuthing(false);
+      window.location.reload()
     }
   };
-
-
 
   const handleLoginFacebook = async () => {
     setAuthing(true);
 
     try {
-      const result = await signInWithPopup(auth, new FacebookAuthProvider());
+      const provider = new FacebookAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account',
+      });
+      const result = await signInWithPopup(auth, provider);
       const authUser = result.user;
 
       // Check email existence asynchronously
       const emailExists = await checkEmailExists(authUser.email);
+      console.log('Email exists: ', emailExists);
 
       if (!emailExists) {
         setError('Email does not exist');
         setAuthing(false);
-        return;
+
+        // Delete the user from Firebase Authentication
+        await deleteUser(authUser);
+
+        return; // Add this line
       }
 
       await handleAuthUser(authUser);
 
       // Redirect after a successful login
       navigate('/');
+
+      window.location.reload()
+      localStorage.removeItem('profilePicUrl');
+
     } catch (error) {
       console.log(error);
-
-      // Handle specific error messages
-      if (error.code === 'auth/account-exists-with-different-credential') {
-        setError('This email is already in use with a different login method. Try logging in with the other provider.');
-      } else {
-        setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-      }
-
       setAuthing(false);
+
+      window.location.reload()
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const user = auth.currentUser;
+  
+    if (user) {
+      // User is signed in, get the user's email
+      const email = user.email;
+  
+      // Confirm with the user before deleting the account
+      const confirmDelete = window.confirm("Are you sure you want to delete your account?");
+      if (!confirmDelete) {
+        // User clicked 'Cancel', do not delete account
+        return;
+      }
+  
+      // User clicked 'OK', proceed with account deletion
+      deleteUser(user).then(async () => {
+        console.log('User account has been successfully deleted.');
+  
+        // Now you can delete the user's data from your database
+        // Query the Users collection to find the document with the matching email
+        const usersCollection = collection(firestore, 'Users');
+        const userQuery = query(usersCollection, where('email', '==', email));
+        const userQuerySnapshot = await getDocs(userQuery);
+  
+        // If a document with the matching email is found, delete it
+        if (!userQuerySnapshot.empty) {
+          const userDoc = doc(firestore, 'Users', userQuerySnapshot.docs[0].id);
+          deleteDoc(userDoc).then(() => {
+            console.log('User data has been successfully deleted from the database.');
+          }).catch((error) => {
+            console.error('Error deleting user data from the database: ', error);
+          });
+        }
+        navigate('/login')
+        localStorage.removeItem('profilePicUrl');
+        setProfilePicUrl(maguire);
+        window.location.reload()
+      }).catch((error) => {
+        console.error('Error deleting user account: ', error);
+      });
+    } else {
+      // No user is signed in, cannot delete account
+      console.log('User needs to be signed in to delete account.');
+    }
+  };
+  
 
 
   const handleAuthUser = async (authUser) => {
@@ -426,27 +547,22 @@ export const useFirebaseLogin = () => {
     if (userQuerySnapshot.empty) {
       // If the user doesn't exist, redirect to the register page
       navigate('/register');
+      window.location.reload()
+
     } else {
       // If the user exists, proceed as normal
       authUser.emailVerified = false;
       setLoggedInUser(authUser);
       // Add this line for debugging
+      console.log('User exists, navigating to home page');
       navigate('/');
+      window.location.reload()
     }
   };
 
 
 
-  const handleLogout = async () => {
-    try {
-      // Sign out the user
-      await signOut(auth);
-      setLoggedInUser(null);
-      navigate('/login'); // Redirect to the login page after logout
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
+
 
   const handleResetPassword = async () => {
     try {
@@ -467,6 +583,7 @@ export const useFirebaseLogin = () => {
     setShowPasswordReset(false);
   };
 
+
   return {
     email,
     setEmail,
@@ -482,7 +599,6 @@ export const useFirebaseLogin = () => {
     handleLogingoogle,
     handleLoginFacebook,
     handleAuthUser,
-    handleLogout,
     handlePasswordReset,
     handlePasswordResetComplete,
     handleResetPassword,
@@ -493,64 +609,96 @@ export const useFirebaseLogin = () => {
     setUserProfile,
     setSaveSession,
     handleCheckboxChange,
-
+    onAuthStateChanged,
+    checkEmailExists,
+    handleDeleteAccount,
   };
 };
 
 
-//const usersCollection = collection(firestore, 'Users'); // use firestore to create the usersCollection
-
-// Load data from Firebase Logic
-// Basicly this const is exported to whatever page we need and the functions
-// inside can be freely used.
 
 export const getUserData = async () => {
-  const user = auth.currentUser;
+  // Get the current user
+  const user = getAuth().currentUser;
 
-  if (!user) {
-    throw new Error('No user is currently signed in');
-  }
 
-  console.log('Current user ID:', user.uid);  // Log the user ID
+  if (user) {
+    // Get the user's email
+    const email = user.email;
 
-  // Get the user document from Firestore
-  const userDocRef = doc(usersCollection, user.uid);
-  let userDoc = await getDoc(userDocRef);
+    // Query for the user document where the email field matches the user's email
+    const q = query(collection(firestore, "Users"), where("email", "==", email));
 
-  if (!userDoc.exists()) {
-    // The document does not exist, create it
-    await setDoc(userDocRef, {
-      displayName: user.displayName,
-      email: user.email,
-      // Add other fields as needed
-    });
+    // Execute the query
+    const querySnapshot = await getDocs(q);
 
-    // Fetch the document again
-    userDoc = await getDoc(userDocRef);
-  }
+    // Get the first document from the query result (assuming email is unique)
+    const userDocSnap = querySnapshot.docs[0];
 
-  console.log('User document data:', userDoc.data());  // Log the document data
+    if (userDocSnap) {
 
-  const userData = userDoc.data();
+      // Return the document data
+      return userDocSnap.data();
+    } else {
+      throw new Error('No document found for the current user');
+    }
+  } else {
+    throw new Error('No user signed in');
+  };
 
-  // Split the displayName into firstName and lastName
-  let firstName = userData.displayName;
-  let lastName = '';
 
-  const nameParts = userData.displayName.split(' ');
-  if (nameParts.length > 1) {
-    firstName = nameParts[0];
-    lastName = nameParts.slice(1).join(' ');
-  }
+
+};
+
+
+export const ChangePicture = () => {
+  const [profilePicUrl, setProfilePicUrl] = useState(localStorage.getItem('profilePicUrl') || maguire);
+  const fileInputRef = useRef();
+  const auth = getAuth();
+  const storage = getStorage();
+
+  const handleProfilePicClick = () => {
+
+    fileInputRef.current.click();
+
+  };
+
+  const handleProfilePicChange = async (event) => {
+    const user = auth.currentUser;
+
+    if (user) {
+      const uid = user.uid;
+      const file = event.target.files[0];
+
+      // Create a storage reference
+      const storageRef = ref(storage, 'ProfilePictures/' + uid);
+
+      // Upload the file to the reference
+      await uploadBytes(storageRef, file);
+
+      // Get the download URL and update the user's profile picture
+      const url = await getDownloadURL(storageRef);
+      setProfilePicUrl(url);  // Update the profile picture URL
+
+      // Store the URL in local storage
+      localStorage.setItem('profilePicUrl', url);
+
+      console.log('Profile picture has been successfully updated.');
+      window.location.reload()
+    } else {
+      console.log('User needs to be signed in to change profile picture.');
+    }
+  };
+
 
   return {
-    email: user.email,
-    firstName,
-    lastName,
-    dateOfBirth: userData.dateofbirth, // Add this line
-    // Add other fields as needed
+    profilePicUrl,
+    fileInputRef,
+    handleProfilePicChange,
+    handleProfilePicClick,
   };
 };
+
 
 /*
 export const API_Fetch = {
@@ -566,3 +714,5 @@ export const API_Fetch = {
   // other fetch functions...
 };
 */
+
+export default useFirebaseLogin;

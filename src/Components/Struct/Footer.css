@@ -1,0 +1,38 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  footer {
+    margin-top: auto;
+  }
+
+  .footer a {
+    color: black;
+    text-decoration: none;
+}
+
+
+.btn-link {
+    margin-bottom: 0.5px; /* adjust this value to change the space */
+  }
+  
+  h5 {
+    margin-bottom: 0.5px; /* adjust this value to change the space */
+  }
+
+  .icon-circle {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background-color: #ddd; /* Change this to your desired color */
+  }
+
+
+.footer3 {
+    margin-top: auto;
+}
